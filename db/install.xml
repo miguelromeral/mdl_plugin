@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/league/db" VERSION="20180618" COMMENT="Archivo de tablas del modulo league"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="league" COMMENT="Tabla principal de la actividad. Contiene el id de la liga y el curso al que pertenece." NEXT="ejercicio">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="curso"/>
+        <FIELD NAME="curso" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="1" SEQUENCE="false" COMMENT="ID del curso de Moodle (id de dbmoodle.mdl_course)" PREVIOUS="id"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="fk-curso"/>
+        <KEY NAME="fk-curso" TYPE="foreign" FIELDS="curso" REFTABLE="mdl_course" REFFIELDS="id" COMMENT="Hace referencia a dbmoodle.mdl_course" PREVIOUS="primary"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="ejercicio" COMMENT="Ejercicio que compone una &quot;jornada&quot; de liga." PREVIOUS="league" NEXT="intento">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="liga"/>
+        <FIELD NAME="liga" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Hace referencia a la liga a la que pertenece este ejercicio." PREVIOUS="id"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="fk-liga"/>
+        <KEY NAME="fk-liga" TYPE="foreign" FIELDS="liga" REFTABLE="league" REFFIELDS="id" COMMENT="Hace referencia a la liga a la que pertenece" PREVIOUS="primary"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="intento" COMMENT="Referencia los intentos de los alumnos" PREVIOUS="ejercicio" NEXT="observacion">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="usuario"/>
+        <FIELD NAME="usuario" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Usuario que realiza el ejercicio" PREVIOUS="id" NEXT="ejercicio"/>
+        <FIELD NAME="ejercicio" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Ejercicio al que pertenece el intento." PREVIOUS="usuario" NEXT="archivo"/>
+        <FIELD NAME="archivo" TYPE="binary" LENGTH="big" NOTNULL="true" SEQUENCE="false" COMMENT="Fichero PDF subido por los alumnos con las respuestas." PREVIOUS="ejercicio" NEXT="nota"/>
+        <FIELD NAME="nota" TYPE="number" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" DECIMALS="2" COMMENT="Nota que ha obtenido el usuario en el intento" PREVIOUS="archivo"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="fk-usuario"/>
+        <KEY NAME="fk-usuario" TYPE="foreign" FIELDS="usuario" REFTABLE="mdl_user" REFFIELDS="id" COMMENT="Hace referencia al id del usuario (mdl_user)" PREVIOUS="primary" NEXT="fk-ejercicio"/>
+        <KEY NAME="fk-ejercicio" TYPE="foreign" FIELDS="ejercicio" REFTABLE="ejercicio" REFFIELDS="id" COMMENT="Hace referencia a un ejercicio de una liga determinada" PREVIOUS="fk-usuario"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="observacion" COMMENT="Observaciones realizadas durante la corrección por los profesores." PREVIOUS="intento">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="intento"/>
+        <FIELD NAME="intento" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="id" NEXT="observacion"/>
+        <FIELD NAME="observacion" TYPE="text" LENGTH="big" NOTNULL="true" SEQUENCE="false" COMMENT="Observación realizada por el profesor (referente a la corrección)" PREVIOUS="intento"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="fk-intento"/>
+        <KEY NAME="fk-intento" TYPE="foreign" FIELDS="intento" REFTABLE="intento" REFFIELDS="id" COMMENT="Hace referencia al número de intento de un alumno" PREVIOUS="primary"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
