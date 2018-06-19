@@ -23,7 +23,7 @@ $capabilities = array(
     'archetypes' => array(
         'guest' => CAP_ALLOW,
         'student' => CAP_ALLOW,
-        'teacher' => CAP_ALLOW,
+        'teacher' => CAP_ALLOW,    'captype' => 'read',
         'editingteacher' => CAP_ALLOW,
         'manager' => CAP_ALLOW
         )

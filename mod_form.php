@@ -1,31 +1,48 @@
 <?php
 
-if (!defined('MOODLE_INTERNAL')) {
-    die('Direct access to this script is forbidden.');    ///  It must be included from a Moodle page
-}
+//moodleform is defined in formslib.php
+require_once("$CFG->libdir/formslib.php");
  
-require_once($CFG->dirroot.'/course/moodleform_mod.php');
-//require_once($CFG->dirroot.'/mod/league/lib.php');
+class mod_league_mod_form extends moodleform {
+    //Add elements to form
+    public function definition() {
+        global $CFG, $DB;
  
-class league_mod_form extends moodleform_mod {
+        $mform = $this->_form; // Don't forget the underscore! 
  
-    function definition() {
-        global $CFG, $DB, $OUTPUT;
- 
-        $mform =& $this->_form;
- 
-        $mform->addElement('text', 'name', get_string('titulo_pagina', 'league'), array('size'=>'64'));
-        $mform->setType('name', PARAM_TEXT);
-        $mform->addRule('name', null, 'required', null, 'client');
- 
-        $ynoptions = array(0 => get_string('no'),
-                           1 => get_string('yes'));
-        $mform->addElement('select', 'usecode', get_string('titulo_pagina', 'league'), $ynoptions);
-        $mform->setDefault('usecode', 0);
-        $mform->addHelpButton('usecode', 'usecode', 'certificate');
- 
-        $this->standard_coursemodule_elements();
- 
+        $mform->addElement('html', '<h2>Estos son de prueba:</h2>');
+        
+        $mform->addElement('text', 'email', get_string('fill_course', 'league')); // Add elements to your form
+        $mform->setType('email', PARAM_NOTAGS);                   //Set type of element
+        $mform->setDefault('email', 'Please enter email');        //Default value
+        
+        
+        $mform->addElement('html', '<h1>Aquí empieza lo de verdad:</h1>');
+        
+        
+        $options = array();
+        
+        $result = $DB->get_records_sql('SELECT * FROM {course} WHERE id > ?', array('1')); //El 1 no, que es el moodle completo.
+        
+        //$mform->addElement('html', '<div>Resultado: '. print_r($result) .'</div>');
+        
+        
+        // ID => NOMBRE DEL CURSO
+        $options[0] = get_string('default_selected_course', 'league');
+        foreach ($result as $rowclass)
+        {
+            $rowclass = json_decode(json_encode($rowclass), True);
+            $options[$rowclass["id"]] = $rowclass["fullname"];
+        }
+        $mform->addElement('select', 'select_course_activity', get_string('mod_form_select_course', 'league'), $options);
+        $mform->addHelpButton('select_course_activity', 'select_course_activity', 'league');
+
+        
+        
         $this->add_action_buttons();
+    }
+    //Custom validation should be added here
+    function validation($data, $files) {
+        return array();
     }
 }

@@ -2,11 +2,13 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title><?= get_string('titulo_pagina', 'league'); ?></title>
+        <title><!-- <?= get_string('modulename', 'league'); ?> -->
+        Index
+        </title>
     </head>
     <body>
-        <?php
-        echo "Hola, el titulo es: " . get_string('titulo_pagina', 'league');
-        ?>
+        <p>
+            Hola, Mundo!
+        </p>
     </body>
 </html>
