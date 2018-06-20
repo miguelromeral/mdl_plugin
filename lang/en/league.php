@@ -22,4 +22,10 @@ $string['title_create_istance'] = 'Rellene los siguientes datos para crear la ac
 $string['mod_form_select_course'] = 'Escoja el nombre del curso al que añadir una liga.';
 $string['default_selected_course'] = 'SELECCIONAR CURSO';
 $string['select_course_activity'] = '¿Añadir una liga a un curso?';
-$string['select_course_activity_help'] = 'El curso que elija tendrá una nueva liga.';
+$string['select_course_activity_help'] = 'AYUDA';
+
+/**
+ *      ERRORES
+ */
+
+$string['noviewdiscussionspermission'] = 'No tiene los suficientes permisos para ver esta liga.';

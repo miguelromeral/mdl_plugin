@@ -18,15 +18,13 @@ function league_add_instance(stdClass $league, mod_league_mod_form $mform = null
     $league->timemodified = time();
    
     
-    print_r($league);
+    //print_r($league);
     
     $league->id = $DB->insert_record('league', $league);
    
     // You may have to add extra stuff in here.
     
     
-    //$league->id = $DB->insert_record('newmodule', $league);
-    //newmodule_grade_item_update($league);
     return $league->id;
 }
 
@@ -46,7 +44,7 @@ function league_update_instance(stdClass $league, mod_league_mod_form $mform = n
     $league->timemodified = time();
     $league->id = $league->instance;
     // You may have to add extra stuff in here.
-    $result = $DB->update_record('newmodule', $league);
+    $result = $DB->update_record('league', $league);
     newmodule_grade_item_update($league);
     return $result;
 }
@@ -63,11 +61,11 @@ function league_update_instance(stdClass $league, mod_league_mod_form $mform = n
  */
 function league_delete_instance($id) {
     global $DB;
-    if (! $league = $DB->get_record('newmodule', array('id' => $id))) {
+    if (! $league = $DB->get_record('league', array('id' => $id))) {
         return false;
     }
     // Delete any dependent records here.
-    $DB->delete_records('newmodule', array('id' => $league->id));
+    $DB->delete_records('league', array('id' => $league->id));
     newmodule_grade_item_delete($league);
     return true;
 }
