@@ -2,9 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title><!-- <?= get_string('modulename', 'league'); ?> -->
-        Pruebas
-        </title>
+        <title>Pruebas</title>
     </head>
     <body>
         <p>

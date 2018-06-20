@@ -2,9 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title><!-- <?= get_string('modulename', 'league'); ?> -->
-        Index
-        </title>
+        <title>Index</title>
     </head>
     <body>
         <p>
