@@ -4,17 +4,28 @@
 require_once('../../config.php');
 require_once('lib.php');
 
-$id = required_param('id', PARAM_INT);    // Course Module ID
+//Identifica la actividad específica (o recurso)
+$cmid = required_param('id', PARAM_INT);    // Course Module ID
+$cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
+$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+$info = get_fast_modinfo($course);
+//print_object($info);
 
-$params = array();
-if ($id) {
-    $params['id'] = $id;
-}
-$PAGE->set_url('/mod/league/view.php', $params);
+/*
+ * La variable $PAGE configura la página
+ * La variable $OUTPUT muestra la página
+ */
 
+require_login($course, true, $cm);
+/*
+ * ABSOLUTAMENTE NECESARIO PONER EL URL.
+ * Por lo menos, el id, después se pueden poner otras 'key' => 'value'
+ * Convierte todo lo que le pasamos a un objeto moodle_url
+ */
+$PAGE->set_url('/mod/league/view.php', array('id' => $cm->id));
 
-if ($id) {
-    if (!$cm = get_coursemodule_from_id('league', $id)) {
+if ($cmid) {
+    if (!$cm = get_coursemodule_from_id('league', $cmid)) {
         print_error('Course Module ID was incorrect'); // NOTE this is invalid use of print_error, must be a lang string id
     }
     if (!$course = $DB->get_record('course', array('id'=> $cm->course))) {
@@ -29,20 +40,30 @@ if ($id) {
 }
 
 
+/*
+ * ABSOLUTAMENTE NECESARIO. Podriamos poner:
+        $PAGE->set_context(context_system::instance());
+        $PAGE->set_context(context_coursecat::instance($categoryid));
+        $PAGE->set_context(context_course::instance($courseid));
+        $PAGE->set_context(context_module::instance($moduleid));
+ * dependiendo de nuestras necesidades
+ */
 $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 $PAGE->set_context($context);
 
-
+//Pone como diseño el estandar de Moodle
+$PAGE->set_pagelayout('standard');
 
 // Mark viewed if required
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
 // Print header.
-
 $PAGE->set_title(format_string($league->name));
 //$PAGE->add_body_class('forumtype-'.$league->type);
 $PAGE->set_heading(format_string($course->fullname));
+
+$output = $PAGE->get_renderer('mod_league');
 
 echo $OUTPUT->header();
 
@@ -83,36 +104,20 @@ foreach ($data as $rowclass)
 }
 
 if ($rol == 'student'){
+    
+    echo $output->inicio_estudiante();
+    
     ?>
-<h1>Actividades disponibles</h1>
-
-<h2>Subir actividades</h2>
-
-<div>Aquí se listarán todas las actividades que estén disponibles.</div>
-
-
-
-
-<h2>Ver clasificación</h2>
-<?php
-
-$mform = $this->_form; // Don't forget the underscore! 
- 
-$mform->addElement('text', 'email', get_string('email')); // Add elements to your form
-$mform->setType('email', PARAM_NOTAGS);                   //Set type of element
-$mform->setDefault('email', 'Please enter email');        //Default value
-
-?>
-<!--
-<form action="qualy.php" method="get">
-    <input type="submit" value="<?= get_string('view_qualy_button', 'league') ?>" name="view_qualy" />
-</form>
--->
-
-
-
-
+    
+    
+    <form action="qualy.php" method="get">
+        <input type="hidden" name="id" value="<?= $cmid ?>" />
+        <input type="submit" value="<?= get_string('view_qualy_button', 'league') ?>"/>
+    </form>
+    
+    
     <?php
+    
 }else if($rol == 'teacher'){
     echo "Página principal del profesor.";
 }else{

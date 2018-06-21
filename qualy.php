@@ -4,17 +4,17 @@
 require_once('../../config.php');
 require_once('lib.php');
 
-$id = required_param('id', PARAM_INT);    // Course Module ID
+$cmid = required_param('id', PARAM_INT);    // Course Module ID
 
 $params = array();
-if ($id) {
-    $params['id'] = $id;
+if ($cmid) {
+    $params['id'] = $cmid;
 }
 $PAGE->set_url('/mod/league/qualy.php', $params);
 
 
-if ($id) {
-    if (!$cm = get_coursemodule_from_id('league', $id)) {
+if ($cmid) {
+    if (!$cm = get_coursemodule_from_id('league', $cmid)) {
         print_error('Course Module ID was incorrect'); // NOTE this is invalid use of print_error, must be a lang string id
     }
     if (!$course = $DB->get_record('course', array('id'=> $cm->course))) {
