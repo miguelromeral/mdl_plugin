@@ -29,3 +29,9 @@ $string['select_course_activity_help'] = 'AYUDA';
  */
 
 $string['noviewdiscussionspermission'] = 'No tiene los suficientes permisos para ver esta liga.';
+
+/**
+ *      PÁGINA PRINCIPAL
+ */
+
+$string['view_qualy_button'] = 'VER CLASIFICACIÓN';

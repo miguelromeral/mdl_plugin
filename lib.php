@@ -24,7 +24,6 @@ function league_add_instance(stdClass $league, mod_league_mod_form $mform = null
    
     // You may have to add extra stuff in here.
     
-    
     return $league->id;
 }
 
@@ -66,6 +65,7 @@ function league_delete_instance($id) {
     }
     // Delete any dependent records here.
     $DB->delete_records('league', array('id' => $league->id));
-    newmodule_grade_item_delete($league);
+    //newmodule_grade_item_delete($league);
     return true;
 }
+

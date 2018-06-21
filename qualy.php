@@ -10,7 +10,7 @@ $params = array();
 if ($id) {
     $params['id'] = $id;
 }
-$PAGE->set_url('/mod/league/view.php', $params);
+$PAGE->set_url('/mod/league/qualy.php', $params);
 
 
 if ($id) {
@@ -41,7 +41,6 @@ $completion->set_module_viewed($cm);
 // Print header.
 
 $PAGE->set_title(format_string($league->name));
-//$PAGE->add_body_class('forumtype-'.$league->type);
 $PAGE->set_heading(format_string($course->fullname));
 
 echo $OUTPUT->header();
@@ -62,11 +61,13 @@ $groupmode = groups_get_activity_groupmode($cm);
 
 $bc = new block_contents();
 
+//Comprobamos los roles del usuario que entran.
 $var="SELECT * 
 FROM mdl_role as er
 INNER JOIN mdl_role_assignments as era 
 ON era.roleid=er.id
 WHERE userid = $USER->id";
+
 $data = $DB->get_records_sql($var);
 $rol = null;
 foreach ($data as $rowclass)
@@ -82,6 +83,39 @@ foreach ($data as $rowclass)
     }
 }
 
+
+//Obtenemos la lista de alumnos matriculados en este curso.
+$var="SELECT
+c.id AS courseid,
+c.fullname,
+u.username,
+u.firstname,
+u.lastname,
+u.email
+                                
+FROM
+mdl_role_assignments ra
+JOIN mdl_user u ON u.id = ra.userid
+JOIN mdl_role r ON r.id = ra.roleid
+JOIN mdl_context cxt ON cxt.id = ra.contextid
+JOIN mdl_course c ON c.id = cxt.instanceid
+
+WHERE ra.userid = u.id
+                                
+AND ra.contextid = cxt.id
+AND cxt.contextlevel =50
+AND cxt.instanceid = c.id
+AND  roleid = 5
+AND c.id = 2
+
+ORDER BY c.fullname";
+
+echo "--> course\n". print_r($course);
+echo "--> CFG\n". print_r($CFG);
+echo "--> USER\n". print_r($USER);
+echo "--> cm\n". print_r($cm);
+echo "--> league\n". print_r($league);
+
 if ($rol == 'student'){
     ?>
 <h1>Actividades disponibles</h1>
@@ -94,20 +128,10 @@ if ($rol == 'student'){
 
 
 <h2>Ver clasificación</h2>
-<?php
-
-$mform = $this->_form; // Don't forget the underscore! 
- 
-$mform->addElement('text', 'email', get_string('email')); // Add elements to your form
-$mform->setType('email', PARAM_NOTAGS);                   //Set type of element
-$mform->setDefault('email', 'Please enter email');        //Default value
-
-?>
-<!--
-<form action="qualy.php" method="get">
+<form action="qualy.php">
     <input type="submit" value="<?= get_string('view_qualy_button', 'league') ?>" name="view_qualy" />
 </form>
--->
+
 
 
 
@@ -118,7 +142,4 @@ $mform->setDefault('email', 'Please enter email');        //Default value
 }else{
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
-
-echo $OUTPUT->footer();
-
 ?>
