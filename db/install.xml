@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/league/db" VERSION="20180620" COMMENT="XMLDB file for Moodle mod/league"
+<XMLDB PATH="mod/league/db" VERSION="20180621" COMMENT="XMLDB file for Moodle mod/league"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="league" COMMENT="Tabla principal de la actividad. Contiene el id de la liga y el curso al que pertenece.">
+    <TABLE NAME="league" COMMENT="Tabla principal de la actividad. Contiene el id de la liga y el curso al que pertenece." NEXT="exercise">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="course"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Identificador del curso" PREVIOUS="id" NEXT="name"/>
@@ -16,6 +16,24 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="fk-course"/>
         <KEY NAME="fk-course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id" COMMENT="FK de curso" PREVIOUS="primary"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="exercise" COMMENT="Tabla que almacena los ejercicios que pertenecen a la liga." PREVIOUS="league">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="course"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Referencia al curso al que pertenece." PREVIOUS="id" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Nombre del ejercicio" PREVIOUS="course" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Tiempo de modificación" PREVIOUS="name" NEXT="intro"/>
+        <FIELD NAME="intro" TYPE="text" LENGTH="big" NOTNULL="false" SEQUENCE="false" COMMENT="Intro" PREVIOUS="timemodified" NEXT="introformat"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Formato de intro" PREVIOUS="intro" NEXT="statement"/>
+        <FIELD NAME="statement" TYPE="text" LENGTH="big" NOTNULL="true" SEQUENCE="false" COMMENT="Enunciado del ejercicio." PREVIOUS="introformat" NEXT="enabled"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Indica si los estudiantes pueden realizar esa ejercicio." PREVIOUS="statement" NEXT="league"/>
+        <FIELD NAME="league" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Liga a la que pertenece la actividad." PREVIOUS="enabled"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="fk-course"/>
+        <KEY NAME="fk-course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id" COMMENT="FK del curso." PREVIOUS="primary" NEXT="fk-league"/>
+        <KEY NAME="fk-league" TYPE="foreign" FIELDS="league" REFTABLE="league" REFFIELDS="id" COMMENT="FK de leauge" PREVIOUS="fk-course"/>
       </KEYS>
     </TABLE>
   </TABLES>

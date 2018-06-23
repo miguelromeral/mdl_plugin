@@ -4,14 +4,25 @@
 require_once('../../config.php');
 require_once('lib.php');
 
+//Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
+$cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
+$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+$info = get_fast_modinfo($course);
+//print_object($info);
 
-$params = array();
-if ($cmid) {
-    $params['id'] = $cmid;
-}
-$PAGE->set_url('/mod/league/qualy.php', $params);
+/*
+ * La variable $PAGE configura la página
+ * La variable $OUTPUT muestra la página
+ */
 
+require_login($course, true, $cm);
+/*
+ * ABSOLUTAMENTE NECESARIO PONER EL URL.
+ * Por lo menos, el id, después se pueden poner otras 'key' => 'value'
+ * Convierte todo lo que le pasamos a un objeto moodle_url
+ */
+$PAGE->set_url('/mod/league/qualy.php', array('id' => $cm->id));
 
 if ($cmid) {
     if (!$cm = get_coursemodule_from_id('league', $cmid)) {
@@ -29,19 +40,30 @@ if ($cmid) {
 }
 
 
+/*
+ * ABSOLUTAMENTE NECESARIO. Podriamos poner:
+        $PAGE->set_context(context_system::instance());
+        $PAGE->set_context(context_coursecat::instance($categoryid));
+        $PAGE->set_context(context_course::instance($courseid));
+        $PAGE->set_context(context_module::instance($moduleid));
+ * dependiendo de nuestras necesidades
+ */
 $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 $PAGE->set_context($context);
 
-
+//Pone como diseño el estandar de Moodle
+$PAGE->set_pagelayout('standard');
 
 // Mark viewed if required
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
 // Print header.
-
 $PAGE->set_title(format_string($league->name));
+//$PAGE->add_body_class('forumtype-'.$league->type);
 $PAGE->set_heading(format_string($course->fullname));
+
+$output = $PAGE->get_renderer('mod_league');
 
 echo $OUTPUT->header();
 
@@ -61,13 +83,11 @@ $groupmode = groups_get_activity_groupmode($cm);
 
 $bc = new block_contents();
 
-//Comprobamos los roles del usuario que entran.
 $var="SELECT * 
 FROM mdl_role as er
 INNER JOIN mdl_role_assignments as era 
 ON era.roleid=er.id
 WHERE userid = $USER->id";
-
 $data = $DB->get_records_sql($var);
 $rol = null;
 foreach ($data as $rowclass)
@@ -82,7 +102,6 @@ foreach ($data as $rowclass)
             break;
     }
 }
-
 
 //Obtenemos la lista de alumnos matriculados en este curso.
 $var="SELECT
@@ -109,28 +128,18 @@ AND  roleid = 5
 AND c.id = 2
 
 ORDER BY c.fullname";
-
+/*
 echo "--> course\n". print_r($course);
 echo "--> CFG\n". print_r($CFG);
 echo "--> USER\n". print_r($USER);
 echo "--> cm\n". print_r($cm);
 echo "--> league\n". print_r($league);
+*/
+
+echo "<h1>".get_string('qualy_title', 'league')."</h1>";
 
 if ($rol == 'student'){
     ?>
-<h1>Actividades disponibles</h1>
-
-<h2>Subir actividades</h2>
-
-<div>Aquí se listarán todas las actividades que estén disponibles.</div>
-
-
-
-
-<h2>Ver clasificación</h2>
-<form action="qualy.php">
-    <input type="submit" value="<?= get_string('view_qualy_button', 'league') ?>" name="view_qualy" />
-</form>
 
 
 
@@ -142,4 +151,7 @@ if ($rol == 'student'){
 }else{
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
+
+echo $OUTPUT->footer();
+
 ?>

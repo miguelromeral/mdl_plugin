@@ -34,4 +34,33 @@ $string['noviewdiscussionspermission'] = 'No tiene los suficientes permisos para
  *      PÁGINA PRINCIPAL
  */
 
-$string['view_qualy_button'] = 'VER CLASIFICACIÓN';
+$string['view_qualy_button'] = 'Ver clasificación';
+$string['manage_exercises_button'] = 'Administrar ejercicios';
+$string['teacher_panel'] = 'Panel del profesor';
+
+/**
+ *      CLASIFICACIÓN
+ */
+
+$string['qualy_title'] = 'Clasificación';
+
+/**
+ *      ADMINISTRACIÓN DE EJERCICIOS
+ */
+
+$string['management_title'] = 'Administración';
+$string['add_exercise_button'] = 'Añadir ejercicio';
+
+/**
+ *      AÑADIR EJERCICIOS
+ */
+
+$string['add_exercise_title'] = 'Añadir nuevo ejercicio';
+$string['ae_name'] = 'Nombre del ejercicio';
+$string['ae_description'] = 'Descripción';
+$string['ae_enviar'] = 'Crear ejercicio';
+$string['ae_explanation'] = 'Los campos con * son obligatorios.';
+$string['ae_errors'] = 'Existen algunos errores en la creación del ejercicio:';
+$string['ae_error_name'] = 'El nombre del ejercicio debe tener entre 1 y 255 caractéres incluidos.';
+$string['ae_error_description'] = 'Debe proporcionar una descripción del ejercicio.';
+$string['ae_success'] = 'Creado con éxito el ejercicio. Actívelo en el panel de actividades.';

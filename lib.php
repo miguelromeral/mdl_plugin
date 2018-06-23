@@ -18,7 +18,7 @@ function league_add_instance(stdClass $league, mod_league_mod_form $mform = null
     $league->timemodified = time();
    
     
-    //print_r($league);
+    print_r($league);
     
     $league->id = $DB->insert_record('league', $league);
    
@@ -69,3 +69,27 @@ function league_delete_instance($id) {
     return true;
 }
 
+
+function exercise_add_instance($course, $name, $statement, $league) {
+    global $DB;
+    $record = new stdClass();
+    $record->course = $course;
+    $record->name = $name;
+    $record->timemodified = time();
+    $record->statement = $statement;
+    $record->intro = null;
+    $record->introformat = null;
+    $record->league = $league;
+    $record->enabled = 0;
+    
+    
+    print_r($record);
+    
+    $id = $DB->insert_record('exercise', $record);
+   
+    if($id){
+        return true;
+    }else{
+        return false;
+    }
+}

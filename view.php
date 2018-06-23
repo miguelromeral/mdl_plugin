@@ -105,7 +105,7 @@ foreach ($data as $rowclass)
 
 if ($rol == 'student'){
     
-    echo $output->inicio_estudiante();
+    //echo $output->inicio_estudiante();
     
     ?>
     
@@ -119,7 +119,22 @@ if ($rol == 'student'){
     <?php
     
 }else if($rol == 'teacher'){
-    echo "Página principal del profesor.";
+    ?>
+
+<h1><?= get_string('teacher_panel', 'league') ?></h1>
+<form action="management.php" method="get">
+    <input type="hidden" name="id" value="<?= $cmid ?>" />
+    <input type="hidden" name="lid" value="<?= $cm->id ?>" />
+    <input type="hidden" name="uid" value="<?= $USER->id ?>" />
+    <input type="submit" value="<?= get_string('manage_exercises_button', 'league') ?>"/>
+</form>
+<form action="qualy.php" method="get">
+    <input type="hidden" name="id" value="<?= $cmid ?>" />
+    <input type="submit" value="<?= get_string('view_qualy_button', 'league') ?>"/>
+</form>
+    
+
+    <?php
 }else{
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
