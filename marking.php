@@ -7,7 +7,7 @@ require_once('utilities.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
-$id_exer = required_param('id_exer', PARAM_INT);    // ID Ejercicio (-1 si no hay)
+$id_exer = required_param('id_exer', PARAM_INT);
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 $info = get_fast_modinfo($course);
@@ -52,7 +52,7 @@ $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
 // Print header.
-$PAGE->set_title(format_string(get_string('add_exercise_title', 'league')));
+$PAGE->set_title(format_string(get_string('management_title', 'league')));
 //$PAGE->add_body_class('forumtype-'.$league->type);
 $PAGE->set_heading(format_string($course->fullname));
 
@@ -76,7 +76,6 @@ $bc = new block_contents();
 
 // Recuperamos el ID del profesor y del modulo, si no coinciden, se mostrará un aviso para que salga.
 $var="SELECT c.id as course, c.shortname, u.id as teacher, u.username, u.firstname || ' ' || u.lastname AS name FROM mdl_course c LEFT OUTER JOIN mdl_context cx ON c.id = cx.instanceid LEFT OUTER JOIN mdl_role_assignments ra ON cx.id = ra.contextid AND ra.roleid = '3' LEFT OUTER JOIN mdl_user u ON ra.userid = u.id WHERE cx.contextlevel = '50' AND c.id = $cm->course AND u.id = $USER->id";
-
 $valido = $DB->get_records_sql($var);
 
 if($valido == 0){
@@ -84,83 +83,13 @@ if($valido == 0){
         Por desgracia, no pertenece a este curso
     <?php
 }else{
-    //Indica si los datos del formulario son correctos.
-    $correcto = false;
-    if($_POST)
-    {
-        $errores = "";
-        $name = $_POST['name'];
-        if(strlen($name) > 255 || empty($name)){
-            $errores .= (get_string('ae_error_name','league') . "<br>");
-        }
-        $statement = $_POST['description'];
-        if(empty($statement)){
-            $errores .= get_string('ae_error_description','league') . "<br>";
-        }
-        
-        if(empty($errores)){
-            $course = $cm->course;
-            $league = $league->id;
-            
-            if($id_exer == -1){
-                $correcto = exercise_add_instance($course, $name, $statement, $league);
-            }else{
-                $correcto = exercise_update_instance($course, $name, $statement, $league, $id_exer, 0);
-            }
-            
-        }else{
-             ?>
-        <div>
-            <?= get_string('ae_errors','league') ?><br>
-            <strong><?php echo $errores ?></strong><br>
-        </div>
-            <?php
-        }
-    }
-   
-    if($correcto){
-        ?>
-        
-            <?= get_string('ae_success','league') ?><br>
-            <form action="management.php" method="get">
-                <input type="hidden" name="id" value="<?= $cmid ?>" />
-                <input type="submit" value="<?= get_string('manage_exercises_button', 'league') ?>"/>
-            </form>
-            
-        <?php
-    }else{
-     
-        if($id_exer == -1){
-            echo "<h1>". get_string('add_exercise_title','league') ."</h1>";
-        }else{
-            echo "<h1>". get_string('modify_exercise_title','league') ."</h1>";
-            $name = required_param('exer_name', PARAM_CLEAN);
-            $description = required_param('exer_description', PARAM_CLEAN);
-        }
-        
-   ?>
-        
-        <form action="add_exercise.php" method="post">
-            <input type="hidden" name="id" value="<?= $cmid ?>" />
-            <input type="hidden" name="id_exer" value="<?= $id_exer ?>" />
-            <?= get_string('ae_name', 'league') ?>*<br>
-            <input type="text" name="name" <?php echo "value=\"".(isset($name) ? $name : "")."\"" ?>><br>
-            
-            <br><?= get_string('ae_description', 'league') ?>*<br>
-    <textarea name="description" rows="4" cols="50"><?php if(isset($description)){ echo "$description"; } ?></textarea><br>
-            
-            <br><input type="submit" value="<?php
-                if (isset($name)) { 
-                    echo get_string('ae_enviar_modificado', 'league');
-                } else { 
-                    echo get_string('ae_enviar', 'league'); 
-                }?>"/>
-        </form>
-        <?= get_string('ae_explanation', 'league') ?>
-        
-   <?php
-
-    }
-}
     
+    if($id_exer){
+        print_students_exercise($league->id, $cmid, $id_exer);
+    }
+    ?>
+        
+<?php
 echo $OUTPUT->footer();
+
+}

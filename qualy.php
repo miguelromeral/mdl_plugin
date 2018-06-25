@@ -59,7 +59,7 @@ $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
 // Print header.
-$PAGE->set_title(format_string($league->name));
+$PAGE->set_title(format_string(get_string('qualy_title', 'league')));
 //$PAGE->add_body_class('forumtype-'.$league->type);
 $PAGE->set_heading(format_string($course->fullname));
 

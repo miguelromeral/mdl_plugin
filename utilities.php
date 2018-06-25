@@ -19,6 +19,9 @@ function print_exercises($idliga, $rol, $cmid){
         <td>Ejercicio</td>
         <td>Fecha de modificación</td>
         <td>Habilitado</td>
+        <td><?= get_string('exercise', 'league') ?></td>
+        <td><?= get_string('timemofied', 'league') ?></td>
+        <td><?= get_string('enable', 'league') ?></td>
     </tr>
     
     <?php
@@ -67,8 +70,6 @@ function print_exercises($idliga, $rol, $cmid){
         </td><td><form action="marking.php" method="get" >
                 <input type="hidden" name="id" value="<?= $cmid ?>" />
                 <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
-                <input type="hidden" name="exer_name" value="<?= $exer['name'] ?>" />
-                <input type="hidden" name="exer_description" value="<?= $exer['statement'] ?>" />
                 <input type="submit" value="<?= get_string('mark_exercise', 'league') ?>"/>
             </form>
         </td>
@@ -88,9 +89,9 @@ function print_exercises($idliga, $rol, $cmid){
 <table border="1">
     <tr>
         <td>#</td>
-        <td>Ejercicio</td>
-        <td>Fecha de modificación</td>
-        <td>Enviar ejercicio</td>
+        <td><?= get_string('exercise', 'league') ?></td>
+        <td><?= get_string('timemofied', 'league') ?></td>
+        <td><?= get_string('send_exercise', 'league') ?></td>
     </tr>
     
     <?php
@@ -106,8 +107,9 @@ function print_exercises($idliga, $rol, $cmid){
         <td><?= $exer['name'] ?></td>
         <td><?= date("H:i:s, d (D) M Y", $exer['timemodified']) ?></td>
         <td>
-             <form action="upload.php" method="get" >
+             <form action="upload.php" method="post" >
                 <input type="hidden" name="id" value="<?= $cmid ?>" />
+                <input type="hidden" name="action" value="begin" />
                 <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
                 <input type="hidden" name="exer_name" value="<?= $exer['name'] ?>" />
                 <input type="hidden" name="exer_description" value="<?= $exer['statement'] ?>" />
@@ -125,4 +127,46 @@ function print_exercises($idliga, $rol, $cmid){
 <?php
         
     }
+}
+
+function print_students_exercise($idliga, $cmid, $id_exer){
+    global $DB;
+    //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
+    $var="SELECT * 
+    FROM mdl_exercise";
+    $data = $DB->get_records_sql($var);
+    
+    ?>
+
+<h1>Ejercicio TBD</h1>
+
+<table border="1">
+    <tr>
+        <td><?= get_string('student', 'league') ?></td>
+        <td><?= get_string('upload_time', 'league') ?></td>
+        <td><?= get_string('mark', 'league') ?></td>
+        <td><?= get_string('reviews', 'league') ?></td>
+        <td><?= get_string('download_file', 'league') ?></td>
+        <td><?= get_string('to_mark', 'league') ?></td>
+    </tr>
+    
+    <?php
+    foreach ($data as $exer)
+    {
+        $exer = json_decode(json_encode($exer), True);
+        print_r($exer);
+        ?>
+    <tr>
+        <td></td>
+        
+    </tr>
+    
+    <?php 
+    }
+    ?>
+    
+</table>
+
+<?php
+    
 }

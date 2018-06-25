@@ -13,6 +13,16 @@ $string['pluginname'] = 'League module';
 $string['fill_course'] = 'Introduce el ID del curso';
 $string['no'] = 'No';
 $string['yes'] = 'Sí';
+$string['exercise'] = 'Ejercicio';
+$string['timemofied'] = 'Fecha de modificación';
+$string['send_exercise'] = 'Enviar ejercicio';
+$string['enable'] = 'Habilitar';
+$string['student'] = 'Alumno';
+$string['upload_time'] = 'Fecha de subida';
+$string['mark'] = 'Nota';
+$string['reviews'] = 'Observaciones';
+$string['download_file'] = 'Descargar fichero';
+$string['to_mark'] = 'Corregir';
 
 
 /*
@@ -77,3 +87,14 @@ $string['ae_errors'] = 'Existen algunos errores en la creación del ejercicio:';
 $string['ae_error_name'] = 'El nombre del ejercicio debe tener entre 1 y 255 caractéres incluidos.';
 $string['ae_error_description'] = 'Debe proporcionar una descripción del ejercicio.';
 $string['ae_success'] = 'Creado con éxito el ejercicio. Actívelo en el panel de actividades.';
+
+/**
+ *      SUBIR EJERCICIOS (Por parte del alumno)
+ */
+
+$string['upload_title'] = 'Subir Ejercicio';
+$string['upload_exercise_file'] = 'Subir fichero';
+$string['ue_error_type'] = 'El tipo del fichero subido no es válido (Debe ser PDF).';
+$string['ue_error_unknown'] = 'Hubo un problema al cargar el fichero.';
+$string['ue_success'] = 'Fichero subido con éxito';
+$string['ue_error_max_size'] = 'Compruebe que el fichero está por debajo del límite del tamaño de un fichero a ser subido: ';

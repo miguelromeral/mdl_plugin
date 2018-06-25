@@ -122,7 +122,7 @@ if($valido == 0){
             ?>
             <div>
                 <strong><?php
-                if ($exer_enabled_post == 0){
+                if ($cambio == 0){
                     echo get_string('exercise_disabled', 'league');
                 } else {
                     echo get_string('exercise_enabled', 'league');
