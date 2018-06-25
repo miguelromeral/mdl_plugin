@@ -16,13 +16,14 @@ $string['yes'] = 'Sí';
 $string['exercise'] = 'Ejercicio';
 $string['timemofied'] = 'Fecha de modificación';
 $string['send_exercise'] = 'Enviar ejercicio';
-$string['enable'] = 'Habilitar';
+$string['enabled'] = 'Habilitado';
 $string['student'] = 'Alumno';
 $string['upload_time'] = 'Fecha de subida';
 $string['mark'] = 'Nota';
 $string['reviews'] = 'Observaciones';
 $string['download_file'] = 'Descargar fichero';
 $string['to_mark'] = 'Corregir';
+$string['modify'] = 'Modificar';
 
 
 /*

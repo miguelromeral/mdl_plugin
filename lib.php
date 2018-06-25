@@ -122,3 +122,26 @@ function exercise_delete_instance($id) {
     //newmodule_grade_item_delete($league);
     return true;
 }
+
+function attempt_add_instance($course, $id_user, $exercise, $task) {
+    global $DB;
+    $record = new stdClass();
+    $record->course = $course;
+    $time = time();
+    $record->name = "$id_user-$exercise-$time";
+    $record->timemodified = $time;
+    $record->id_user = $id_user;
+    $record->intro = null;
+    $record->introformat = null;
+    $record->exercise = $exercise;
+    $record->task = $task;
+    $record->mark = -1;
+  
+    $id = $DB->insert_record('attempt', $record);
+   
+    if($id){
+        return true;
+    }else{
+        return false;
+    }
+}

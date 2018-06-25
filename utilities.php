@@ -16,12 +16,9 @@ function print_exercises($idliga, $rol, $cmid){
 <table border="1">
     <tr>
         <td>#</td>
-        <td>Ejercicio</td>
-        <td>Fecha de modificación</td>
-        <td>Habilitado</td>
         <td><?= get_string('exercise', 'league') ?></td>
         <td><?= get_string('timemofied', 'league') ?></td>
-        <td><?= get_string('enable', 'league') ?></td>
+        <td><?= get_string('enabled', 'league') ?></td>
     </tr>
     
     <?php

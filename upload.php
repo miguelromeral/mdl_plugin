@@ -4,6 +4,7 @@
 require_once('../../config.php');
 require_once('lib.php');
 require_once('utilities.php');
+require_once('./upload_form.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
@@ -113,9 +114,6 @@ if($valido == 0){
     $correcto = false;
     if($_POST)
     {   
-        echo "--> POST: <br>";
-        print_r($_POST);
-        echo "<-- <br>";
         if ($_POST['action'] == 'begin'){
             ?>
         
@@ -123,7 +121,7 @@ if($valido == 0){
         <div><?= $_POST['exer_description'] ?></div>
         
         <br>
-        <form action="upload.php" method="post" enctype="multipart/form-data">
+        <!--<form action="upload.php" method="post" enctype="multipart/form-data">
 
             <input type="hidden" name="id" value="<?= $cmid ?>" />
             <input type="hidden" name="action" value="upload_file" />
@@ -133,33 +131,79 @@ if($valido == 0){
             <input type="submit" value="<?= get_string('upload_exercise_file', 'league') ?>" />
 
         </form>
+        -->
+        <?php
+        
+        $mform = new upload_form();
+        
+        //Form processing and displaying is done here
+        if ($mform->is_cancelled()) {
+            //Handle form cancel operation, if cancel button is present on form
+        } else if ($fromform = $mform->get_data()) {
+          //In this case you process validated data. $mform->get_data() returns data posted in form.
+        } else {
+          // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
+          // or on the first display of the form.
+
+          //Set default data (if any)
+          $mform->set_data($toform);
+          //displays the form
+          $mform->display();
+        }
         
         
             
-            <?php
         }else if($_POST['action'] == 'upload_file'){
             
+            //print_r($_POST);
+            
+            //echo "<br>--> User ID: $USER->id";
+            
+            $ejerc = null;
+            if($_POST['id_exer']){
+                $ejerc = $_POST['id_exer'];
+            }
+             
             print_r($_FILES);
             
-            $targetfolder = "/tmp/";
-            $targetfolder = $targetfolder . basename( $_FILES['file']['name']) ;
-            $ok=1;
-            $file_type=$_FILES['file']['type'];
+            if($_FILES["file"]["name"]){
+                $filename = $_FILES["file"]["name"];
+                $source = $_FILES["file"]["tmp_name"];
+                $type = $_FILES["file"]["type"];
 
-            echo "-> Máximo -> ".ini_get('upload_max_filesize');
-            
-            if ($file_type=="application/pdf") {
-                if(move_uploaded_file($_FILES['file']['tmp_name'], $targetfolder)){
-                    echo "<strong>". get_string('ue_success', 'league') . " ( ".basename( $_FILES['file']['name'])." )</strong><br>";
-                } else {
-               echo "<strong>". get_string('ue_error_unknown', 'league') ."<br>".
-                       get_string('ue_error_max_size', 'league') ." ".ini_get('upload_max_filesize')."</strong><br>";
+                $name = explode(".", $filename);
+                $accepted_types = array('application/zip', 'application/x-zip-compressed', 'multipart/x-zip', 'application/x-compressed');
+                foreach($accepted_types as $mime_type) {
+                        if($mime_type == $type) {
+                                $okay = true;
+                                break;
+                        } 
                 }
-           } else {
-               echo "<strong>". get_string('ue_error_type', 'league') ."<br>".
-                       get_string('ue_error_max_size', 'league') ." ".ini_get('upload_max_filesize')."</strong><br>";
-               
-           }
+                
+                $continue = strtolower($name[1]) == 'zip' ? true : false;
+                if(!$continue) {
+                        $message = "The file you are trying to upload is not a .zip file. Please try again.";
+                }
+
+                $target_path = "/tmp/".$filename;  // change this to the correct site path
+                if(move_uploaded_file($source, $target_path)) {
+                        $zip = new ZipArchive();
+                        $x = $zip->open($target_path);
+                        if ($x === true) {
+                                $zip->extractTo("/tmp/"); // change this to the correct site path
+                                $zip->close();
+                                unlink($target_path);
+                        }
+                        //call to lib function
+                        $message = "Your .zip file was uploaded and unpacked.";
+                } else {	
+                        $message = "There was a problem with the upload. Please try again.";
+                }
+                
+                echo "<strong>$message</strong>";
+            }
+            
+            
         }
     }
 }
