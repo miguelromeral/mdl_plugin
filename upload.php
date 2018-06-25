@@ -4,7 +4,7 @@
 require_once('../../config.php');
 require_once('lib.php');
 require_once('utilities.php');
-require_once('./upload_form.php');
+require_once('./forms.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID

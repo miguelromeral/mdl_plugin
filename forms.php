@@ -27,3 +27,38 @@ class upload_form extends moodleform {
         return array();
     }
 }
+
+//Formulario de creación de ficheros
+class exercise_form extends moodleform {
+    //Add elements to form
+    public function definition() {
+        global $CFG, $DB;
+        
+        $mform = $this->_form;
+        $id_exer = ($this->_customdata['id_exer'] ? $this->_customdata['id_exer'] : -1);
+        
+        if($id_exer == -1){
+            $mform->addElement('header', 'header_form', get_string('add_exercise_title','league'));
+        }else{
+            $mform->addElement('header', 'header_form', get_string('modify_exercise_title','league'));
+        }
+        //ID ejercicio
+        $mform->addElement('hidden', 'id_exer', $id_exer);
+        $mform->addElement('hidden', 'id', $this->_customdata['id']);
+        $mform->setType('id', PARAM_RAW);
+        //Nombre del ejercicio
+        $name = ($this->_customdata['name'] ? $this->_customdata['name'] : "");
+        $mform->addElement('text', 'name', get_string('ae_name', 'league'), array('size'=>'50'));
+        $mform->setDefault('name', $name);
+        //Descripción del ejercicio
+        $statement = ($this->_customdata['statement'] ? $this->_customdata['statement'] : "");
+        $mform->addElement('textarea', 'statement', get_string("introtext", "survey"), 'wrap="virtual" rows="20" cols="50"');
+        $mform->setDefault('statement', $statement);
+        
+        $this->add_action_buttons();
+    }
+    //Custom validation should be added here
+    function validation($data, $files) {
+        return array();
+    }
+}

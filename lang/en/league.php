@@ -24,6 +24,7 @@ $string['reviews'] = 'Observaciones';
 $string['download_file'] = 'Descargar fichero';
 $string['to_mark'] = 'Corregir';
 $string['modify'] = 'Modificar';
+$string['go_back'] = 'Volver';
 
 
 /*
@@ -78,6 +79,7 @@ $string['mark_exercise'] = 'Corregir';
  */
 
 $string['add_exercise_title'] = 'Añadir nuevo ejercicio';
+$string['ae_cancel'] = 'Cancelada la modificación del ejercicio';
 $string['modify_exercise_title'] = 'Modificar ejercicio';
 $string['ae_name'] = 'Nombre del ejercicio';
 $string['ae_description'] = 'Descripción';

@@ -48,8 +48,8 @@ function print_exercises($idliga, $rol, $cmid){
         <td><form action="add_exercise.php" method="get" >
                 <input type="hidden" name="id" value="<?= $cmid ?>" />
                 <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
-                <input type="hidden" name="exer_name" value="<?= $exer['name'] ?>" />
-                <input type="hidden" name="exer_description" value="<?= $exer['statement'] ?>" />
+                <input type="hidden" name="name" value="<?= $exer['name'] ?>" />
+                <input type="hidden" name="statement" value="<?= $exer['statement'] ?>" />
                 <input type="submit" value="<?= get_string('modify_exercise_button', 'league') ?>"/>
             </form>
         </td>

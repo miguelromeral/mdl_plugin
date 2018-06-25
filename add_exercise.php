@@ -4,6 +4,7 @@
 require_once('../../config.php');
 require_once('lib.php');
 require_once('utilities.php');
+require_once('./forms.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
@@ -84,83 +85,76 @@ if($valido == 0){
         Por desgracia, no pertenece a este curso
     <?php
 }else{
-    //Indica si los datos del formulario son correctos.
-    $correcto = false;
-    if($_POST)
-    {
-        $errores = "";
-        $name = $_POST['name'];
-        if(strlen($name) > 255 || empty($name)){
-            $errores .= (get_string('ae_error_name','league') . "<br>");
-        }
-        $statement = $_POST['description'];
-        if(empty($statement)){
-            $errores .= get_string('ae_error_description','league') . "<br>";
-        }
-        
-        if(empty($errores)){
-            $course = $cm->course;
-            $league = $league->id;
-            
-            if($id_exer == -1){
-                $correcto = exercise_add_instance($course, $name, $statement, $league);
-            }else{
-                $correcto = exercise_update_instance($course, $name, $statement, $league, $id_exer, 0);
-            }
-            
-        }else{
-             ?>
-        <div>
-            <?= get_string('ae_errors','league') ?><br>
-            <strong><?php echo $errores ?></strong><br>
-        </div>
-            <?php
-        }
-    }
-   
-    if($correcto){
-        ?>
-        
-            <?= get_string('ae_success','league') ?><br>
-            <form action="management.php" method="get">
-                <input type="hidden" name="id" value="<?= $cmid ?>" />
-                <input type="submit" value="<?= get_string('manage_exercises_button', 'league') ?>"/>
-            </form>
-            
-        <?php
-    }else{
+    
      
         if($id_exer == -1){
-            echo "<h1>". get_string('add_exercise_title','league') ."</h1>";
+            $mform = new exercise_form(null,
+                    array('id'=>$cmid,
+                        'id_exer'=>-1));
         }else{
-            echo "<h1>". get_string('modify_exercise_title','league') ."</h1>";
-            $name = required_param('exer_name', PARAM_CLEAN);
-            $description = required_param('exer_description', PARAM_CLEAN);
+            $name = required_param('name', PARAM_TEXT);
+            $description = required_param('statement', PARAM_TEXT);
+            $mform = new exercise_form(null,
+                    array('id'=>$cmid,
+                        'id_exer'=>$id_exer,
+                        'name'=>$name,
+                        'statement'=>$description));
         }
         
-   ?>
         
-        <form action="add_exercise.php" method="post">
-            <input type="hidden" name="id" value="<?= $cmid ?>" />
-            <input type="hidden" name="id_exer" value="<?= $id_exer ?>" />
-            <?= get_string('ae_name', 'league') ?>*<br>
-            <input type="text" name="name" <?php echo "value=\"".(isset($name) ? $name : "")."\"" ?>><br>
-            
-            <br><?= get_string('ae_description', 'league') ?>*<br>
-    <textarea name="description" rows="4" cols="50"><?php if(isset($description)){ echo "$description"; } ?></textarea><br>
-            
-            <br><input type="submit" value="<?php
-                if (isset($name)) { 
-                    echo get_string('ae_enviar_modificado', 'league');
-                } else { 
-                    echo get_string('ae_enviar', 'league'); 
-                }?>"/>
-        </form>
-        <?= get_string('ae_explanation', 'league') ?>
+        //Form processing and displaying is done here
+        if ($mform->is_cancelled()) {
+            ?>
+                <h1><?= get_string('ae_cancel','league') ?></h1>
+                <form action="management.php" method="get" >
+                    <input type="hidden" name="id" value="<?= $cmid ?>" />
+                    <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
+                </form>
         
-   <?php
+            <?php
+        } else if ($formdata = $mform->get_data()) {
+            $errores = "";
+            $name = $formdata->name;
+            if(strlen($name) > 255 || empty($name)){
+                $errores .= (get_string('ae_error_name','league') . "<br>");
+            }
+            $statement = $formdata->statement;
+            if(empty($statement)){
+                $errores .= get_string('ae_error_description','league') . "<br>";
+            }
 
-    }
+            if(empty($errores)){
+                $course = $cm->course;
+                $league = $league->id;
+
+                if($id_exer == -1){
+                    $correcto = exercise_add_instance($course, $name, $statement, $league);
+                }else{
+                    $correcto = exercise_update_instance($course, $name, $statement, $league, $id_exer, 0);
+                }
+                
+                if($correcto){
+                    ?>
+                    <?= get_string('ae_success','league') ?><br>
+                        <form action="management.php" method="get">
+                            <input type="hidden" name="id" value="<?= $cmid ?>" />
+                            <input type="submit" value="<?= get_string('manage_exercises_button', 'league') ?>"/>
+                        </form>
+                    <?php
+                }
+            }else{
+                 ?>
+            <div>
+                <?= get_string('ae_errors','league') ?><br>
+                <strong><?php echo $errores ?></strong><br>
+            </div>
+                <?php
+            }
+        } else {
+          //displays the form
+          $mform->display();
+        }
+
 }
     
 echo $OUTPUT->footer();
