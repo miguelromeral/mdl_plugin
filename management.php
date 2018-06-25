@@ -84,34 +84,53 @@ if($valido == 0){
 }else{
     if($_POST)
     {
-        /*
-         * "id" value="<?= $cmid ?>" />
-                <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
-                <input type="hidden" name="exer_name" value="<?= $exer['name'] ?>" />
-                <input type="hidden" name="exer_description" value="<?= $exer['statement'] ?>" />
-                <input type="hidden" name="exer_enabled"
-         */
-        
         $id_exer_post = $_POST['id_exer'];
         $exer_name_post = $_POST['exer_name'];
         $exer_description_post = $_POST['exer_description'];
-        $exer_enabled_post = ($_POST['exer_enabled'] == 0 ? 1 : 0);
+        $exer_enabled_post = $_POST['exer_enabled'];
         $course = $cm->course;
         $league_post = $league->id;
+
+        if ($_POST['action'] == 'delete'){
             
-        exercise_update_instance($course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $exer_enabled_post);
-        
-        ?>
-        <div>
-            <strong><?php
+            $exito = false;
+            
+            //Si está deshabilitado, podremos eliminarlo
             if ($exer_enabled_post == 0){
-                echo get_string('exercise_disabled', 'league');
-            } else {
-                echo get_string('exercise_enabled', 'league');
+                $exito = exercise_delete_instance($id_exer_post);
             }
-            ?></strong><br>
-        </div>
-        <?php
+            
+            ?>
+            <div>
+                <strong><?php
+                if ($exito){
+                    echo get_string('exercise_deleted', 'league');
+                } else {
+                    echo get_string('exercise_not_deleted', 'league');
+                }
+                ?></strong><br>
+            </div>
+            <?php
+            
+        } else if ($_POST['action'] == 'enable_disable'){
+
+            //Negamos el cambio, si estába des, lo activamos, y si estaba activado, lo des.
+            $cambio = ($exer_enabled_post == 0 ? 1 : 0);
+            
+            exercise_update_instance($course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $cambio);
+
+            ?>
+            <div>
+                <strong><?php
+                if ($exer_enabled_post == 0){
+                    echo get_string('exercise_disabled', 'league');
+                } else {
+                    echo get_string('exercise_enabled', 'league');
+                }
+                ?></strong><br>
+            </div>
+            <?php
+        }
         
     }
     

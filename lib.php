@@ -81,10 +81,7 @@ function exercise_add_instance($course, $name, $statement, $league) {
     $record->introformat = null;
     $record->league = $league;
     $record->enabled = 0;
-    
-    
-    print_r($record);
-    
+  
     $id = $DB->insert_record('exercise', $record);
    
     if($id){
@@ -113,4 +110,15 @@ function exercise_update_instance($course, $name, $statement, $league, $idexer, 
     }else{
         return false;
     }
+}
+
+function exercise_delete_instance($id) {
+    global $DB;
+    if (! $exercise = $DB->get_record('exercise', array('id' => $id))) {
+        return false;
+    }
+    // Delete any dependent records here.
+    $DB->delete_records('exercise', array('id' => $exercise->id));
+    //newmodule_grade_item_delete($league);
+    return true;
 }

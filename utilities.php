@@ -31,11 +31,16 @@ function print_exercises($idliga, $rol, $cmid){
         <td><?= $exer['name'] ?></td>
         <td><?= date("H:i:s, d (D) M Y", $exer['timemodified']) ?></td>
         <td><?= ($exer['enabled'] == 0 ? get_string('no','league') : "<i><strong>".get_string('yes','league')."</strong></i>") ?></td>
-        <td><a href="a_eliminar">
-            <img border="0" src="images/delete.png" width="20" height="20">
-            
-            
-            </a>
+        <td>
+            <form action="management.php" method="post" >
+                <input type="hidden" name="id" value="<?= $cmid ?>" />
+                <input type="hidden" name="action" value="delete" />
+                <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
+                <input type="hidden" name="exer_name" value="<?= $exer['name'] ?>" />
+                <input type="hidden" name="exer_description" value="<?= $exer['statement'] ?>" />
+                <input type="hidden" name="exer_enabled" value="<?= $exer['enabled'] ?>" />
+                <input type="image" name="submit_red"  value="red"  alt="red " src="images/delete.png" width="20" height="20">
+            </form>
             
             
         </td>
