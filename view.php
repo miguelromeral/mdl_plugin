@@ -3,6 +3,7 @@
 
 require_once('../../config.php');
 require_once('lib.php');
+require_once('utilities.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
@@ -106,6 +107,8 @@ foreach ($data as $rowclass)
 if ($rol == 'student'){
     
     //echo $output->inicio_estudiante();
+    
+    print_exercises($league->id, 'student', $cmid);
     
     ?>
     

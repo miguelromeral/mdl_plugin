@@ -59,6 +59,8 @@ $string['exercise_enabled'] = 'El ejercicio está habilitado para todos los alum
 $string['exercise_disabled'] = 'El ejercicio está deshabilitado. Los alumnos no pueden ver este ejercicio actualmente.';
 $string['exercise_deleted'] = 'El ejercicio ha sido eliminado con éxito.';
 $string['exercise_not_deleted'] = 'No se ha podido eliminar el ejercicio.';
+$string['upload_exercise'] = 'Subir ejercicio';
+$string['mark_exercise'] = 'Corregir';
 
 /**
  *      AÑADIR EJERCICIOS

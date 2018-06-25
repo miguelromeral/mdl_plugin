@@ -4,7 +4,8 @@ function print_exercises($idliga, $rol, $cmid){
     global $DB;
     $var="SELECT * 
     FROM mdl_exercise
-    WHERE league = $idliga";
+    WHERE league = $idliga
+    ORDER BY id";
     $data = $DB->get_records_sql($var);
     $num = 1;
     
@@ -63,6 +64,13 @@ function print_exercises($idliga, $rol, $cmid){
                 ($exer['enabled'] == 0 ? get_string('enable_exercise_button', 'league') : get_string('disable_exercise_button', 'league')) 
             ?>"/>
             </form>
+        </td><td><form action="marking.php" method="get" >
+                <input type="hidden" name="id" value="<?= $cmid ?>" />
+                <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
+                <input type="hidden" name="exer_name" value="<?= $exer['name'] ?>" />
+                <input type="hidden" name="exer_description" value="<?= $exer['statement'] ?>" />
+                <input type="submit" value="<?= get_string('mark_exercise', 'league') ?>"/>
+            </form>
         </td>
     </tr>
         <?php
@@ -75,6 +83,46 @@ function print_exercises($idliga, $rol, $cmid){
 
     } else if ($rol == 'student'){
         
+        ?>
+
+<table border="1">
+    <tr>
+        <td>#</td>
+        <td>Ejercicio</td>
+        <td>Fecha de modificación</td>
+        <td>Enviar ejercicio</td>
+    </tr>
+    
+    <?php
+    foreach ($data as $exer)
+    {
+        $exer = json_decode(json_encode($exer), True);
+        
+        if($exer['enabled'] == 1){
+        
+        ?>
+    <tr>
+        <td><?= $num ?></td>
+        <td><?= $exer['name'] ?></td>
+        <td><?= date("H:i:s, d (D) M Y", $exer['timemodified']) ?></td>
+        <td>
+             <form action="upload.php" method="get" >
+                <input type="hidden" name="id" value="<?= $cmid ?>" />
+                <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
+                <input type="hidden" name="exer_name" value="<?= $exer['name'] ?>" />
+                <input type="hidden" name="exer_description" value="<?= $exer['statement'] ?>" />
+                <input type="submit" value="<?= get_string('upload_exercise', 'league') ?>"/>
+            </form>
+        </td>
+    </tr>
+        <?php
+        $num += 1;
+        }
+    }
+    
+?>
+</table>
+<?php
         
     }
 }
