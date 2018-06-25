@@ -82,17 +82,57 @@ if($valido == 0){
         Por desgracia, no pertenece a este curso
     <?php
 }else{
+    if($_POST)
+    {
+        /*
+         * "id" value="<?= $cmid ?>" />
+                <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
+                <input type="hidden" name="exer_name" value="<?= $exer['name'] ?>" />
+                <input type="hidden" name="exer_description" value="<?= $exer['statement'] ?>" />
+                <input type="hidden" name="exer_enabled"
+         */
+        
+        $id_exer_post = $_POST['id_exer'];
+        $exer_name_post = $_POST['exer_name'];
+        $exer_description_post = $_POST['exer_description'];
+        $exer_enabled_post = ($_POST['exer_enabled'] == 0 ? 1 : 0);
+        $course = $cm->course;
+        $league_post = $league->id;
+            
+        exercise_update_instance($course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $exer_enabled_post);
+        
+        ?>
+        <div>
+            <strong><?php
+            if ($exer_enabled_post == 0){
+                echo get_string('exercise_disabled', 'league');
+            } else {
+                echo get_string('exercise_enabled', 'league');
+            }
+            ?></strong><br>
+        </div>
+        <?php
+        
+    }
+    
+    
+    
+    
     
     //Aquí mostraremos una lista con todas las actividades
-    print_exercises($cm->course);
+    print_exercises($league->id, 'teacher', $cmid);
 
     ?>
     
     <form action="add_exercise.php" method="get">
         <input type="hidden" name="id" value="<?= $cmid ?>" />
+        <input type="hidden" name="id_exer" value="-1" />
         <input type="submit" value="<?= get_string('add_exercise_button', 'league') ?>"/>
     </form>
     
+
+
+<script src="scripts/checker.js"></script> 
         
 <?php
 echo $OUTPUT->footer();

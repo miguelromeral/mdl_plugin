@@ -7,6 +7,7 @@ require_once('utilities.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
+$id_exer = required_param('id_exer', PARAM_INT);    // ID Ejercicio (-1 si no hay)
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 $info = get_fast_modinfo($course);
@@ -75,6 +76,7 @@ $bc = new block_contents();
 
 // Recuperamos el ID del profesor y del modulo, si no coinciden, se mostrará un aviso para que salga.
 $var="SELECT c.id as course, c.shortname, u.id as teacher, u.username, u.firstname || ' ' || u.lastname AS name FROM mdl_course c LEFT OUTER JOIN mdl_context cx ON c.id = cx.instanceid LEFT OUTER JOIN mdl_role_assignments ra ON cx.id = ra.contextid AND ra.roleid = '3' LEFT OUTER JOIN mdl_user u ON ra.userid = u.id WHERE cx.contextlevel = '50' AND c.id = $cm->course AND u.id = $USER->id";
+
 $valido = $DB->get_records_sql($var);
 
 if($valido == 0){
@@ -96,12 +98,16 @@ if($valido == 0){
             $errores .= get_string('ae_error_description','league') . "<br>";
         }
         
-        print_r($_POST);
-        
         if(empty($errores)){
             $course = $cm->course;
             $league = $league->id;
-            $correcto = exercise_add_instance($course, $name, $statement, $league);
+            
+            if($id_exer == -1){
+                $correcto = exercise_add_instance($course, $name, $statement, $league);
+            }else{
+                $correcto = exercise_update_instance($course, $name, $statement, $league, $id_exer, 0);
+            }
+            
         }else{
              ?>
         <div>
@@ -124,17 +130,31 @@ if($valido == 0){
         <?php
     }else{
      
+        if($id_exer == -1){
+            echo "<h1>". get_string('add_exercise_title','league') ."</h1>";
+        }else{
+            echo "<h1>". get_string('modify_exercise_title','league') ."</h1>";
+            $name = required_param('exer_name', PARAM_CLEAN);
+            $description = required_param('exer_description', PARAM_CLEAN);
+        }
+        
    ?>
-        <h1><?= get_string('add_exercise_title','league') ?></h1>
+        
         <form action="add_exercise.php" method="post">
             <input type="hidden" name="id" value="<?= $cmid ?>" />
+            <input type="hidden" name="id_exer" value="<?= $id_exer ?>" />
             <?= get_string('ae_name', 'league') ?>*<br>
-            <input type="text" name="name"><br>
+            <input type="text" name="name" <?php echo "value=\"".(isset($name) ? $name : "")."\"" ?>><br>
             
             <br><?= get_string('ae_description', 'league') ?>*<br>
-            <textarea name="description" rows="4" cols="50"></textarea><br>
+    <textarea name="description" rows="4" cols="50"><?php if(isset($description)){ echo "$description"; } ?></textarea><br>
             
-            <br><input type="submit" value="<?= get_string('ae_enviar', 'league') ?>"/>
+            <br><input type="submit" value="<?php
+                if (isset($name)) { 
+                    echo get_string('ae_enviar_modificado', 'league');
+                } else { 
+                    echo get_string('ae_enviar', 'league'); 
+                }?>"/>
         </form>
         <?= get_string('ae_explanation', 'league') ?>
         

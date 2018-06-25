@@ -93,3 +93,24 @@ function exercise_add_instance($course, $name, $statement, $league) {
         return false;
     }
 }
+
+function exercise_update_instance($course, $name, $statement, $league, $idexer, $enabled) {
+    global $DB;
+    $record = new stdClass();
+    $record->id = $idexer;
+    $record->course = $course;
+    $record->name = $name;
+    $record->timemodified = time();
+    $record->statement = $statement;
+    $record->intro = null;
+    $record->introformat = null;
+    $record->league = $league;
+    $record->enabled = $enabled;
+    $id = $DB->update_record('exercise', $record);
+    
+    if($id){
+        return true;
+    }else{
+        return false;
+    }
+}

@@ -11,6 +11,8 @@ $string['modulenameplural'] = 'Activities League';
 $string['pluginadministration'] = 'League Administration';
 $string['pluginname'] = 'League module';
 $string['fill_course'] = 'Introduce el ID del curso';
+$string['no'] = 'No';
+$string['yes'] = 'Sí';
 
 
 /*
@@ -50,15 +52,22 @@ $string['qualy_title'] = 'Clasificación';
 
 $string['management_title'] = 'Administración';
 $string['add_exercise_button'] = 'Añadir ejercicio';
+$string['modify_exercise_button'] = 'Modificar';
+$string['enable_exercise_button'] = 'Habilitar';
+$string['disable_exercise_button'] = 'Deshabilitar';
+$string['exercise_enabled'] = 'El ejercicio está habilitado para todos los alumnos del curso. Ahora podrán subir la tarea.';
+$string['exercise_disabled'] = 'El ejercicio está deshabilitado. Los alumnos no pueden ver este ejercicio actualmente.';
 
 /**
  *      AÑADIR EJERCICIOS
  */
 
 $string['add_exercise_title'] = 'Añadir nuevo ejercicio';
+$string['modify_exercise_title'] = 'Modificar ejercicio';
 $string['ae_name'] = 'Nombre del ejercicio';
 $string['ae_description'] = 'Descripción';
 $string['ae_enviar'] = 'Crear ejercicio';
+$string['ae_enviar_modificado'] = 'Modificar ejercicio';
 $string['ae_explanation'] = 'Los campos con * son obligatorios.';
 $string['ae_errors'] = 'Existen algunos errores en la creación del ejercicio:';
 $string['ae_error_name'] = 'El nombre del ejercicio debe tener entre 1 y 255 caractéres incluidos.';
