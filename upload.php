@@ -13,6 +13,11 @@ $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 $info = get_fast_modinfo($course);
 //print_object($info);
+$component='mod_league';
+$filearea='userfile';
+$options = array('subdirs' => 0, 'maxbytes' => 0, 'areamaxbytes' => 10485760, 'maxfiles' => 50,
+        'accepted_types' => array('image', 'document', 'application/pdf', 'application/zip', 'presentation',
+        'application/vnd.openxmlformats-officedocument.presentationml.template'));        
 
 /*
  * La variable $PAGE configura la página
@@ -43,6 +48,7 @@ if ($cmid) {
 }
 
 $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+$contextid = $context->id;
 $PAGE->set_context($context);
 
 //Pone como diseño el estandar de Moodle
@@ -110,12 +116,13 @@ if($valido == 0){
         Por desgracia, no pertenece a este curso
     <?php
 }else{
-    
+        $maxbytes = 10000000;
         $mform = new upload_form(null,
                     array('id'=>$cmid,
                         'id_exer'=>$id_exer,
                         'name'=>$_POST['name'],
-                        'statement'=>$_POST['statement']));
+                        'statement'=>$_POST['statement'],
+                        'max_bytes'=>$maxbytes));
         
         //Form processing and displaying is done here
         if ($mform->is_cancelled()) {
@@ -128,14 +135,13 @@ if($valido == 0){
         
             <?php
         } else if ($formdata = $mform->get_data()) {
-            $content = $mform->get_file_content('userfile');
-            $name = $mform->get_new_filename('userfile');
+            $name = $id_exer."_".$USER->id."_".time()."-".$mform->get_new_filename('userfile');
             $folder = "/home/league";
-            $fullpath = $folder."/".$id_exer."_".$USER->id."_".time()."-".$name;
+            $fullpath = $folder."/".$name;
             $success = $mform->save_file('userfile', $fullpath, false); //Que no se sobrescriban
             
-            if ($success = 1){
-                $correcto = attempt_add_instance($course->id, $USER->id, $id_exer, $content, $fullpath);
+            if ($success == 1){
+                $correcto = attempt_add_instance($course->id, $USER->id, $id_exer, null, $name);
                 if($correcto){
                     ?>
                     <?= get_string('ue_success','league') ?><br>
@@ -146,10 +152,7 @@ if($valido == 0){
                     <?php
                 }
             }
-            
-            
             /*
-            
             $ejerc = $formdata->name;
              
             print_r($_FILES);

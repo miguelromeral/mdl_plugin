@@ -9,7 +9,6 @@ class upload_form extends moodleform {
     public function definition() {
         global $CFG, $DB;
         
-        $maxbytes = 10000000;
         $mform = $this->_form; // Don't forget the underscore! 
         
         $mform->addElement('hidden', 'id_exer', $this->_customdata['id_exer']);
@@ -18,14 +17,9 @@ class upload_form extends moodleform {
         $mform->addElement('hidden', 'statement', $this->_customdata['statement']);
         
         
-        //$mform->addElement('filepicker', 'userfile', get_string('upload_exercise', 'league'), null,
-        //           array('maxbytes' => $maxbytes, 'accepted_types' => '*'));
-        //$mform->addRule('userfile', null, 'required', null, 'client');
-        
-        $mform->addElement('filemanager', 'userfile', get_string('attachment', 'moodle'), null,
-                    array('subdirs' => 0, 'maxbytes' => $maxbytes, 'areamaxbytes' => 10485760,
-                           'return_types'=> FILE_INTERNAL | FILE_EXTERNAL));
-        //ECHAR UN OJO A LOS ACCEPTED_TYPES
+        $mform->addElement('filepicker', 'userfile', get_string('upload_exercise', 'league'), null,
+                   array('maxbytes' => $this->_customdata['max_bytes'], 'accepted_types' => '*'));
+        $mform->addRule('userfile', null, 'required', null, 'client');
         
         
         $this->add_action_buttons();
