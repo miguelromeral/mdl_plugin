@@ -24,7 +24,7 @@ require_login($course, true, $cm);
  * Por lo menos, el id, después se pueden poner otras 'key' => 'value'
  * Convierte todo lo que le pasamos a un objeto moodle_url
  */
-$PAGE->set_url('/mod/league/management.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/league/marking.php', array('id' => $cm->id));
 
 if ($cmid) {
     if (!$cm = get_coursemodule_from_id('league', $cmid)) {
@@ -85,7 +85,8 @@ if($valido == 0){
 }else{
     
     if($id_exer){
-        print_students_exercise($league->id, $cmid, $id_exer);
+        $name_exer = required_param('name', PARAM_TEXT);
+        print_students_exercise($cmid, $id_exer, $name_exer);
     }
     ?>
         

@@ -25,7 +25,7 @@ require_login($course, true, $cm);
  * Por lo menos, el id, después se pueden poner otras 'key' => 'value'
  * Convierte todo lo que le pasamos a un objeto moodle_url
  */
-$PAGE->set_url('/mod/league/management.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/league/upload.php', array('id' => $cm->id));
 
 if ($cmid) {
     if (!$cm = get_coursemodule_from_id('league', $cmid)) {
@@ -110,59 +110,47 @@ if($valido == 0){
         Por desgracia, no pertenece a este curso
     <?php
 }else{
-    //Indica si los datos del formulario son correctos.
-    $correcto = false;
-    if($_POST)
-    {   
-        if ($_POST['action'] == 'begin'){
-            ?>
-        
-        <h1><?= $_POST['exer_name'] ?></h1>
-        <div><?= $_POST['exer_description'] ?></div>
-        
-        <br>
-        <!--<form action="upload.php" method="post" enctype="multipart/form-data">
-
-            <input type="hidden" name="id" value="<?= $cmid ?>" />
-            <input type="hidden" name="action" value="upload_file" />
-            <input type="hidden" name="id_exer" value="<?= $id_exer ?>" />
-            <input type="file" name="file" size="50" />
-            <br />
-            <input type="submit" value="<?= get_string('upload_exercise_file', 'league') ?>" />
-
-        </form>
-        -->
-        <?php
-        
-        $mform = new upload_form();
+    
+        $mform = new upload_form(null,
+                    array('id'=>$cmid,
+                        'id_exer'=>$id_exer,
+                        'name'=>$_POST['name'],
+                        'statement'=>$_POST['statement']));
         
         //Form processing and displaying is done here
         if ($mform->is_cancelled()) {
-            //Handle form cancel operation, if cancel button is present on form
-        } else if ($fromform = $mform->get_data()) {
-          //In this case you process validated data. $mform->get_data() returns data posted in form.
-        } else {
-          // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
-          // or on the first display of the form.
-
-          //Set default data (if any)
-          $mform->set_data($toform);
-          //displays the form
-          $mform->display();
-        }
+            ?>
+                <h1><?= get_string('ue_cancel','league') ?></h1>
+                <form action="view.php" method="get" >
+                    <input type="hidden" name="id" value="<?= $cmid ?>" />
+                    <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
+                </form>
         
-        
+            <?php
+        } else if ($formdata = $mform->get_data()) {
+            $content = $mform->get_file_content('userfile');
+            $name = $mform->get_new_filename('userfile');
+            $folder = "/home/league";
+            $fullpath = $folder."/".$id_exer."_".$USER->id."_".time()."-".$name;
+            $success = $mform->save_file('userfile', $fullpath, false); //Que no se sobrescriban
             
-        }else if($_POST['action'] == 'upload_file'){
-            
-            //print_r($_POST);
-            
-            //echo "<br>--> User ID: $USER->id";
-            
-            $ejerc = null;
-            if($_POST['id_exer']){
-                $ejerc = $_POST['id_exer'];
+            if ($success = 1){
+                $correcto = attempt_add_instance($course->id, $USER->id, $id_exer, $content, $fullpath);
+                if($correcto){
+                    ?>
+                    <?= get_string('ue_success','league') ?><br>
+                        <form action="view.php" method="get">
+                            <input type="hidden" name="id" value="<?= $cmid ?>" />
+                            <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
+                        </form>
+                    <?php
+                }
             }
+            
+            
+            /*
+            
+            $ejerc = $formdata->name;
              
             print_r($_FILES);
             
@@ -201,11 +189,20 @@ if($valido == 0){
                 }
                 
                 echo "<strong>$message</strong>";
-            }
-            
-            
+            }*/
+        } else {
+        ?>
+
+            <h1><?= $_POST['name'] ?></h1>
+            <div><?= $_POST['statement'] ?></div>
+            <br>
+
+
+        <?php
+          //displays the form
+          $mform->display();
         }
     }
-}
+
     
 echo $OUTPUT->footer();

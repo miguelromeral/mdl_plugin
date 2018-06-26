@@ -12,12 +12,20 @@ class upload_form extends moodleform {
         $maxbytes = 10000000;
         $mform = $this->_form; // Don't forget the underscore! 
         
-        $mform->addElement('text', 'action', "TMP: Accion: (upload_file)", array('size'=>'64'));
-        $mform->setType('action', PARAM_TEXT);
-        $mform->addRule('action', null, 'required', null, 'client');
-        $mform->addElement('filepicker', 'userfile', get_string('upload_exercise', 'league'), null,
-                   array('maxbytes' => $maxbytes, 'accepted_types' => '*'));
-        $mform->addRule('action', null, 'required', null, 'client');
+        $mform->addElement('hidden', 'id_exer', $this->_customdata['id_exer']);
+        $mform->addElement('hidden', 'id', $this->_customdata['id']);
+        $mform->addElement('hidden', 'name', $this->_customdata['name']);
+        $mform->addElement('hidden', 'statement', $this->_customdata['statement']);
+        
+        
+        //$mform->addElement('filepicker', 'userfile', get_string('upload_exercise', 'league'), null,
+        //           array('maxbytes' => $maxbytes, 'accepted_types' => '*'));
+        //$mform->addRule('userfile', null, 'required', null, 'client');
+        
+        $mform->addElement('filemanager', 'userfile', get_string('attachment', 'moodle'), null,
+                    array('subdirs' => 0, 'maxbytes' => $maxbytes, 'areamaxbytes' => 10485760,
+                           'return_types'=> FILE_INTERNAL | FILE_EXTERNAL));
+        //ECHAR UN OJO A LOS ACCEPTED_TYPES
         
         
         $this->add_action_buttons();

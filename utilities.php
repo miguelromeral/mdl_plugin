@@ -67,6 +67,7 @@ function print_exercises($idliga, $rol, $cmid){
         </td><td><form action="marking.php" method="get" >
                 <input type="hidden" name="id" value="<?= $cmid ?>" />
                 <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
+                <input type="hidden" name="name" value="<?= $exer['name'] ?>" />
                 <input type="submit" value="<?= get_string('mark_exercise', 'league') ?>"/>
             </form>
         </td>
@@ -108,8 +109,8 @@ function print_exercises($idliga, $rol, $cmid){
                 <input type="hidden" name="id" value="<?= $cmid ?>" />
                 <input type="hidden" name="action" value="begin" />
                 <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
-                <input type="hidden" name="exer_name" value="<?= $exer['name'] ?>" />
-                <input type="hidden" name="exer_description" value="<?= $exer['statement'] ?>" />
+                <input type="hidden" name="name" value="<?= $exer['name'] ?>" />
+                <input type="hidden" name="statement" value="<?= $exer['statement'] ?>" />
                 <input type="submit" value="<?= get_string('upload_exercise', 'league') ?>"/>
             </form>
         </td>
@@ -126,16 +127,25 @@ function print_exercises($idliga, $rol, $cmid){
     }
 }
 
-function print_students_exercise($idliga, $cmid, $id_exer){
+function print_students_exercise($cmid, $id_exer, $name){
     global $DB;
     //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
-    $var="SELECT * 
-    FROM mdl_exercise";
+    $var="select *
+    from mdl_attempt as a
+    inner join (
+            select c.id, c.id_user, d.firstname, d.lastname
+            from mdl_attempt as c
+            inner join mdl_user as d
+            on c.id_user = d.id
+            where c.exercise = $id_exer
+            order by c.id desc
+            limit 1
+    ) as b
+    on a.id = b.id";
     $data = $DB->get_records_sql($var);
-    
     ?>
 
-<h1>Ejercicio TBD</h1>
+<h1><?= $name ?></h1>
 
 <table border="1">
     <tr>
@@ -148,20 +158,40 @@ function print_students_exercise($idliga, $cmid, $id_exer){
     </tr>
     
     <?php
-    foreach ($data as $exer)
-    {
-        $exer = json_decode(json_encode($exer), True);
-        print_r($exer);
-        ?>
-    <tr>
-        <td></td>
-        
-    </tr>
     
-    <?php 
+    foreach ($data as $d){
+        $d = get_object_vars($d);
+        ?> <tr> 
+            <td><?php echo $d['firstname']." ".$d['lastname']; ?></td>
+            <td><?= date("H:i:s, d (D) M Y", $d['timemodified']) ?></td>
+            <td><?php 
+            if($d['mark'] == -1){
+                echo get_string('no_mark_yet', 'league');
+            }else{
+                echo $d['mark'];
+            }
+            ?></td>
+            <td>TBA</td>
+            <td>
+             <form action="download.php" method="post" >
+                <input type="hidden" name="id" value="<?= $cmid ?>" />
+                <input type="hidden" name="id_exer" value="<?= $id_exer ?>" />
+                <input type="hidden" name="file" value="<?= $d['name'] ?>" />
+                <input type="submit" value="<?= get_string('download_file_button', 'league') ?>"/>
+            </form></td>
+            <td>
+             <form action="mark_student.php" method="post" >
+                <input type="hidden" name="id" value="<?= $cmid ?>" />
+                <input type="hidden" name="id_exer" value="<?= $id_exer ?>" />
+                <input type="hidden" name="name" value="<?= $name ?>" />
+                <input type="submit" value="<?= get_string('mark_student_button', 'league') ?>"/>
+            </form>
+            </td>
+        
+        </tr>
+        <?php
     }
     ?>
-    
 </table>
 
 <?php

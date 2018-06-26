@@ -25,7 +25,7 @@ require_login($course, true, $cm);
  * Por lo menos, el id, después se pueden poner otras 'key' => 'value'
  * Convierte todo lo que le pasamos a un objeto moodle_url
  */
-$PAGE->set_url('/mod/league/management.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/league/add_exercise.php', array('id' => $cm->id));
 
 if ($cmid) {
     if (!$cm = get_coursemodule_from_id('league', $cmid)) {

@@ -96,8 +96,23 @@ $string['ae_success'] = 'Creado con éxito el ejercicio. Actívelo en el panel d
  */
 
 $string['upload_title'] = 'Subir Ejercicio';
+$string['ue_cancel'] = 'Cancelada la subida de ficheros.';
 $string['upload_exercise_file'] = 'Subir fichero';
 $string['ue_error_type'] = 'El tipo del fichero subido no es válido (Debe ser PDF).';
 $string['ue_error_unknown'] = 'Hubo un problema al cargar el fichero.';
 $string['ue_success'] = 'Fichero subido con éxito';
 $string['ue_error_max_size'] = 'Compruebe que el fichero está por debajo del límite del tamaño de un fichero a ser subido: ';
+
+/**
+ *      CORRECCIÓN EJERCICIOS
+ */
+
+$string['no_mark_yet'] = 'Sin corrección';
+$string['mark_student_button'] = 'Calificar alumno';
+$string['download_file_button'] = 'Descargar fichero';
+
+/**
+ *      DESCARGA DE FICHEROS
+ */
+
+$string['dw_title'] = 'Descargar tarea';
