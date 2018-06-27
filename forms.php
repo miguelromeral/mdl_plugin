@@ -93,6 +93,7 @@ class mark_form extends moodleform {
         $mform->addElement('hidden', 'id_user', $id_user);
         $mform->addElement('hidden', 'id', $this->_customdata['id']);
         $mform->addElement('hidden', 'idat', $this->_customdata['idat']);
+        $mform->addElement('hidden', 'name', $this->_customdata['name_exer']);
         $mform->setType('id', PARAM_RAW);
         
         $options[-1] = "Sin calificar";

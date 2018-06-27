@@ -11,6 +11,7 @@ $id_exer = required_param('id_exer', PARAM_INT);
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 $info = get_fast_modinfo($course);
+$name_exer = required_param('name', PARAM_TEXT);
 //print_object($info);
 
 /*
@@ -85,7 +86,6 @@ if($valido == 0){
 }else{
     
     if($id_exer){
-        $name_exer = required_param('name', PARAM_TEXT);
         print_students_exercise($cmid, $id_exer, $name_exer);
     }
     ?>

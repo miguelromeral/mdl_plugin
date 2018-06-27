@@ -126,3 +126,9 @@ $string['mark_cancel'] = 'La calificación de';
 $string['set_mark'] = 'Calificación (0 a 100)';
 $string['set_observation'] = 'Observaciones';
 $string['mark_sent_success'] = 'Nota actualizada con éxito.';
+
+/**
+ *      GRADEBOOK
+ */
+
+$string['grade'] = 'Hola, Mundo!';

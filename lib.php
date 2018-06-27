@@ -151,7 +151,7 @@ function attempt_add_instance($course, $id_user, $exercise, $task, $name = null)
     }
 }
 
-function attempt_update_instance($idat, /*$course, $id_user, $exercise, $task, */ $mark) {
+function attempt_update_instance($league, $idat, /*$course, $id_user, $exercise, $task, */ $mark) {
     global $DB;
     $record = new stdClass();
     $record->id = $idat;
@@ -171,7 +171,8 @@ function attempt_update_instance($idat, /*$course, $id_user, $exercise, $task, *
     //echo "<br>----<br>";
   
     $id = $DB->update_record('attempt', $record);
-   
+    league_update_grades($league);
+    
     if($id){
         return true;
     }else{
@@ -223,72 +224,60 @@ function league_grade_item_update($league, $grades=null) {
 }
 
 
-function league_update_grades($league=null, $userid=0, $nullifnone=true) {
+function league_update_grades($league, $userid=0, $nullifnone=true) {
     global $CFG, $DB;
-    // get hotpot object
-    //require_once($CFG->dirroot.'/mod/league/locallib.php');
-    if ($league===null) {
-        /*
-        // update/create grades for all hotpots
-        // set up sql strings
-        $strupdating = get_string('updatinggrades', 'mod_hotpot');
-        $select = 'h.*, cm.idnumber AS cmidnumber';
-        $from   = '{hotpot} h, {course_modules} cm, {modules} m';
-        $where  = 'h.id = cm.instance AND cm.module = m.id AND m.name = ?';
-        $params = array('hotpot');
-        // get previous record index (if any)
-        $configname = 'update_grades';
-        $configvalue = get_config('mod_hotpot', $configname);
-        if (is_numeric($configvalue)) {
-            $i_min = intval($configvalue);
-        } else {
-            $i_min = 0;
-        }
-        if ($i_max = $DB->count_records_sql("SELECT COUNT('x') FROM $from WHERE $where", $params)) {
-            if ($rs = $DB->get_recordset_sql("SELECT $select FROM $from WHERE $where", $params)) {
-                if (defined('CLI_SCRIPT') && CLI_SCRIPT) {
-                    $bar = false;
-                } else {
-                    $bar = new progress_bar('hotpotupgradegrades', 500, true);
-                }
-                $i = 0;
-                foreach ($rs as $hotpot) {
-                    // update grade
-                    if ($i >= $i_min) {
-                        upgrade_set_timeout(); // apply for more time (3 mins)
-                        hotpot_update_grades($hotpot, $userid, $nullifnone);
-                    }
-                    // update progress bar
-                    $i++;
-                    if ($bar) {
-                        $bar->update($i, $i_max, $strupdating.": ($i/$i_max)");
-                    }
-                    // update record index
-                    if ($i > $i_min) {
-                        set_config($configname, $i, 'mod_hotpot');
-                    }
-                }
-                $rs->close();
-            }
-        }
-        // delete the record index
-        unset_config($configname, 'league');
-        return; // finish here
-        */
-        return;
-    }
-    // sanity check on $hotpot->id
+    require_once($CFG->libdir.'/gradelib.php');
+ 
     if (! isset($league->id)) {
         return false;
     }
+
     $grades = league_get_grades($league, $userid);
+
     if (count($grades)) {
-        league_grade_item_update($league, $grades);
-    } else if ($userid && $nullifnone) {
-        // no grades for this user, but we must force the creation of a "null" grade record
-        league_grade_item_update($league, (object)array('userid'=>$userid, 'rawgrade'=>null));
+        return league_grade_item_update($league, $grades);
+
+    } else if ($userid and $nullifnone) {
+        $grade = new stdClass();
+        $grade->userid   = $userid;
+        $grade->rawgrade = NULL;
+        return league_grade_item_update($league, $grade);
+ 
     } else {
-        // no grades and no userid
-        league_grade_item_update($league);
+        return league_grade_item_update($league);
     }
+}
+
+require_once($CFG->dirroot.'/rating/lib.php');
+
+function league_get_user_grades($league, $userid){
+    $ratingoptions = new stdClass;
+    $ratingoptions->component = 'mod_league';
+    $ratingoptions->ratingarea = 'post';
+    $ratingoptions->modulename = 'league';
+    $ratingoptions->moduleid   = $league->id;
+    $ratingoptions->userid = $userid;
+    //$ratingoptions->aggregationmethod = $league->assessed;
+    //$ratingoptions->scaleid = $league->scale;
+    //$ratingoptions->itemtable = 'forum_posts';
+    $ratingoptions->itemtableusercolumn = 'userid';
+
+    $rm = new rating_manager();
+    return $rm->get_user_grades($ratingoptions);
+}
+
+function league_get_grades($league, $userid = null) {
+    global $DB;
+
+    $where = (isset($userid) ? "where id_user = ".$userid : "");
+    
+    $sql = "select * from mdl_attempt $where";
+
+    $grades = array();
+    if ($aggregates = $DB->get_records_sql($sql)) {
+        foreach ($aggregates as $userid => $aggregate) {
+            $grades[$userid] = (object)array('userid'=>$userid, 'rawgrade'=>$aggregate->mark, 'maxstatus' => 100);
+        }
+    }
+    return $grades;
 }

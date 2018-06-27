@@ -8,14 +8,10 @@ require_once('./forms.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
-$id_exer = required_param('id_exer', PARAM_INT);    // ID Ejercicio (-1 si no hay)
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 $info = get_fast_modinfo($course);
 //print_object($info);
-
-$itemnumber = optional_param('itemnumber', 0, PARAM_INT); // Item number, may be != 0 for activities that allow more than one grade per user
-$userid = optional_param('userid', 0, PARAM_INT); // Graded user ID (optional)
 
 /*
  * La variable $PAGE configura la página
@@ -78,42 +74,53 @@ $groupmode = groups_get_activity_groupmode($cm);
 
 $bc = new block_contents();
 
-$var="SELECT
-c.id AS courseid,
-c.fullname,
-u.id as userid,
-u.username,
-u.firstname,
-u.lastname,
-u.email
-                                
-FROM
-mdl_role_assignments ra
-JOIN mdl_user u ON u.id = ra.userid
-JOIN mdl_role r ON r.id = ra.roleid
-JOIN mdl_context cxt ON cxt.id = ra.contextid
-JOIN mdl_course c ON c.id = cxt.instanceid
+$var="SELECT * 
+FROM mdl_role as er
+INNER JOIN mdl_role_assignments as era 
+ON era.roleid=er.id
+WHERE userid = $USER->id";
+$data = $DB->get_records_sql($var);
+$rol = null;
+foreach ($data as $rowclass)
+{
+    $rowclass = json_decode(json_encode($rowclass), True);
+    switch ($rowclass['shortname']){
+        case 'student':
+            $rol = 'student';
+            break;
+        case 'teacher' || 'editingteacher':
+            $rol = 'teacher';
+            break;
+    }
+}
 
-WHERE ra.userid = u.id
-                                
-AND ra.contextid = cxt.id
-AND cxt.contextlevel =50
-AND cxt.instanceid = c.id
-AND roleid = 5
-and c.id = $cm->course
-and userid = $USER->id
-
-ORDER BY c.fullname";
-
-$valido = $DB->get_records_sql($var);
-
-if($valido == 0){
+if ($rol == 'student'){
+    
+    //echo $output->inicio_estudiante();
+    //echo "Hola, Mundo! Estudiante, ya te pondremos aqui las calificaciones.";
+    
+    
+    $grading = league_get_grades($league, $USER->id);
+    print_r($grading);
+    
+    
+}else if($rol == 'teacher'){
     ?>
-        Por desgracia, no pertenece a este curso
+
+<h1><?= get_string('teacher_panel', 'league') ?></h1>
+<form action="management.php" method="get">
+    <input type="hidden" name="id" value="<?= $cmid ?>" />
+    <input type="hidden" name="lid" value="<?= $cm->id ?>" />
+    <input type="hidden" name="uid" value="<?= $USER->id ?>" />
+    <input type="submit" value="<?= get_string('manage_exercises_button', 'league') ?>"/>
+</form>
+    
+
     <?php
 }else{
-    
-
+    notice(get_string('noviewdiscussionspermission', 'league'));
 }
-    
+
 echo $OUTPUT->footer();
+
+?>

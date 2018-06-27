@@ -15,6 +15,7 @@ $info = get_fast_modinfo($course);
 $id_user = required_param('id_user', PARAM_INT);
 $idat = required_param('idat', PARAM_INT);
 $mark = required_param('mark', PARAM_INT);
+$name_exer = required_param('name', PARAM_TEXT);
 
 /*
  * La variable $PAGE configura la página
@@ -91,6 +92,7 @@ if($valido == 0){
                     array('id'=>$cmid,
                         'id_exer'=>$id_exer,
                         'mark'=>$mark,
+                        'name_exer'=>$name_exer,
                         'idat'=>$idat,
                         'id_user'=>$id_user));
     
@@ -100,6 +102,7 @@ if($valido == 0){
                 <h1><?= get_string('mark_cancel','league') ?></h1>
                 <form action="marking.php" method="get" >
                     <input type="hidden" name="id" value="<?= $cmid ?>" />
+                    <input type="hidden" name="name" value="<?= $name_exer ?>" />
                     <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
                 </form>
         
@@ -108,7 +111,7 @@ if($valido == 0){
             $new_mark = $data->mark;
             $observaciones = $data->observations;
             
-            attempt_update_instance($idat, $new_mark);
+            attempt_update_instance($league, $idat, $new_mark);
             
             
             ?>
@@ -116,6 +119,7 @@ if($valido == 0){
                 <form action="marking.php" method="get">
                     <input type="hidden" name="id" value="<?= $cmid ?>" />
                     <input type="hidden" name="id_exer" value="<?= $id_exer ?>" />
+                    <input type="hidden" name="name" value="<?= $name_exer ?>" />
                     <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
                 </form>
             <?php

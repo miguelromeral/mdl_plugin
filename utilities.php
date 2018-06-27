@@ -139,9 +139,9 @@ function print_students_exercise($cmid, $id_exer, $name){
             on c.id_user = d.id
             where c.exercise = $id_exer
             order by c.id desc
-            limit 1
     ) as b
-    on a.id = b.id";
+    on a.id = b.id
+    group by b.id_user";
     $data = $DB->get_records_sql($var);
     ?>
 
