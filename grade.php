@@ -8,12 +8,14 @@ require_once('./forms.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
-$file = required_param('file', PARAM_TEXT);
 $id_exer = required_param('id_exer', PARAM_INT);    // ID Ejercicio (-1 si no hay)
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 $info = get_fast_modinfo($course);
 //print_object($info);
+
+$itemnumber = optional_param('itemnumber', 0, PARAM_INT); // Item number, may be != 0 for activities that allow more than one grade per user
+$userid = optional_param('userid', 0, PARAM_INT); // Graded user ID (optional)
 
 /*
  * La variable $PAGE configura la página
@@ -26,7 +28,7 @@ require_login($course, true, $cm);
  * Por lo menos, el id, después se pueden poner otras 'key' => 'value'
  * Convierte todo lo que le pasamos a un objeto moodle_url
  */
-$PAGE->set_url('/mod/league/download.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/league/grade.php', array('id' => $cm->id));
 
 if ($cmid) {
     if (!$cm = get_coursemodule_from_id('league', $cmid)) {
@@ -53,6 +55,12 @@ $PAGE->set_pagelayout('standard');
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
+// Print header.
+$PAGE->set_title(format_string(get_string('grade', 'league')));
+//$PAGE->add_body_class('forumtype-'.$league->type);
+$PAGE->set_heading(format_string($course->fullname));
+
+echo $OUTPUT->header();
 
 /// Some capability checks.
 if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities', $context)) {
@@ -64,14 +72,38 @@ if (!has_capability('mod/league:view', $context)) {
 }
 
 /// find out current groups mode
-groups_print_activity_menu($cm, $CFG->wwwroot . '/mod/league/view.php?id=' . $cm->id);
+groups_print_activity_menu($cm, $CFG->wwwroot . '/mod/league/grade.php?id=' . $cm->id);
 $currentgroup = groups_get_activity_group($cm);
 $groupmode = groups_get_activity_groupmode($cm);
 
 $bc = new block_contents();
 
-// Recuperamos el ID del profesor y del modulo, si no coinciden, se mostrará un aviso para que salga.
-$var="SELECT c.id as course, c.shortname, u.id as teacher, u.username, u.firstname || ' ' || u.lastname AS name FROM mdl_course c LEFT OUTER JOIN mdl_context cx ON c.id = cx.instanceid LEFT OUTER JOIN mdl_role_assignments ra ON cx.id = ra.contextid AND ra.roleid = '3' LEFT OUTER JOIN mdl_user u ON ra.userid = u.id WHERE cx.contextlevel = '50' AND c.id = $cm->course AND u.id = $USER->id";
+$var="SELECT
+c.id AS courseid,
+c.fullname,
+u.id as userid,
+u.username,
+u.firstname,
+u.lastname,
+u.email
+                                
+FROM
+mdl_role_assignments ra
+JOIN mdl_user u ON u.id = ra.userid
+JOIN mdl_role r ON r.id = ra.roleid
+JOIN mdl_context cxt ON cxt.id = ra.contextid
+JOIN mdl_course c ON c.id = cxt.instanceid
+
+WHERE ra.userid = u.id
+                                
+AND ra.contextid = cxt.id
+AND cxt.contextlevel =50
+AND cxt.instanceid = c.id
+AND roleid = 5
+and c.id = $cm->course
+and userid = $USER->id
+
+ORDER BY c.fullname";
 
 $valido = $DB->get_records_sql($var);
 
@@ -81,14 +113,7 @@ if($valido == 0){
     <?php
 }else{
     
-    if($_POST){
-                
-            $archivo = required_param('file', PARAM_TEXT);
-            $path = "/home/league/".$archivo;
-            send_stored_file($path, 0, 0, true, array());
-        
-    }
-    
+
 }
     
 echo $OUTPUT->footer();

@@ -27,7 +27,7 @@ class mod_league_mod_form extends moodleform_mod {
         
         // ID => NOMBRE DEL CURSO
         //$options[0] = get_string('default_selected_course', 'league');
-        foreach ($result as $rowclass)
+       /* foreach ($result as $rowclass)
         {
             $rowclass = json_decode(json_encode($rowclass), True);
             $options[$rowclass["id"]] = $rowclass["fullname"];
@@ -37,6 +37,8 @@ class mod_league_mod_form extends moodleform_mod {
         $mform->addRule('course', 'MENSAJE DE ERROR', 'required', null, 'client');
         $mform->addHelpButton('course', 'select_course_activity', 'league');
         
+        * 
+        */
         $this->standard_coursemodule_elements();
         $this->add_action_buttons();
     }

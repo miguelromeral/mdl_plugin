@@ -81,7 +81,6 @@ $groupmode = groups_get_activity_groupmode($cm);
 
 $bc = new block_contents();
 
-// Recuperamos el ID del profesor y del modulo, si no coinciden, se mostrará un aviso para que salga.
 $var="SELECT
 c.id AS courseid,
 c.fullname,
@@ -116,13 +115,35 @@ if($valido == 0){
         Por desgracia, no pertenece a este curso
     <?php
 }else{
+    
+        $attachment = $id_exer."-".$USER->id."-att";
+    
         $maxbytes = 10000000;
         $mform = new upload_form(null,
                     array('id'=>$cmid,
                         'id_exer'=>$id_exer,
                         'name'=>$_POST['name'],
                         'statement'=>$_POST['statement'],
+                        'at_name'=>$attachment,
                         'max_bytes'=>$maxbytes));
+    
+        if (empty($entry->id)) {
+            $entry = new stdClass;
+            //$entry->id = 0;
+            //$entry->id = null;
+            $entry->id = $cmid;
+        }
+
+        $options = array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1);
+        $draftitemid = file_get_submitted_draft_itemid('attachments');
+
+        file_prepare_draft_area($draftitemid, $context->id, 'mod_league', 'attachment', $entry->id,
+                                $options);
+
+        $entry->attachments = $draftitemid;
+
+        $mform->set_data($entry);
+    
         
         //Form processing and displaying is done here
         if ($mform->is_cancelled()) {
@@ -134,65 +155,21 @@ if($valido == 0){
                 </form>
         
             <?php
-        } else if ($formdata = $mform->get_data()) {
-            $name = $id_exer."_".$USER->id."_".time()."-".$mform->get_new_filename('userfile');
+        } else if ($data = $mform->get_data()) {
+            $file = file_save_draft_area_files($data->attachments, $context->id, 'mod_league', 'attachment',
+                   $entry->id, $options);
+            $name = $id_exer."_".$USER->id."_".time()."-".$mform->get_new_filename('attachments');
             $folder = "/home/league";
             $fullpath = $folder."/".$name;
-            $success = $mform->save_file('userfile', $fullpath, false); //Que no se sobrescriban
+            attempt_add_instance($course->id, $USER->id, $id_exer, null, $name);
             
-            if ($success == 1){
-                $correcto = attempt_add_instance($course->id, $USER->id, $id_exer, null, $name);
-                if($correcto){
-                    ?>
-                    <?= get_string('ue_success','league') ?><br>
-                        <form action="view.php" method="get">
-                            <input type="hidden" name="id" value="<?= $cmid ?>" />
-                            <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
-                        </form>
-                    <?php
-                }
-            }
-            /*
-            $ejerc = $formdata->name;
-             
-            print_r($_FILES);
-            
-            if($_FILES["file"]["name"]){
-                $filename = $_FILES["file"]["name"];
-                $source = $_FILES["file"]["tmp_name"];
-                $type = $_FILES["file"]["type"];
-
-                $name = explode(".", $filename);
-                $accepted_types = array('application/zip', 'application/x-zip-compressed', 'multipart/x-zip', 'application/x-compressed');
-                foreach($accepted_types as $mime_type) {
-                        if($mime_type == $type) {
-                                $okay = true;
-                                break;
-                        } 
-                }
-                
-                $continue = strtolower($name[1]) == 'zip' ? true : false;
-                if(!$continue) {
-                        $message = "The file you are trying to upload is not a .zip file. Please try again.";
-                }
-
-                $target_path = "/tmp/".$filename;  // change this to the correct site path
-                if(move_uploaded_file($source, $target_path)) {
-                        $zip = new ZipArchive();
-                        $x = $zip->open($target_path);
-                        if ($x === true) {
-                                $zip->extractTo("/tmp/"); // change this to the correct site path
-                                $zip->close();
-                                unlink($target_path);
-                        }
-                        //call to lib function
-                        $message = "Your .zip file was uploaded and unpacked.";
-                } else {	
-                        $message = "There was a problem with the upload. Please try again.";
-                }
-                
-                echo "<strong>$message</strong>";
-            }*/
+            ?>
+            <?= get_string('ue_success','league') ?><br>
+                <form action="view.php" method="get">
+                    <input type="hidden" name="id" value="<?= $cmid ?>" />
+                    <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
+                </form>
+            <?php
         } else {
         ?>
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/league/db" VERSION="20180625" COMMENT="XMLDB file for Moodle mod/league"
+<XMLDB PATH="mod/league/db" VERSION="20180627" COMMENT="XMLDB file for Moodle mod/league"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -11,7 +11,8 @@
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Nombre instancia" PREVIOUS="course" NEXT="timemodified"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Tiempo modificación" PREVIOUS="name" NEXT="intro"/>
         <FIELD NAME="intro" TYPE="text" LENGTH="big" NOTNULL="false" SEQUENCE="false" COMMENT="Descripción de actividad." PREVIOUS="timemodified" NEXT="introformat"/>
-        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Formato de intro" PREVIOUS="intro"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Formato de intro" PREVIOUS="intro" NEXT="gradeweighting"/>
+        <FIELD NAME="gradeweighting" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="100" SEQUENCE="false" COMMENT="Peso de las notas" PREVIOUS="introformat"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="fk-course"/>
@@ -47,7 +48,8 @@
         <FIELD NAME="exercise" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="ID del ejercicio al que pertenece" PREVIOUS="introformat" NEXT="id_user"/>
         <FIELD NAME="id_user" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Usuario que realiza el ejercicio" PREVIOUS="exercise" NEXT="mark"/>
         <FIELD NAME="mark" TYPE="number" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" DECIMALS="2" COMMENT="Nota del alumno" PREVIOUS="id_user" NEXT="task"/>
-        <FIELD NAME="task" TYPE="binary" LENGTH="big" NOTNULL="false" SEQUENCE="false" COMMENT="Archivo que subirá el usuario" PREVIOUS="mark"/>
+        <FIELD NAME="task" TYPE="binary" LENGTH="big" NOTNULL="false" SEQUENCE="false" COMMENT="Archivo que subirá el usuario" PREVIOUS="mark" NEXT="observations"/>
+        <FIELD NAME="observations" TYPE="text" LENGTH="big" NOTNULL="false" SEQUENCE="false" COMMENT="Observaciones sobre el trabajo hecho" PREVIOUS="task"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="fk-course"/>

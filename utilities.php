@@ -64,7 +64,7 @@ function print_exercises($idliga, $rol, $cmid){
                 ($exer['enabled'] == 0 ? get_string('enable_exercise_button', 'league') : get_string('disable_exercise_button', 'league')) 
             ?>"/>
             </form>
-        </td><td><form action="marking.php" method="get" >
+        </td><td><form action="marking.php" method="post" >
                 <input type="hidden" name="id" value="<?= $cmid ?>" />
                 <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
                 <input type="hidden" name="name" value="<?= $exer['name'] ?>" />
@@ -184,6 +184,9 @@ function print_students_exercise($cmid, $id_exer, $name){
                 <input type="hidden" name="id" value="<?= $cmid ?>" />
                 <input type="hidden" name="id_exer" value="<?= $id_exer ?>" />
                 <input type="hidden" name="name" value="<?= $name ?>" />
+                <input type="hidden" name="id_user" value="<?= $d['id_user'] ?>" />
+                <input type="hidden" name="idat" value="<?= $d['id'] ?>" />
+                <input type="hidden" name="mark" value="<?= $d['mark'] ?>" />
                 <input type="submit" value="<?= get_string('mark_student_button', 'league') ?>"/>
             </form>
             </td>

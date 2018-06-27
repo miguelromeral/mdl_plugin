@@ -116,3 +116,13 @@ $string['download_file_button'] = 'Descargar fichero';
  */
 
 $string['dw_title'] = 'Descargar tarea';
+
+/**
+ *      CALIFICACIÓN ALUMNOS
+ */
+
+$string['mark_title'] = 'Calificar alumno';
+$string['mark_cancel'] = 'La calificación de';
+$string['set_mark'] = 'Calificación (0 a 100)';
+$string['set_observation'] = 'Observaciones';
+$string['mark_sent_success'] = 'Nota actualizada con éxito.';

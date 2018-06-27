@@ -16,13 +16,14 @@ defined('MOODLE_INTERNAL') || die();
 function league_add_instance(stdClass $league, mod_league_mod_form $mform = null) {
     global $DB;
     $league->timemodified = time();
-   
+    $league->gradeweighting = 100;
     
-    print_r($league);
+    //print_r($league);
     
     $league->id = $DB->insert_record('league', $league);
-   
-    // You may have to add extra stuff in here.
+    //Creamos Gradebook
+    league_grade_item_update($league);
+    
     
     return $league->id;
 }
@@ -44,7 +45,7 @@ function league_update_instance(stdClass $league, mod_league_mod_form $mform = n
     $league->id = $league->instance;
     // You may have to add extra stuff in here.
     $result = $DB->update_record('league', $league);
-    newmodule_grade_item_update($league);
+    league_grade_item_update($league);
     return $result;
 }
 
@@ -178,59 +179,116 @@ function attempt_update_instance($idat, /*$course, $id_user, $exercise, $task, *
     }
 }
 
-/**
- * Serve the files from the MYPLUGIN file areas
- *
- * @param stdClass $course the course object
- * @param stdClass $cm the course module object
- * @param stdClass $context the context
- * @param string $filearea the name of the file area
- * @param array $args extra arguments (itemid, path)
- * @param bool $forcedownload whether or not force download
- * @param array $options additional options affecting the file serving
- * @return bool false if the file not found, just send the file otherwise and do not return anything
- */
-function league_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
-    // Check the contextlevel is as expected - if your plugin is a block, this becomes CONTEXT_BLOCK, etc.
-    if ($context->contextlevel != CONTEXT_MODULE) {
-        return false; 
+////////////////////////////////////////////////////////////////////////////////
+// Gradebook API                                                              //
+////////////////////////////////////////////////////////////////////////////////
+
+
+function league_grade_item_update($league, $grades=null) {
+    global $CFG;
+    require_once($CFG->dirroot.'/lib/gradelib.php');
+    
+    // sanity check on $hotpot->id
+    if (empty($league->id) || empty($league->course)) {
+        return;
     }
- 
-    // Make sure the filearea is one of those used by the plugin.
-    if ($filearea !== 'expectedfilearea' && $filearea !== 'anotherexpectedfilearea') {
-        return false;
+    
+    // set up params for grade_update()
+    $params = array(
+        'itemname' => $league->name
+    );
+    if ($grades==='reset') {
+        $params['reset'] = true;
+        $grades = null;
     }
- 
-    // Make sure the user is logged in and has access to the module (plugins that are not course modules should leave out the 'cm' part).
-    require_login($course, true, $cm);
- 
-    // Check the relevant capabilities - these may vary depending on the filearea being accessed.
-    if (!has_capability('mod/league:view', $context)) {
-        return false;
+    if (isset($league->cmidnumber)) {
+        //cmidnumber may not be always present
+        $params['idnumber'] = $league->cmidnumber;
     }
- 
-    // Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
-    $itemid = array_shift($args); // The first item in the $args array.
- 
-    // Use the itemid to retrieve any relevant data records and perform any security checks to see if the
-    // user really does have access to the file in question.
- 
-    // Extract the filename / filepath from the $args array.
-    $filename = array_pop($args); // The last item in the $args array.
-    if (!$args) {
-        $filepath = '/'; // $args is empty => the path is '/'
+    if ($league->gradeweighting) {
+        $params['gradetype'] = GRADE_TYPE_VALUE;
+        $params['grademax']  = $league->gradeweighting;
+        $params['grademin']  = 0;
     } else {
-        $filepath = '/'.implode('/', $args).'/'; // $args contains elements of the filepath
+        $params['gradetype'] = GRADE_TYPE_NONE;
+        // Note: when adding a new activity, a gradeitem will *not*
+        // be created in the grade book if gradetype==GRADE_TYPE_NONE
+        // A gradeitem will be created later if gradetype changes to GRADE_TYPE_VALUE
+        // However, the gradeitem will *not* be deleted if the activity's
+        // gradetype changes back from GRADE_TYPE_VALUE to GRADE_TYPE_NONE
+        // Therefore, we force the removal of empty gradeitems
+        $params['deleted'] = true;
     }
- 
-    // Retrieve the file from the Files API.
-    $fs = get_file_storage();
-    $file = $fs->get_file($context->id, 'mod_league', $filearea, $itemid, $filepath, $filename);
-    if (!$file) {
-        return false; // The file does not exist.
+    return grade_update('mod/league', $league->course, 'mod', 'league', $league->id, 0, $grades, $params);
+}
+
+
+function league_update_grades($league=null, $userid=0, $nullifnone=true) {
+    global $CFG, $DB;
+    // get hotpot object
+    //require_once($CFG->dirroot.'/mod/league/locallib.php');
+    if ($league===null) {
+        /*
+        // update/create grades for all hotpots
+        // set up sql strings
+        $strupdating = get_string('updatinggrades', 'mod_hotpot');
+        $select = 'h.*, cm.idnumber AS cmidnumber';
+        $from   = '{hotpot} h, {course_modules} cm, {modules} m';
+        $where  = 'h.id = cm.instance AND cm.module = m.id AND m.name = ?';
+        $params = array('hotpot');
+        // get previous record index (if any)
+        $configname = 'update_grades';
+        $configvalue = get_config('mod_hotpot', $configname);
+        if (is_numeric($configvalue)) {
+            $i_min = intval($configvalue);
+        } else {
+            $i_min = 0;
+        }
+        if ($i_max = $DB->count_records_sql("SELECT COUNT('x') FROM $from WHERE $where", $params)) {
+            if ($rs = $DB->get_recordset_sql("SELECT $select FROM $from WHERE $where", $params)) {
+                if (defined('CLI_SCRIPT') && CLI_SCRIPT) {
+                    $bar = false;
+                } else {
+                    $bar = new progress_bar('hotpotupgradegrades', 500, true);
+                }
+                $i = 0;
+                foreach ($rs as $hotpot) {
+                    // update grade
+                    if ($i >= $i_min) {
+                        upgrade_set_timeout(); // apply for more time (3 mins)
+                        hotpot_update_grades($hotpot, $userid, $nullifnone);
+                    }
+                    // update progress bar
+                    $i++;
+                    if ($bar) {
+                        $bar->update($i, $i_max, $strupdating.": ($i/$i_max)");
+                    }
+                    // update record index
+                    if ($i > $i_min) {
+                        set_config($configname, $i, 'mod_hotpot');
+                    }
+                }
+                $rs->close();
+            }
+        }
+        // delete the record index
+        unset_config($configname, 'league');
+        return; // finish here
+        */
+        return;
     }
- 
-    // We can now send the file back to the browser - in this case with a cache lifetime of 1 day and no filtering. 
-    // From Moodle 2.3, use send_stored_file instead.
-    send_file($file, 86400, 0, $forcedownload, $options);
+    // sanity check on $hotpot->id
+    if (! isset($league->id)) {
+        return false;
+    }
+    $grades = league_get_grades($league, $userid);
+    if (count($grades)) {
+        league_grade_item_update($league, $grades);
+    } else if ($userid && $nullifnone) {
+        // no grades for this user, but we must force the creation of a "null" grade record
+        league_grade_item_update($league, (object)array('userid'=>$userid, 'rawgrade'=>null));
+    } else {
+        // no grades and no userid
+        league_grade_item_update($league);
+    }
 }
