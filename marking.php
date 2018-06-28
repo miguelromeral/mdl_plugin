@@ -90,6 +90,11 @@ if($valido == 0){
     }
     ?>
         
+        <form action="management.php" method="get">
+        <input type="hidden" name="id" value="<?= $cmid ?>" />
+        <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
+    </form>
+        
 <?php
 echo $OUTPUT->footer();
 

@@ -148,6 +148,10 @@ if($valido == 0){
         <input type="hidden" name="id_exer" value="-1" />
         <input type="submit" value="<?= get_string('add_exercise_button', 'league') ?>"/>
     </form>
+    <form action="view.php" method="get">
+        <input type="hidden" name="id" value="<?= $cmid ?>" />
+        <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
+    </form>
     
 
 

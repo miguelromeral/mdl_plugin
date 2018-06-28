@@ -104,6 +104,7 @@ if($valido == 0){
                 <h1><?= get_string('mark_cancel','league') ?></h1>
                 <form action="marking.php" method="get" >
                     <input type="hidden" name="id" value="<?= $cmid ?>" />
+                    <input type="hidden" name="id_exer" value="<?= $id_exer ?>" />
                     <input type="hidden" name="name" value="<?= $name_exer ?>" />
                     <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
                 </form>

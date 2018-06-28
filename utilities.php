@@ -131,6 +131,7 @@ function print_students_exercise($cmid, $id_exer, $name){
             inner join mdl_user as d
             on c.id_user = d.id
             where c.exercise = $id_exer
+            group by c.id_user
             order by c.id desc
     ) as b
     on a.id = b.id
@@ -213,16 +214,17 @@ function print_notas_alumno($idleague, $cmid, $userid){
     from mdl_exercise as a
     left outer join
     (
-        select a.id as idat, a.timemodified as tma, a.observations, a.course as ca, a.name as fname, a.exercise, b.id_user, a.mark, a.id_file, a.url
-        from mdl_attempt as a
-        inner join (
-                        select *
-                        from mdl_attempt
-                        where id_user = $userid
-                        order by id desc
-        ) as b
-        on a.id = b.id
-        group by a.exercise
+        select a.id as idat, a.timemodified as tma,
+		a.observations, a.course as ca, a.name as fname,
+		a.exercise, b.id_user, a.mark, a.id_file, a.url
+		from mdl_attempt as a
+		inner join (
+			select max(id) as m, id_user
+			from mdl_attempt
+			where id_user = $userid
+			group by exercise
+		) as b
+		on a.id = b.m
     ) as b
     on a.id = b.exercise
     where a.league = $idleague";
