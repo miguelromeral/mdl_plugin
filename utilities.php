@@ -173,12 +173,8 @@ function print_students_exercise($cmid, $id_exer, $name){
             ?></td>
             <td>TBA</td>
             <td>
-             <form action="download.php" method="post" >
-                <input type="hidden" name="id" value="<?= $cmid ?>" />
-                <input type="hidden" name="id_exer" value="<?= $id_exer ?>" />
-                <input type="hidden" name="file" value="<?= $d['name'] ?>" />
-                <input type="submit" value="<?= get_string('download_file_button', 'league') ?>"/>
-            </form></td>
+                <a href="http://romeral.ddns.net/moodle/pluginfile.php/46/mod_league/fa_3/1530185235/moodle.txt"><?= get_string('download_file_button', 'league') ?></a>
+            </td>
             <td>
              <form action="mark_student.php" method="post" >
                 <input type="hidden" name="id" value="<?= $cmid ?>" />

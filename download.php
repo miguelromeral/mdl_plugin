@@ -2,31 +2,13 @@
 <?php
 
 require_once('../../config.php');
-require_once('lib.php');
-require_once('utilities.php');
-require_once('./forms.php');
 
 //Identifica la actividad específica (o recurso)
-$cmid = required_param('id', PARAM_INT);    // Course Module ID
-$file = required_param('file', PARAM_TEXT);
-$id_exer = required_param('id_exer', PARAM_INT);    // ID Ejercicio (-1 si no hay)
+$cmid = required_param('id', PARAM_INT);
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-$info = get_fast_modinfo($course);
-//print_object($info);
-
-/*
- * La variable $PAGE configura la página
- * La variable $OUTPUT muestra la página
- */
 
 require_login($course, true, $cm);
-/*
- * ABSOLUTAMENTE NECESARIO PONER EL URL.
- * Por lo menos, el id, después se pueden poner otras 'key' => 'value'
- * Convierte todo lo que le pasamos a un objeto moodle_url
- */
-$PAGE->set_url('/mod/league/download.php', array('id' => $cm->id));
 
 if ($cmid) {
     if (!$cm = get_coursemodule_from_id('league', $cmid)) {
@@ -44,14 +26,6 @@ if ($cmid) {
 }
 
 $context = get_context_instance(CONTEXT_MODULE, $cm->id);
-$PAGE->set_context($context);
-
-//Pone como diseño el estandar de Moodle
-$PAGE->set_pagelayout('standard');
-
-// Mark viewed if required
-$completion = new completion_info($course);
-$completion->set_module_viewed($cm);
 
 
 /// Some capability checks.
@@ -63,15 +37,8 @@ if (!has_capability('mod/league:view', $context)) {
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
 
-/// find out current groups mode
-groups_print_activity_menu($cm, $CFG->wwwroot . '/mod/league/view.php?id=' . $cm->id);
-$currentgroup = groups_get_activity_group($cm);
-$groupmode = groups_get_activity_groupmode($cm);
-
-$bc = new block_contents();
-
 // Recuperamos el ID del profesor y del modulo, si no coinciden, se mostrará un aviso para que salga.
-$var="SELECT c.id as course, c.shortname, u.id as teacher, u.username, u.firstname || ' ' || u.lastname AS name FROM mdl_course c LEFT OUTER JOIN mdl_context cx ON c.id = cx.instanceid LEFT OUTER JOIN mdl_role_assignments ra ON cx.id = ra.contextid AND ra.roleid = '3' LEFT OUTER JOIN mdl_user u ON ra.userid = u.id WHERE cx.contextlevel = '50' AND c.id = $cm->course AND u.id = $USER->id";
+/*$var="SELECT c.id as course, c.shortname, u.id as teacher, u.username, u.firstname || ' ' || u.lastname AS name FROM mdl_course c LEFT OUTER JOIN mdl_context cx ON c.id = cx.instanceid LEFT OUTER JOIN mdl_role_assignments ra ON cx.id = ra.contextid AND ra.roleid = '3' LEFT OUTER JOIN mdl_user u ON ra.userid = u.id WHERE cx.contextlevel = '50' AND c.id = $cm->course AND u.id = $USER->id";
 
 $valido = $DB->get_records_sql($var);
 
@@ -80,15 +47,9 @@ if($valido == 0){
         Por desgracia, no pertenece a este curso
     <?php
 }else{
-    
-    if($_POST){
-                
-            $archivo = required_param('file', PARAM_TEXT);
-            $path = "/home/league/".$archivo;
-            send_stored_file($path, 0, 0, true, array());
-        
-    }
-    
-}
-    
-echo $OUTPUT->footer();
+    */
+    $itemid = 1530185235;
+    $name= "moodle.txt";
+    league_pluginfile($course, $cm, $context, 'fa_3', array('itemid'=>$itemid, 'filename'=>$name), true);
+            
+   

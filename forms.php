@@ -18,11 +18,15 @@ class upload_form extends moodleform {
         
         $attachment = $this->_customdata['at_name'];
         
-        $mform->addElement('filemanager', 'attachments', get_string('upload_exercise_file', 'league'), null,
+        /*$mform->addElement('filemanager', 'attachments', get_string('upload_exercise_file', 'league'), null,
                     array('subdirs' => 0, 'maxbytes' => $this->_customdata['max_bytes'], 'areamaxbytes' => 10485760,
-                        'maxfiles' => 1, 'accepted_types' => array('.txt', '.pdf', '.doc'), 
-                        /*'return_types'=> FILE_INTERNAL | FILE_EXTERNAL*/));
-        
+                        'maxfiles' => 1, 'accepted_types' => array('.txt', '.pdf', '.doc', '.zip'), 
+                        //'return_types'=> FILE_INTERNAL | FILE_EXTERNAL
+            ));
+        */
+        $mform->addElement('filepicker', 'userfile', get_string('upload_exercise_file', 'league'), null,
+                   array('maxbytes' => $this->_customdata['max_bytes'], 'accepted_types' => '*'));
+                        
         $this->add_action_buttons();
     }
     //Custom validation should be added here

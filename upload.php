@@ -156,13 +156,83 @@ if($valido == 0){
         
             <?php
         } else if ($data = $mform->get_data()) {
-            $file = file_save_draft_area_files($data->attachments, $context->id, 'mod_league', 'attachment',
-                   $entry->id, $options);
-            $name = $id_exer."_".$USER->id."_".time()."-".$mform->get_new_filename('attachments');
-            $folder = "/home/league";
-            $fullpath = $folder."/".$name;
-            attempt_add_instance($course->id, $USER->id, $id_exer, null, $name);
             
+            $component = 'mod_league';
+            $filearea = 'fa_'.$id_exer;             
+            
+            $orig_name = $mform->get_new_filename('userfile');
+            
+            if($orig_name){
+            
+            
+            $name = $id_exer."_".$USER->id."_".time()."-".$orig_name;
+            $content = $mform->get_file_content('userfile');
+            $itemid = time();
+            //$success = $mform->save_file('userfile', $fullpath, false); //Que no se sobrescriban
+            $success = $mform->save_stored_file('userfile', $context->id, $component, $filearea, $itemid);
+            attempt_add_instance($course->id, $USER->id, $id_exer, $content, $name);
+            
+            print_r($success);
+            
+            
+            
+            
+            //$url = $CFG->wwwroot."/pluginfile.php/".$context->id."/".$component."/".$filearea."/".$league->id."/".$orig_name;
+            
+            $fs = get_file_storage();
+            print_r($fs);
+            if ($files = $fs->get_area_files($contextid, $component, $filearea, $itemid, 'sortorder', false)) {              
+            //if ($files = $fs->get_area_files($context->id, $component, $filearea, null, 'sortorder', false)) {              
+                foreach ($files as $file) {
+                    $fileurl = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());           
+                    echo "<br>-> $fileurl<br>";
+                }
+            }
+            
+            
+            
+            /*
+            $url = moodle_url::make_pluginfile_url($context->id,
+                    $component, $filearea, $itemid,
+                    '/', $orig_name);
+            
+            echo "<br><br>URL: $url<br><br>";
+            
+            echo "<br>itemid: $itemid<br>";
+            echo "<br>filename: $orig_name<br>";
+            */
+            //league_pluginfile($course, $cm, $context, $filearea, array('itemid'=>$itemid, 'filename'=>$orig_name), true);
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            /*if ($draftitemid = file_get_submitted_draft_itemid('attachments')) {
+                file_save_draft_area_files($draftitemid, $context->id, 'mod_league', 'attachments',
+                        0, array('subdirs' => 0, 'maxfiles' => 1));
+            }
+            $fs = get_file_storage();
+            if ($files = $fs->get_area_files($context->id, 'mod_league', 'attachment', '0', 'sortorder', false)) {
+                // Look through each file being managed
+                foreach ($files as $file) {
+                // Build the File URL. Long process! But extremely accurate.
+                $fileurl = moodle_url::make_pluginfile_url($file->get_contextid(),
+                        $file->get_component(), $file->get_filearea(), $file->get_itemid(),
+                        $file->get_filepath(), $file->get_filename());
+                echo $fileurl;
+                }
+            } else {
+                print_r($files);
+                echo '<p>Please upload an image first</p>';
+            }
+            
+            https://stackoverflow.com/questions/19430076/how-to-store-file-and-retrive-it-correctly-with-moodle-file-api
+            */
+            /*
             ?>
             <?= get_string('ue_success','league') ?><br>
                 <form action="view.php" method="get">
@@ -170,6 +240,10 @@ if($valido == 0){
                     <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
                 </form>
             <?php
+            */
+            }else{
+                echo "<br><br>Mal, debes subir un puto archivo.<br><br>";
+            }
         } else {
         ?>
 
