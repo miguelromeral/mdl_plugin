@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/league/db" VERSION="20180627" COMMENT="XMLDB file for Moodle mod/league"
+<XMLDB PATH="mod/league/db" VERSION="20180628" COMMENT="XMLDB file for Moodle mod/league"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -47,15 +47,17 @@
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Formato del intro" PREVIOUS="intro" NEXT="exercise"/>
         <FIELD NAME="exercise" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="ID del ejercicio al que pertenece" PREVIOUS="introformat" NEXT="id_user"/>
         <FIELD NAME="id_user" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Usuario que realiza el ejercicio" PREVIOUS="exercise" NEXT="mark"/>
-        <FIELD NAME="mark" TYPE="number" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" DECIMALS="2" COMMENT="Nota del alumno" PREVIOUS="id_user" NEXT="task"/>
-        <FIELD NAME="task" TYPE="binary" LENGTH="big" NOTNULL="false" SEQUENCE="false" COMMENT="Archivo que subirá el usuario" PREVIOUS="mark" NEXT="observations"/>
-        <FIELD NAME="observations" TYPE="text" LENGTH="big" NOTNULL="false" SEQUENCE="false" COMMENT="Observaciones sobre el trabajo hecho" PREVIOUS="task"/>
+        <FIELD NAME="mark" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" COMMENT="Nota del alumno" PREVIOUS="id_user" NEXT="observations"/>
+        <FIELD NAME="observations" TYPE="text" LENGTH="big" NOTNULL="false" SEQUENCE="false" COMMENT="Observaciones sobre el trabajo hecho" PREVIOUS="mark" NEXT="id_file"/>
+        <FIELD NAME="id_file" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="ID del fichero que se sube" PREVIOUS="observations" NEXT="url"/>
+        <FIELD NAME="url" TYPE="char" LENGTH="1333" NOTNULL="true" SEQUENCE="false" COMMENT="URL para bajar el fichero" PREVIOUS="id_file"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="fk-course"/>
         <KEY NAME="fk-course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id" COMMENT="FK del course" PREVIOUS="primary" NEXT="fk-id_user"/>
         <KEY NAME="fk-id_user" TYPE="foreign" FIELDS="id_user" REFTABLE="user" REFFIELDS="id" COMMENT="FK del id_user" PREVIOUS="fk-course" NEXT="fk-exercise"/>
-        <KEY NAME="fk-exercise" TYPE="foreign" FIELDS="exercise" REFTABLE="exercise" REFFIELDS="id" COMMENT="FK del exercise" PREVIOUS="fk-id_user"/>
+        <KEY NAME="fk-exercise" TYPE="foreign" FIELDS="exercise" REFTABLE="exercise" REFFIELDS="id" COMMENT="FK del exercise" PREVIOUS="fk-id_user" NEXT="fk-id_file"/>
+        <KEY NAME="fk-id_file" TYPE="foreign" FIELDS="id_file" REFTABLE="files" REFFIELDS="id" COMMENT="FK del ID file" PREVIOUS="fk-exercise"/>
       </KEYS>
     </TABLE>
   </TABLES>

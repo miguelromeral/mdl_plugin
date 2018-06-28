@@ -152,9 +152,6 @@ function print_students_exercise($cmid, $id_exer, $name){
         <td><?= get_string('student', 'league') ?></td>
         <td><?= get_string('upload_time', 'league') ?></td>
         <td><?= get_string('mark', 'league') ?></td>
-        <td><?= get_string('reviews', 'league') ?></td>
-        <td><?= get_string('download_file', 'league') ?></td>
-        <td><?= get_string('to_mark', 'league') ?></td>
     </tr>
     
     <?php
@@ -168,12 +165,11 @@ function print_students_exercise($cmid, $id_exer, $name){
             if($d['mark'] == -1){
                 echo get_string('no_mark_yet', 'league');
             }else{
-                echo $d['mark'];
+                echo $d['mark']."%";
             }
             ?></td>
-            <td>TBA</td>
             <td>
-                <a href="http://romeral.ddns.net/moodle/pluginfile.php/46/mod_league/fa_3/1530185235/moodle.txt"><?= get_string('download_file_button', 'league') ?></a>
+                <a href="<?= $d['url'] ?>"><?= get_string('download_file_button', 'league') ?></a>
             </td>
             <td>
              <form action="mark_student.php" method="post" >
@@ -195,4 +191,23 @@ function print_students_exercise($cmid, $id_exer, $name){
 
 <?php
     
+}
+
+
+function getIDFileFromContenthash($contenthash){
+    global $DB;
+    $var="SELECT max(id) as 'm'
+    FROM mdl_files
+    WHERE contenthash = '$contenthash'";
+
+    $data = $DB->get_records_sql($var);
+    $id = -1;
+    foreach ($data as $d){
+        //print_r($d);
+        foreach($d as $i => $l){
+            $id = $l;
+        }
+    }
+    
+    return $id;
 }

@@ -124,7 +124,7 @@ function exercise_delete_instance($id) {
     return true;
 }
 
-function attempt_add_instance($course, $id_user, $exercise, $task, $name = null) {
+function attempt_add_instance($course, $id_user, $exercise, $id_file, $url, $name = null) {
     global $DB;
     $record = new stdClass();
     $record->course = $course;
@@ -135,8 +135,9 @@ function attempt_add_instance($course, $id_user, $exercise, $task, $name = null)
     $record->intro = null;
     $record->introformat = null;
     $record->exercise = $exercise;
-    $record->task = $task;
     $record->mark = -1;
+    $record->id_file = $id_file;
+    $record->url = $url;
     
     //echo "Voy a añadir:<br>";
     //print_r($record);

@@ -16,14 +16,6 @@ class upload_form extends moodleform {
         $mform->addElement('hidden', 'name', $this->_customdata['name']);
         $mform->addElement('hidden', 'statement', $this->_customdata['statement']);
         
-        $attachment = $this->_customdata['at_name'];
-        
-        /*$mform->addElement('filemanager', 'attachments', get_string('upload_exercise_file', 'league'), null,
-                    array('subdirs' => 0, 'maxbytes' => $this->_customdata['max_bytes'], 'areamaxbytes' => 10485760,
-                        'maxfiles' => 1, 'accepted_types' => array('.txt', '.pdf', '.doc', '.zip'), 
-                        //'return_types'=> FILE_INTERNAL | FILE_EXTERNAL
-            ));
-        */
         $mform->addElement('filepicker', 'userfile', get_string('upload_exercise_file', 'league'), null,
                    array('maxbytes' => $this->_customdata['max_bytes'], 'accepted_types' => '*'));
                         

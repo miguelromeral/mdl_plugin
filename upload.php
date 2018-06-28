@@ -14,11 +14,6 @@ $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST)
 $info = get_fast_modinfo($course);
 //print_object($info);
 $component='mod_league';
-$filearea='userfile';
-$options = array('subdirs' => 0, 'maxbytes' => 0, 'areamaxbytes' => 10485760, 'maxfiles' => 50,
-        'accepted_types' => array('image', 'document', 'application/pdf', 'application/zip', 'presentation',
-        'application/vnd.openxmlformats-officedocument.presentationml.template'));        
-
 /*
  * La variable $PAGE configura la página
  * La variable $OUTPUT muestra la página
@@ -116,35 +111,14 @@ if($valido == 0){
     <?php
 }else{
     
-        $attachment = $id_exer."-".$USER->id."-att";
-    
         $maxbytes = 10000000;
         $mform = new upload_form(null,
                     array('id'=>$cmid,
                         'id_exer'=>$id_exer,
                         'name'=>$_POST['name'],
                         'statement'=>$_POST['statement'],
-                        'at_name'=>$attachment,
                         'max_bytes'=>$maxbytes));
     
-        if (empty($entry->id)) {
-            $entry = new stdClass;
-            //$entry->id = 0;
-            //$entry->id = null;
-            $entry->id = $cmid;
-        }
-
-        $options = array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1);
-        $draftitemid = file_get_submitted_draft_itemid('attachments');
-
-        file_prepare_draft_area($draftitemid, $context->id, 'mod_league', 'attachment', $entry->id,
-                                $options);
-
-        $entry->attachments = $draftitemid;
-
-        $mform->set_data($entry);
-    
-        
         //Form processing and displaying is done here
         if ($mform->is_cancelled()) {
             ?>
@@ -158,89 +132,34 @@ if($valido == 0){
         } else if ($data = $mform->get_data()) {
             
             $component = 'mod_league';
-            $filearea = 'fa_'.$id_exer;             
+            $filearea = 'fa_'.$id_exer;
+            $name = $mform->get_new_filename('userfile');
             
-            $orig_name = $mform->get_new_filename('userfile');
-            
-            if($orig_name){
-            
-            
-            $name = $id_exer."_".$USER->id."_".time()."-".$orig_name;
-            $content = $mform->get_file_content('userfile');
-            $itemid = time();
-            //$success = $mform->save_file('userfile', $fullpath, false); //Que no se sobrescriban
-            $success = $mform->save_stored_file('userfile', $context->id, $component, $filearea, $itemid);
-            attempt_add_instance($course->id, $USER->id, $id_exer, $content, $name);
-            
-            print_r($success);
-            
-            
-            
-            
-            //$url = $CFG->wwwroot."/pluginfile.php/".$context->id."/".$component."/".$filearea."/".$league->id."/".$orig_name;
-            
-            $fs = get_file_storage();
-            print_r($fs);
-            if ($files = $fs->get_area_files($contextid, $component, $filearea, $itemid, 'sortorder', false)) {              
-            //if ($files = $fs->get_area_files($context->id, $component, $filearea, null, 'sortorder', false)) {              
-                foreach ($files as $file) {
-                    $fileurl = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());           
-                    echo "<br>-> $fileurl<br>";
+            if($name){
+                $itemid = time();
+                $success = $mform->save_stored_file('userfile', $context->id, $component, $filearea, $itemid);
+                
+                $fs = get_file_storage();
+                //print_r($fs);
+                if ($files = $fs->get_area_files($contextid, $component, $filearea, $itemid, 'sortorder', false)) {               
+                    foreach ($files as $file) {
+                        $fileurl = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());           
+                        $contenthash = $file->get_contenthash();
+                        $id_file = getIDFileFromContenthash($contenthash);
+                        
+                        $exito = attempt_add_instance($course->id, $USER->id, $id_exer, $id_file, $fileurl, $name);
+
+                        if($exito){
+                            ?>
+                            <?= get_string('ue_success','league') ?><br>
+                                <form action="view.php" method="get">
+                                    <input type="hidden" name="id" value="<?= $cmid ?>" />
+                                    <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
+                                </form>
+                            <?php
+                        }
+                    }
                 }
-            }
-            
-            
-            
-            /*
-            $url = moodle_url::make_pluginfile_url($context->id,
-                    $component, $filearea, $itemid,
-                    '/', $orig_name);
-            
-            echo "<br><br>URL: $url<br><br>";
-            
-            echo "<br>itemid: $itemid<br>";
-            echo "<br>filename: $orig_name<br>";
-            */
-            //league_pluginfile($course, $cm, $context, $filearea, array('itemid'=>$itemid, 'filename'=>$orig_name), true);
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            /*if ($draftitemid = file_get_submitted_draft_itemid('attachments')) {
-                file_save_draft_area_files($draftitemid, $context->id, 'mod_league', 'attachments',
-                        0, array('subdirs' => 0, 'maxfiles' => 1));
-            }
-            $fs = get_file_storage();
-            if ($files = $fs->get_area_files($context->id, 'mod_league', 'attachment', '0', 'sortorder', false)) {
-                // Look through each file being managed
-                foreach ($files as $file) {
-                // Build the File URL. Long process! But extremely accurate.
-                $fileurl = moodle_url::make_pluginfile_url($file->get_contextid(),
-                        $file->get_component(), $file->get_filearea(), $file->get_itemid(),
-                        $file->get_filepath(), $file->get_filename());
-                echo $fileurl;
-                }
-            } else {
-                print_r($files);
-                echo '<p>Please upload an image first</p>';
-            }
-            
-            https://stackoverflow.com/questions/19430076/how-to-store-file-and-retrive-it-correctly-with-moodle-file-api
-            */
-            /*
-            ?>
-            <?= get_string('ue_success','league') ?><br>
-                <form action="view.php" method="get">
-                    <input type="hidden" name="id" value="<?= $cmid ?>" />
-                    <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
-                </form>
-            <?php
-            */
             }else{
                 echo "<br><br>Mal, debes subir un puto archivo.<br><br>";
             }
