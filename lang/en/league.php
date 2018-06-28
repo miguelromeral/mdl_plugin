@@ -22,6 +22,7 @@ $string['upload_time'] = 'Fecha de subida';
 $string['mark'] = 'Nota';
 $string['reviews'] = 'Observaciones';
 $string['download_file'] = 'Descargar fichero';
+$string['file_uploaded'] = 'Fichero subido';
 $string['to_mark'] = 'Corregir';
 $string['modify'] = 'Modificar';
 $string['go_back'] = 'Volver';
@@ -132,3 +133,9 @@ $string['mark_sent_success'] = 'Nota actualizada con éxito.';
  */
 
 $string['grade'] = 'Hola, Mundo!';
+
+/**
+ *      NOTAS PARA ALUMNOS
+ */
+
+$string['not_sent_yet'] = 'SIN HACER EJERCICIO';

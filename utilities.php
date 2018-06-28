@@ -7,7 +7,6 @@ function print_exercises($idliga, $rol, $cmid){
     WHERE league = $idliga
     ORDER BY id";
     $data = $DB->get_records_sql($var);
-    $num = 1;
     
     if ($rol == 'teacher'){
     
@@ -15,7 +14,6 @@ function print_exercises($idliga, $rol, $cmid){
 
 <table border="1">
     <tr>
-        <td>#</td>
         <td><?= get_string('exercise', 'league') ?></td>
         <td><?= get_string('timemofied', 'league') ?></td>
         <td><?= get_string('enabled', 'league') ?></td>
@@ -28,7 +26,6 @@ function print_exercises($idliga, $rol, $cmid){
         //print_r($exer);
         ?>
     <tr>
-        <td><?= $num ?></td>
         <td><?= $exer['name'] ?></td>
         <td><?= date("H:i:s, d (D) M Y", $exer['timemodified']) ?></td>
         <td><?= ($exer['enabled'] == 0 ? get_string('no','league') : "<i><strong>".get_string('yes','league')."</strong></i>") ?></td>
@@ -73,7 +70,6 @@ function print_exercises($idliga, $rol, $cmid){
         </td>
     </tr>
         <?php
-        $num += 1;
     }
     
 ?>
@@ -86,7 +82,6 @@ function print_exercises($idliga, $rol, $cmid){
 
 <table border="1">
     <tr>
-        <td>#</td>
         <td><?= get_string('exercise', 'league') ?></td>
         <td><?= get_string('timemofied', 'league') ?></td>
         <td><?= get_string('send_exercise', 'league') ?></td>
@@ -101,7 +96,6 @@ function print_exercises($idliga, $rol, $cmid){
         
         ?>
     <tr>
-        <td><?= $num ?></td>
         <td><?= $exer['name'] ?></td>
         <td><?= date("H:i:s, d (D) M Y", $exer['timemodified']) ?></td>
         <td>
@@ -116,7 +110,6 @@ function print_exercises($idliga, $rol, $cmid){
         </td>
     </tr>
         <?php
-        $num += 1;
         }
     }
     
@@ -133,7 +126,7 @@ function print_students_exercise($cmid, $id_exer, $name){
     $var="select *
     from mdl_attempt as a
     inner join (
-            select c.id, c.id_user, d.firstname, d.lastname
+            select max(c.id) as id, c.id_user, d.firstname, d.lastname
             from mdl_attempt as c
             inner join mdl_user as d
             on c.id_user = d.id
@@ -179,6 +172,7 @@ function print_students_exercise($cmid, $id_exer, $name){
                 <input type="hidden" name="id_user" value="<?= $d['id_user'] ?>" />
                 <input type="hidden" name="idat" value="<?= $d['id'] ?>" />
                 <input type="hidden" name="mark" value="<?= $d['mark'] ?>" />
+                <input type="hidden" name="observations" value="<?= $d['observations'] ?>" />
                 <input type="submit" value="<?= get_string('mark_student_button', 'league') ?>"/>
             </form>
             </td>
@@ -210,4 +204,76 @@ function getIDFileFromContenthash($contenthash){
     }
     
     return $id;
+}
+
+function print_notas_alumno($idleague, $cmid, $userid){
+    global $DB;
+    //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
+    $var="select *
+    from mdl_exercise as a
+    left outer join
+    (
+        select a.id as idat, a.timemodified as tma, a.observations, a.course as ca, a.name as fname, a.exercise, b.id_user, a.mark, a.id_file, a.url
+        from mdl_attempt as a
+        inner join (
+                        select *
+                        from mdl_attempt
+                        where id_user = $userid
+                        order by id desc
+        ) as b
+        on a.id = b.id
+        group by a.exercise
+    ) as b
+    on a.id = b.exercise
+    where a.league = $idleague";
+    $data = $DB->get_records_sql($var);
+    ?>
+
+<table border="1">
+    <tr>
+        <td><?= get_string('exercise', 'league') ?></td>
+        <td><?= get_string('upload_time', 'league') ?></td>
+        <td><?= get_string('file_uploaded', 'league') ?></td>
+        <td><?= get_string('mark', 'league') ?></td>
+        <td><?= get_string('reviews', 'league') ?></td>
+    </tr>
+    
+    <?php
+    
+    foreach ($data as $d){
+        $d = get_object_vars($d);
+        if($d['enabled'] == 1 || $d['idat']){
+        
+        
+        ?> <tr> 
+            <td><?= $d['name'] ?></td>
+            <td><?= ($d['tma'] ? date("H:i:s, d (D) M Y", $d['tma']) : "") ?></td>
+            <td>
+                <?php
+                    if($d['url']){
+                        echo "<a href=".$d['url'].">".get_string('download_file_button', 'league')."</a>";
+                    }
+                ?>
+            </td>
+            <td><?php 
+            if($d['mark'] == -1){
+                echo get_string('no_mark_yet', 'league');
+            }else{
+                if($d['mark']){
+                    echo $d['mark']."%";
+                }else{
+                    echo "<b><i>".get_string('not_sent_yet', 'league')."</i></b>";
+                }
+            }
+            ?></td>
+            <td><?= $d['observations'] ?></td>
+        
+        </tr>
+        <?php
+        }
+    }
+    ?>
+</table>
+
+<?php
 }

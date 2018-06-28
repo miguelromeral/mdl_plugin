@@ -72,6 +72,7 @@ class mark_form extends moodleform {
         $id_exer = ($this->_customdata['id_exer'] ? $this->_customdata['id_exer'] : -1);
         $id_user = ($this->_customdata['id_user'] ? $this->_customdata['id_user'] : -1);
         $mark = ($this->_customdata['mark'] ? $this->_customdata['mark'] : -1);
+        $obs = ($this->_customdata['observations'] ? $this->_customdata['observations'] : "");
         
         $result = $DB->get_records_sql('SELECT * FROM {exercise} WHERE id = ?', array($id_exer)); //El 1 no, que es el moodle completo.
         $name_exer = "";
@@ -103,7 +104,7 @@ class mark_form extends moodleform {
         $mform->setDefault('mark', $options[$mark]);
         
         $mform->addElement('textarea', 'observations', get_string("set_observation", "league"), 'wrap="virtual" rows="20" cols="50"');
-        $mform->setDefault('observations', "");
+        $mform->setDefault('observations', $obs);
         
         $this->add_action_buttons();
     }

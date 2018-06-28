@@ -16,6 +16,7 @@ $id_user = required_param('id_user', PARAM_INT);
 $idat = required_param('idat', PARAM_INT);
 $mark = required_param('mark', PARAM_INT);
 $name_exer = required_param('name', PARAM_TEXT);
+$observations = required_param('observations', PARAM_TEXT);
 
 /*
  * La variable $PAGE configura la página
@@ -94,6 +95,7 @@ if($valido == 0){
                         'mark'=>$mark,
                         'name_exer'=>$name_exer,
                         'idat'=>$idat,
+                        'observations'=>$observations,
                         'id_user'=>$id_user));
     
         //Form processing and displaying is done here
@@ -109,9 +111,9 @@ if($valido == 0){
             <?php
         } else if ($data = $mform->get_data()) {
             $new_mark = $data->mark;
-            $observaciones = $data->observations;
+            $new_observaciones = $data->observations;
             
-            attempt_update_instance($league, $idat, $new_mark);
+            attempt_update_instance($league, $idat, $new_mark, $new_observaciones);
             
             
             ?>

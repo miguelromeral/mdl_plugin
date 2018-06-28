@@ -152,7 +152,7 @@ function attempt_add_instance($course, $id_user, $exercise, $id_file, $url, $nam
     }
 }
 
-function attempt_update_instance($league, $idat, /*$course, $id_user, $exercise, $task, */ $mark) {
+function attempt_update_instance($league, $idat, $mark, $observations) {
     global $DB;
     $record = new stdClass();
     $record->id = $idat;
@@ -160,6 +160,7 @@ function attempt_update_instance($league, $idat, /*$course, $id_user, $exercise,
     $time = time();
     //$record->name = "$id_user-$exercise-$time";
     $record->timemodified = $time;
+    $record->observations = $observations;
     //$record->id_user = $id_user;
     //$record->intro = null;
     //$record->introformat = null;
