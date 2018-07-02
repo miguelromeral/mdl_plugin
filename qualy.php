@@ -3,6 +3,7 @@
 
 require_once('../../config.php');
 require_once('lib.php');
+require_once('utilities.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
@@ -139,15 +140,17 @@ echo "--> league\n". print_r($league);
 echo "<h1>".get_string('qualy_title', 'league')."</h1>";
 
 if ($rol == 'student'){
-    ?>
+
+        print_qualy($league->id, $course->id, $USER->id);
 
 
-
-
-
-    <?php
 }else if($rol == 'teacher'){
-    echo "Página principal del profesor.";
+    
+    
+        print_qualy($league->id, $course->id, $USER->id);
+        
+        
+        
 }else{
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
