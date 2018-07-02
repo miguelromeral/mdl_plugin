@@ -17,7 +17,6 @@ function league_add_instance(stdClass $league, mod_league_mod_form $mform = null
     global $DB;
     $league->timemodified = time();
     $league->gradeweighting = 100;
-    
     //print_r($league);
     
     $league->id = $DB->insert_record('league', $league);

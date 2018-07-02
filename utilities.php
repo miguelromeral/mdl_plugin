@@ -378,7 +378,7 @@ function sort_qualy_array_best_marks($q){
             $r1 = $q[$j];
             $r2 = $q[$j+1];
             //echo "<br> Miro ".$j." y ".($j+1)." ( ${r1['totalmark']} / ${r2['totalmark']}) <br>";
-            if($r2['totalmark'] > $r1['totalmark'] || ($r2['totalmark'] === $r1['totalmark'] && mejoresNotasSegundo($q, $r1, $r2, $j, $j+1))){
+            if($r2['totalmark'] > $r1['totalmark'] || ($r2['totalmark'] === $r1['totalmark'] && mejoresNotasSegundo($q, $r1, $r2))){
                // echo "<br>CAMBIO<br>";
                 $q = exchange($q, $j, $j+1);
             }
@@ -388,9 +388,7 @@ function sort_qualy_array_best_marks($q){
     for ($i = 0; $i < $n - 1; $i++){
         $r1 = $q[$i];
         $r2 = $q[$i+1];
-        if($r2['totalmark'] === $r1['totalmark']){
-            $q = setNotesBestMarks($q, $r1, $r2, $i, $i+1);
-        }
+        $q = setNotesBM($q, $r1, $r2, $i, $i+1);
     }
     return $q;
 }
@@ -405,7 +403,7 @@ function sort_qualy_array_more_exercises($q){
             //echo "<br> Miro ".$j." y ".($j+1)." ( ${r1['totalmark']} / ${r2['totalmark']}) <br>";
             if($r2['exeruplo'] > $r1['exeruplo'] ||
                     ($r2['exeruplo'] === $r1['exeruplo'] && 
-                        ($r2['totalmark'] > $r1['totalmark'] || mejoresNotasSegundo($q, $r1, $r2, $j, $j+1)))){
+                        ($r2['totalmark'] > $r1['totalmark'] || mejoresNotasSegundo($q, $r1, $r2)))){
                 //echo "<br>CAMBIO<br>";
                 $q = exchange($q, $j, $j+1);
             }
@@ -415,18 +413,55 @@ function sort_qualy_array_more_exercises($q){
     for ($i = 0; $i < $n - 1; $i++){
         $r1 = $q[$i];
         $r2 = $q[$i+1];
-        $q = setNotesMoreExercises($q, $r1, $r2, $i, $i+1);
+        $q = setNotesME($q, $r1, $r2, $i, $i+1);
     }
     return $q;
 }
 
-function setNotesMoreExercises($q, $r1, $r2, $f, $s){
+function setNotesBM($q, $r1, $r2, $f, $s){
     $aux = 0;
+    $s = $r1['exeruplo'];
     if($r1['exeruplo'] > $r2['exeruplo'] && $r1['totalmark'] === $r2['totalmark']){
         $q[$f]['notes'] = 'Ha subido más ejercicios';
     }else{
         if($r1['totalmark'] === $r2['totalmark']){
             while (true) {
+                if($s != $aux){
+                    $n1 = $r1['marks'][$aux];
+                    $n2 = $r2['marks'][$aux];
+                    if($n1 && $n2){
+                        if($n1 > $n2){
+                            $q[$f]['notes'] = 'Tiene mejores notas en comparación '. comparaNotas($q, $f, $s, true).' a '
+                                    . comparaNotas($q, $f, $s, false);
+                            //$q[$f]['notes'] = 'Tiene mejores notas en comparación';
+                            return $q;
+                        }
+                        if($n1 == $n2){
+                            $aux += 1;
+                        }
+                    }else{
+                        $q[$f]['notes'] = 'Empate total';
+                        return $q;
+                    }
+                }else {
+                    $q[$f]['notes'] = 'Empate total';
+                    return $q;
+                }
+            }
+        }
+    }
+    return $q;
+}
+function setNotesME($q, $r1, $r2, $f, $s){
+    $aux = 0;
+    $s = $r1['exeruplo'];
+    if($r1['exeruplo'] != $r2['exeruplo']){
+        if($r1['exeruplo'] > $r2['exeruplo']){
+            $q[$f]['notes'] = 'Ha subido más ejercicios';
+        }
+    }else{
+        while (true) {
+            if($s != $aux){
                 $n1 = $r1['marks'][$aux];
                 $n2 = $r2['marks'][$aux];
                 if($n1 && $n2){
@@ -442,31 +477,6 @@ function setNotesMoreExercises($q, $r1, $r2, $f, $s){
                 }else{
                     $q[$f]['notes'] = 'Empate total';
                     return $q;
-                }
-            }
-        }
-    }
-    return $q;
-}
-function setNotesBestMarks($q, $r1, $r2, $f, $s){
-    $aux = 0;
-    if($r1['exeruplo'] != $r2['exeruplo']){
-        if($r1['exeruplo'] > $r2['exeruplo']){
-            $q[$f]['notes'] = 'Ha subido más ejercicios';
-        }
-    }else{
-        while (true) {
-            $n1 = $r1['marks'][$aux];
-            $n2 = $r2['marks'][$aux];
-            if($n1 && $n2){
-                if($n1 > $n2){
-                    $q[$f]['notes'] = 'Tiene mejores notas en comparación '. comparaNotas($q, $f, $s, true).' a '
-                            . comparaNotas($q, $f, $s, false);
-                    //$q[$f]['notes'] = 'Tiene mejores notas en comparación';
-                    return $q;
-                }
-                if($n1 == $n2){
-                    $aux += 1;
                 }
             }else{
                 $q[$f]['notes'] = 'Empate total';
@@ -494,8 +504,9 @@ function comparaNotas($q, $i, $j, $primero){
 }
 
 // TRUE si r2 tiene mejores notas
-function mejoresNotasSegundo($q, $r1, $r2, $i, $j){
+function mejoresNotasSegundo($q, $r1, $r2){
     $i = 0;
+    $s = $r1['exeruplo'];
     if($r1['exeruplo'] != $r2['exeruplo']){
         if($r1['exeruplo'] > $r2['exeruplo']){
             return false;
@@ -504,17 +515,21 @@ function mejoresNotasSegundo($q, $r1, $r2, $i, $j){
         }
     }else{
         while (true) {
-            $n1 = $r1['marks'][$i];
-            $n2 = $r2['marks'][$i];
-            if($n1 && $n2){
-                if($n2 > $n1){
-                    return true;
-                }
-                if($n1 > $n2){
+            if($i != $s){
+                $n1 = ($r1['marks'][$i] ? $r1['marks'][$i] : null);
+                $n2 = ($r2['marks'][$i] ? $r2['marks'][$i] : null);
+                if($n1 && $n2){
+                    if($n2 > $n1){
+                        return true;
+                    }
+                    if($n1 > $n2){
+                        return false;
+                    }
+                    if($n1 == $n2){
+                        $i += 1;
+                    }
+                }else{
                     return false;
-                }
-                if($n1 == $n2){
-                    $i += 1;
                 }
             }else{
                 return false;

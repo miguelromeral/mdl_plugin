@@ -142,6 +142,8 @@ $q = get_qualy_array($league->id, $course->id, $rol, $league->method);
 
 if ($rol == 'student' || $rol == 'teacher'){
         
+        echo "Metodo: $league->method<br>";
+        
         echo "<h1>".get_string('qualy_title', 'league')."</h1>";
         print_qualy($q, $USER->id, $rol);
         
