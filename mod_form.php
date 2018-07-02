@@ -22,23 +22,13 @@ class mod_league_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
 
         $options = array();
+        $options[1] = get_string('select_best_marks', 'league');
+        $options[2] = get_string('select_more_exercises', 'league');
+        $mform->addElement('select', 'method', get_string('mod_form_select_method', 'league'), $options);
+        $mform->setType('method', PARAM_INT);
+        $mform->addRule('method', 'MENSAJE DE ERROR', 'required', null, 'client');
+        $mform->addHelpButton('method', 'select_method', 'league');
         
-        $result = $DB->get_records_sql('SELECT * FROM {course} WHERE id > ?', array('1')); //El 1 no, que es el moodle completo.
-        
-        // ID => NOMBRE DEL CURSO
-        //$options[0] = get_string('default_selected_course', 'league');
-       /* foreach ($result as $rowclass)
-        {
-            $rowclass = json_decode(json_encode($rowclass), True);
-            $options[$rowclass["id"]] = $rowclass["fullname"];
-        }
-        $mform->addElement('select', 'course', get_string('mod_form_select_course', 'league'), $options);
-        $mform->setType('course', PARAM_INT);
-        $mform->addRule('course', 'MENSAJE DE ERROR', 'required', null, 'client');
-        $mform->addHelpButton('course', 'select_course_activity', 'league');
-        
-        * 
-        */
         $this->standard_coursemodule_elements();
         $this->add_action_buttons();
     }

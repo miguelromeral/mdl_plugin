@@ -137,17 +137,13 @@ echo "--> cm\n". print_r($cm);
 echo "--> league\n". print_r($league);
 */
 
-echo "<h1>".get_string('qualy_title', 'league')."</h1>";
 
-if ($rol == 'student'){
+$q = get_qualy_array($league->id, $course->id, $rol, $league->method);
 
-        print_qualy($league->id, $course->id, $USER->id);
-
-
-}else if($rol == 'teacher'){
-    
-    
-        print_qualy($league->id, $course->id, $USER->id);
+if ($rol == 'student' || $rol == 'teacher'){
+        
+        echo "<h1>".get_string('qualy_title', 'league')."</h1>";
+        print_qualy($q, $USER->id, $rol);
         
         
         

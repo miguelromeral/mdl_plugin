@@ -82,6 +82,7 @@ function exercise_add_instance($course, $name, $statement, $league) {
     $record->introformat = null;
     $record->league = $league;
     $record->enabled = 0;
+    $record->published = 0;
   
     $id = $DB->insert_record('exercise', $record);
    
@@ -92,7 +93,7 @@ function exercise_add_instance($course, $name, $statement, $league) {
     }
 }
 
-function exercise_update_instance($course, $name, $statement, $league, $idexer, $enabled) {
+function exercise_update_instance($course, $name, $statement, $league, $idexer, $enabled, $pub) {
     global $DB;
     $record = new stdClass();
     $record->id = $idexer;
@@ -104,6 +105,7 @@ function exercise_update_instance($course, $name, $statement, $league, $idexer, 
     $record->introformat = null;
     $record->league = $league;
     $record->enabled = $enabled;
+    $record->published = $pub;
     $id = $DB->update_record('exercise', $record);
     
     if($id){

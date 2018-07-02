@@ -17,6 +17,7 @@ function print_exercises($idliga, $rol, $cmid){
         <td><?= get_string('exercise', 'league') ?></td>
         <td><?= get_string('timemofied', 'league') ?></td>
         <td><?= get_string('enabled', 'league') ?></td>
+        <td><?= get_string('published_marks', 'league') ?></td>
     </tr>
     
     <?php
@@ -29,6 +30,7 @@ function print_exercises($idliga, $rol, $cmid){
         <td><?= $exer['name'] ?></td>
         <td><?= date("H:i:s, d (D) M Y", $exer['timemodified']) ?></td>
         <td><?= ($exer['enabled'] == 0 ? get_string('no','league') : "<i><strong>".get_string('yes','league')."</strong></i>") ?></td>
+        <td><?= ($exer['published'] == 0 ? get_string('no','league') : "<i><strong>".get_string('yes','league')."</strong></i>") ?></td>
         <td>
             <form action="management.php" method="post" >
                 <input type="hidden" name="id" value="<?= $cmid ?>" />
@@ -37,10 +39,9 @@ function print_exercises($idliga, $rol, $cmid){
                 <input type="hidden" name="exer_name" value="<?= $exer['name'] ?>" />
                 <input type="hidden" name="exer_description" value="<?= $exer['statement'] ?>" />
                 <input type="hidden" name="exer_enabled" value="<?= $exer['enabled'] ?>" />
+                <input type="hidden" name="exer_published" value="<?= $exer['published'] ?>" />
                 <input type="image" name="submit_red"  value="red"  alt="red " src="images/delete.png" width="20" height="20">
             </form>
-            
-            
         </td>
         <td><form action="add_exercise.php" method="get" >
                 <input type="hidden" name="id" value="<?= $cmid ?>" />
@@ -57,6 +58,7 @@ function print_exercises($idliga, $rol, $cmid){
                 <input type="hidden" name="exer_name" value="<?= $exer['name'] ?>" />
                 <input type="hidden" name="exer_description" value="<?= $exer['statement'] ?>" />
                 <input type="hidden" name="exer_enabled" value="<?= $exer['enabled'] ?>" />
+                <input type="hidden" name="exer_published" value="<?= $exer['published'] ?>" />
                 <input type="submit" value="<?= 
                 ($exer['enabled'] == 0 ? get_string('enable_exercise_button', 'league') : get_string('disable_exercise_button', 'league')) 
             ?>"/>
@@ -66,6 +68,20 @@ function print_exercises($idliga, $rol, $cmid){
                 <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
                 <input type="hidden" name="name" value="<?= $exer['name'] ?>" />
                 <input type="submit" value="<?= get_string('mark_exercise', 'league') ?>"/>
+            </form>
+        </td>
+        <td>
+            <form action="management.php" method="post" >
+                <input type="hidden" name="id" value="<?= $cmid ?>" />
+                <input type="hidden" name="action" value="publish" />
+                <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
+                <input type="hidden" name="exer_name" value="<?= $exer['name'] ?>" />
+                <input type="hidden" name="exer_description" value="<?= $exer['statement'] ?>" />
+                <input type="hidden" name="exer_published" value="<?= $exer['published'] ?>" />
+                <input type="hidden" name="exer_enabled" value="<?= $exer['enabled'] ?>" />
+                <input type="submit" value="<?= 
+                ($exer['published'] == 0 ? get_string('publish', 'league') : get_string('unpublish', 'league')) 
+            ?>"/>
             </form>
         </td>
     </tr>
@@ -258,7 +274,7 @@ function print_notas_alumno($idleague, $cmid, $userid){
                 ?>
             </td>
             <td><?php 
-            if($d['mark'] == -1){
+            if($d['mark'] == -1 || $d['published'] == 0){
                 echo get_string('no_mark_yet', 'league');
             }else{
                 if($d['mark']){
@@ -268,7 +284,13 @@ function print_notas_alumno($idleague, $cmid, $userid){
                 }
             }
             ?></td>
-            <td><?= $d['observations'] ?></td>
+            <td><?php
+            if($d['mark'] == -1 || $d['published'] == 0){
+                echo "";
+            }else{
+                echo $d['observations'];
+            }
+            ?></td>
         
         </tr>
         <?php
@@ -280,7 +302,7 @@ function print_notas_alumno($idleague, $cmid, $userid){
 <?php
 }
 
-function get_qualy_array($idleague, $idcurso){
+function get_qualy_array($idleague, $idcurso, $rol, $method){
     global $DB;
     //Lista de estudiantes de un curso
     $var="SELECT DISTINCT u.id AS userid, c.id AS courseid, u.firstname, u.lastname, u.username
@@ -315,6 +337,9 @@ function get_qualy_array($idleague, $idcurso){
         ) as b
         on a.id = b.exercise
         where a.league = $idleague";
+        if($rol == 'student'){
+            $var2 .= " and a.published = 1";
+        }
         $data2 = $DB->get_records_sql($var2);
         foreach ($data2 as $d2){
             $d2 = get_object_vars($d2);
@@ -330,7 +355,12 @@ function get_qualy_array($idleague, $idcurso){
         }
         array_push($q, $fila);
     }
-    return sort_qualy_array($q);
+    
+    switch($method){
+        case 1: return sort_qualy_array_best_marks($q);
+        case 2: return sort_qualy_array_more_exercises($q);
+        default: return $q;
+    }
 }
 
 function exchange($array, $id1, $id2){
@@ -340,69 +370,110 @@ function exchange($array, $id1, $id2){
     return $array;
 }
 
-function sort_qualy_array($q){
-   // print_r($q);
+function sort_qualy_array_best_marks($q){
     $n = sizeof($q);
     //Algoritmo burbuja
     for ($i = 1; $i < $n; $i++){
         for($j = 0; $j < $n - $i; $j++){
             $r1 = $q[$j];
             $r2 = $q[$j+1];
-         /*   echo "<br>--- LAP ---<br>";
-            echo "<br> r1: ($i) <br>";
-            print_r($r1);
-            echo "<br> r2: ($j) <br>";
-            print_r($r2);
-         */
-         /*   echo "<br>--- LAP ---<br>";
-            echo "<br> r1: (${r1['totalmark']}) / j: $j <br>";
-            echo "<br> r2: (${r2['totalmark']}) / j+1: ".($j+1)." <br>";
-          */  
-            if($r2['totalmark'] > $r1['totalmark']){
-            //    echo "<br> CAMBIO <br>";
-                //echo "<br> Antes: <br>";
-                //print_r($);
-                $q = exchange($q, $i, $j);
-            }else if($r2['totalmark'] === $r1['totalmark']){
-                $ex = mejoresNotasSegundo($q, $r1, $r2, $i, $j);
-                switch ($ex) {
-                    case 0:
-                        $q[$i]['notes'] = "Empate Total";
-                        $q[$j]['notes'] = "Empate Total";
-                        break;
-                    case 1:
-                        $q[$i]['notes'] = "Ha subido menos ejercicios";
-                        $q[$j]['notes'] = "Ha subido más ejercicios";
-                        break;
-                    case 2:
-                        $q[$i]['notes'] = "Ha subido menos ejercicios";
-                        $q[$j]['notes'] = "Ha subido más ejercicios";
-                        break;
-                    case 3:
-                        $q[$i]['notes'] = "Ha obtenido mayor nota comparando ejercicios ("
-                            .comparaNotas($q, $i, $j, true).")";
-                        $q[$j]['notes'] = "Ha obtenido menor nota comparando ejercicios ("
-                            .comparaNotas($q, $i, $j, false).")";
-                        break;
-                    case 4:
-                        $q[$j]['notes'] = "Ha obtenido mayor nota comparando ejercicios ("
-                            .comparaNotas($q, $i, $j, true).")";
-                        $q[$i]['notes'] = "Ha obtenido menor nota comparando ejercicios ("
-                            .comparaNotas($q, $i, $j, false).")";
-                        break;
-                    default:
-                        break;
+            //echo "<br> Miro ".$j." y ".($j+1)." ( ${r1['totalmark']} / ${r2['totalmark']}) <br>";
+            if($r2['totalmark'] > $r1['totalmark'] || ($r2['totalmark'] === $r1['totalmark'] && mejoresNotasSegundo($q, $r1, $r2, $j, $j+1))){
+               // echo "<br>CAMBIO<br>";
+                $q = exchange($q, $j, $j+1);
+            }
+        }
+       }
+    //Ya está ordenado, ahora a poner las aclaraciones en caso de empates
+    for ($i = 0; $i < $n - 1; $i++){
+        $r1 = $q[$i];
+        $r2 = $q[$i+1];
+        if($r2['totalmark'] === $r1['totalmark']){
+            $q = setNotesBestMarks($q, $r1, $r2, $i, $i+1);
+        }
+    }
+    return $q;
+}
+
+function sort_qualy_array_more_exercises($q){
+    $n = sizeof($q);
+    //Algoritmo burbuja
+    for ($i = 1; $i < $n; $i++){
+        for($j = 0; $j < $n - $i; $j++){
+            $r1 = $q[$j];
+            $r2 = $q[$j+1];
+            //echo "<br> Miro ".$j." y ".($j+1)." ( ${r1['totalmark']} / ${r2['totalmark']}) <br>";
+            if($r2['exeruplo'] > $r1['exeruplo'] ||
+                    ($r2['exeruplo'] === $r1['exeruplo'] && 
+                        ($r2['totalmark'] > $r1['totalmark'] || mejoresNotasSegundo($q, $r1, $r2, $j, $j+1)))){
+                //echo "<br>CAMBIO<br>";
+                $q = exchange($q, $j, $j+1);
+            }
+        }
+       }
+    //Ya está ordenado, ahora a poner las aclaraciones en caso de empates
+    for ($i = 0; $i < $n - 1; $i++){
+        $r1 = $q[$i];
+        $r2 = $q[$i+1];
+        $q = setNotesMoreExercises($q, $r1, $r2, $i, $i+1);
+    }
+    return $q;
+}
+
+function setNotesMoreExercises($q, $r1, $r2, $f, $s){
+    $aux = 0;
+    if($r1['exeruplo'] > $r2['exeruplo'] && $r1['totalmark'] === $r2['totalmark']){
+        $q[$f]['notes'] = 'Ha subido más ejercicios';
+    }else{
+        if($r1['totalmark'] === $r2['totalmark']){
+            while (true) {
+                $n1 = $r1['marks'][$aux];
+                $n2 = $r2['marks'][$aux];
+                if($n1 && $n2){
+                    if($n1 > $n2){
+                        $q[$f]['notes'] = 'Tiene mejores notas en comparación '. comparaNotas($q, $f, $s, true).' a '
+                                . comparaNotas($q, $f, $s, false);
+                        //$q[$f]['notes'] = 'Tiene mejores notas en comparación';
+                        return $q;
+                    }
+                    if($n1 == $n2){
+                        $aux += 1;
+                    }
+                }else{
+                    $q[$f]['notes'] = 'Empate total';
+                    return $q;
                 }
-                if ($ex === 1 || $ex === 3){
-                    $q = exchange($q, $i, $j);
-                }
-            }else{
-                $q[$i]['notes'] = "";
-                $q[$j]['notes'] = "";
             }
         }
     }
-    
+    return $q;
+}
+function setNotesBestMarks($q, $r1, $r2, $f, $s){
+    $aux = 0;
+    if($r1['exeruplo'] != $r2['exeruplo']){
+        if($r1['exeruplo'] > $r2['exeruplo']){
+            $q[$f]['notes'] = 'Ha subido más ejercicios';
+        }
+    }else{
+        while (true) {
+            $n1 = $r1['marks'][$aux];
+            $n2 = $r2['marks'][$aux];
+            if($n1 && $n2){
+                if($n1 > $n2){
+                    $q[$f]['notes'] = 'Tiene mejores notas en comparación '. comparaNotas($q, $f, $s, true).' a '
+                            . comparaNotas($q, $f, $s, false);
+                    //$q[$f]['notes'] = 'Tiene mejores notas en comparación';
+                    return $q;
+                }
+                if($n1 == $n2){
+                    $aux += 1;
+                }
+            }else{
+                $q[$f]['notes'] = 'Empate total';
+                return $q;
+            }
+        }
+    }
     return $q;
 }
 
@@ -427,36 +498,32 @@ function mejoresNotasSegundo($q, $r1, $r2, $i, $j){
     $i = 0;
     if($r1['exeruplo'] != $r2['exeruplo']){
         if($r1['exeruplo'] > $r2['exeruplo']){
-            return 2;
+            return false;
         }else{
-            return 1;
+            return true;
         }
     }else{
         while (true) {
             $n1 = $r1['marks'][$i];
             $n2 = $r2['marks'][$i];
-            echo "<br> $n1 - $n2 <br>";
             if($n1 && $n2){
                 if($n2 > $n1){
-                    return 3;
                     return true;
                 }
                 if($n1 > $n2){
-                    return 4;
                     return false;
                 }
                 if($n1 == $n2){
                     $i += 1;
                 }
             }else{
-                return 0;
+                return false;
             }
         }
     }
 }
 
-function print_qualy($idleague, $idcurso, $iduser = -1){
-    $q = get_qualy_array($idleague, $idcurso);
+function print_qualy($q, $iduser = -1, $rol = 'student'){
     $pos = 1;
         ?>
 <table border="1">
@@ -469,7 +536,8 @@ function print_qualy($idleague, $idcurso, $iduser = -1){
         <td>ES</td>
         <td>NT</td>
         <td>PERC</td>
-        <td>Notas</td>
+        <td>Apuntes</td>
+        <td colspan="<?= $q[0]['totalexer'] ?>">Mejores notas</td>
     </tr>
         <?php
     foreach ($q as $r){
@@ -482,8 +550,17 @@ function print_qualy($idleague, $idcurso, $iduser = -1){
         <td><?= $r['totalexer'] ?></td>
         <td><?= $r['exeruplo'] ?></td>
         <td><?= $r['totalmark'] ?></td>
-        <td><?= number_format(($r['totalmark'] / ($r['totalexer'] * 100)) * 100, 2, ',', ' ') ?> %</td>
-        <td><?= ($r['notes'] ? $r['notes'] : "") ?></td>
+        <td><?= ($r['totalexer'] > 0 ? number_format(($r['totalmark'] / ($r['totalexer'] * 100)) * 100, 2, ',', ' ') . ' %' : 'NaN') ?></td>
+        <td><?= $r['notes'] ?></td>
+        <?php 
+            if($rol === 'teacher'){
+                foreach ($r['marks'] as $n){
+                    if($n){
+                        echo "<td>$n</td>";
+                    }
+                }
+            }
+        ?>
     </tr>
 
         <?php
@@ -518,7 +595,11 @@ function getArrayMarkByStudent($idleague, $iduser){
     $mark = Array();
     foreach ($data as $d){
         $d = get_object_vars($d);
-        array_push($mark, $d['mark']);
+        if ($d['mark'] != -1){
+            array_push($mark, $d['mark']);
+        }else{
+            array_push($mark, 'TBA');
+        }
     }
     return $mark;
 }

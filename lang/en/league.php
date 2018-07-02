@@ -39,6 +39,14 @@ $string['default_selected_course'] = 'SELECCIONAR CURSO';
 $string['select_course_activity'] = '¿Añadir una liga a un curso?';
 $string['select_course_activity_help'] = 'AYUDA';
 
+$string['mod_form_select_method'] = 'Seleccione el criterio de ordenación';
+$string['select_best_marks'] = 'Mejores notas';
+$string['select_more_exercises'] = 'Más ejercicios subidos';
+$string['select_method'] = 'Seleccionar criterios de ordenación';
+$string['select_method_help'] = 'Si selecciona "'.$string['select_best_marks'].
+        '" se ordenará la clasificación en función de cuales son las mejores notas obtenidas. Sin embargo, '
+        . 'si selecciona "'.$string['select_more_exercises'].'" se premiará a los alumnos que hayan subido más ejercicios.';
+
 /**
  *      ERRORES
  */
@@ -74,6 +82,11 @@ $string['exercise_deleted'] = 'El ejercicio ha sido eliminado con éxito.';
 $string['exercise_not_deleted'] = 'No se ha podido eliminar el ejercicio.';
 $string['upload_exercise'] = 'Subir ejercicio';
 $string['mark_exercise'] = 'Corregir';
+$string['published_marks'] = 'Notas publicadas';
+$string['publish'] = 'Publicar notas';
+$string['unpublish'] = 'Ocultar notas';
+$string['currently_published'] = 'Las notas han sido publicadas. A partir de ahora, los alumnos podrán ver sus notas para este ejercicio.';
+$string['currently_unpublished'] = 'Retirada la publicación de notas. Ningún alumno puede ver su nota para este ejercicio.';
 
 /**
  *      AÑADIR EJERCICIOS

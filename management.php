@@ -88,6 +88,7 @@ if($valido == 0){
         $exer_name_post = $_POST['exer_name'];
         $exer_description_post = $_POST['exer_description'];
         $exer_enabled_post = $_POST['exer_enabled'];
+        $pub = $_POST['exer_published'];
         $course = $cm->course;
         $league_post = $league->id;
 
@@ -117,7 +118,7 @@ if($valido == 0){
             //Negamos el cambio, si estába des, lo activamos, y si estaba activado, lo des.
             $cambio = ($exer_enabled_post == 0 ? 1 : 0);
             
-            exercise_update_instance($course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $cambio);
+            exercise_update_instance($course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $cambio, $pub);
 
             ?>
             <div>
@@ -130,13 +131,26 @@ if($valido == 0){
                 ?></strong><br>
             </div>
             <?php
+        } else if ($_POST['action'] == 'publish'){
+
+            //Negamos la accion qeu esta ahora
+            $cambio = ($pub == 0 ? 1 : 0);
+            exercise_update_instance($course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $exer_enabled_post, $cambio);
+
+            ?>
+            <div>
+                <strong><?php
+                if ($cambio == 0){
+                    echo get_string('currently_unpublished', 'league');
+                } else {
+                    echo get_string('currently_published', 'league');
+                }
+                ?></strong><br>
+            </div>
+            <?php
         }
         
     }
-    
-    
-    
-    
     
     //Aquí mostraremos una lista con todas las actividades
     print_exercises($league->id, 'teacher', $cmid);
