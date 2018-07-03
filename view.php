@@ -111,6 +111,7 @@ if ($rol == 'student'){
     print_exercises($league->id, 'student', $cmid);
     print_notas_alumno($league->id, $cmid, $USER->id);
     
+    
     ?>
     
     

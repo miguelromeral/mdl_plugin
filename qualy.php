@@ -136,9 +136,14 @@ if ($rol == 'student' || $rol == 'teacher'){
         
         echo "<h1>".get_string('qualy_title', 'league')."</h1>";
         print_qualy($q, $USER->id, $rol);
-        
-        
-        
+        ?>
+            
+            <form action="view.php" method="get">
+                <input type="hidden" name="id" value="<?= $cmid ?>" />
+                <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
+            </form>
+
+        <?php
 }else{
     notice(get_string('noviewdiscussionspermission', 'league'));
 }

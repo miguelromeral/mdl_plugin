@@ -265,7 +265,6 @@ function league_grade_item_update($league, $grades=NULL){
         $params['reset'] = true;
         $grades = NULL;
     }*/
- 
     return grade_update('mod/league', $league->course, 'mod', 'league', $league->id, 0, $grades, $params);
 }
 
@@ -356,4 +355,24 @@ function league_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
     // We can now send the file back to the browser - in this case with a cache lifetime of 1 day and no filtering. 
     // From Moodle 2.3, use send_stored_file instead.
     send_stored_file($file, 0, 0, true, $filename); // download MUST be forced - security!
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Navigation API                                                             //
+////////////////////////////////////////////////////////////////////////////////
+
+function league_extend_navigation(navigation_node $leaguenode, stdclass $course, stdclass $module, cm_info $cm) {
+    global $CFG, $DB, $PAGE;
+    
+    //$coursenode = $PAGE->navigation->find($course->id, navigation_node::TYPE_COURSE);
+    $thingnode = $leaguenode->add(get_string('qualy_title', 'league'),
+            new moodle_url('/mod/league/qualy.php', array('id' => $leaguenode->key)));
+    $thingnode->make_active();
+    
+}
+
+/**
+ * Extends the settings navigation with the Hotpot settings
+*/
+function league_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $leaguenode=null) {
 }
