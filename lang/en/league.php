@@ -66,6 +66,21 @@ $string['teacher_panel'] = 'Panel del profesor';
  */
 
 $string['qualy_title'] = 'Clasificación';
+$string['q_pos'] = 'POS';
+$string['q_name'] = 'Nombre';
+$string['q_user'] = 'Usuario';
+$string['q_id'] = 'ID';
+$string['q_total_exercises'] = 'TE';
+$string['q_exercises_uploaded'] = 'ES';
+$string['q_total_mark'] = 'NT';
+$string['q_percentage'] = 'PERC';
+$string['q_notes'] = 'Apuntes';
+$string['q_best_marks'] = 'Mejores notas';
+$string['total_draw'] = 'Empate total';
+$string['higher_mark'] = 'Tiene una nota más alta';
+$string['more_exercises_uploaded'] = 'Ha subido más ejercicios';
+$string['q_tba'] = 'TBA';
+$string['q_name_hashed'] = 'Usuario hasheado';
 
 /**
  *      ADMINISTRACIÓN DE EJERCICIOS

@@ -422,7 +422,7 @@ function setNotesBM($q, $r1, $r2, $f, $s){
     $aux = 0;
     $s = $r1['exeruplo'];
     if($r1['exeruplo'] > $r2['exeruplo'] && $r1['totalmark'] === $r2['totalmark']){
-        $q[$f]['notes'] = 'Ha subido más ejercicios';
+        $q[$f]['notes'] = get_string('more_exercises_uploaded','league');
     }else{
         if($r1['totalmark'] === $r2['totalmark']){
             while (true) {
@@ -431,20 +431,19 @@ function setNotesBM($q, $r1, $r2, $f, $s){
                     $n2 = $r2['marks'][$aux];
                     if($n1 && $n2){
                         if($n1 > $n2){
-                            $q[$f]['notes'] = 'Tiene mejores notas en comparación '. comparaNotas($q, $f, $s, true).' a '
+                            $q[$f]['notes'] = get_string('higher_mark','league').' '. comparaNotas($q, $f, $s, true).' a '
                                     . comparaNotas($q, $f, $s, false);
-                            //$q[$f]['notes'] = 'Tiene mejores notas en comparación';
                             return $q;
                         }
                         if($n1 == $n2){
                             $aux += 1;
                         }
                     }else{
-                        $q[$f]['notes'] = 'Empate total';
+                        $q[$f]['notes'] = get_string('total_draw','league');
                         return $q;
                     }
                 }else {
-                    $q[$f]['notes'] = 'Empate total';
+                    $q[$f]['notes'] = get_string('total_draw','league');
                     return $q;
                 }
             }
@@ -457,7 +456,7 @@ function setNotesME($q, $r1, $r2, $f, $s){
     $s = $r1['exeruplo'];
     if($r1['exeruplo'] != $r2['exeruplo']){
         if($r1['exeruplo'] > $r2['exeruplo']){
-            $q[$f]['notes'] = 'Ha subido más ejercicios';
+            $q[$f]['notes'] = get_string('more_exercises_uploaded','league');
         }
     }else{
         while (true) {
@@ -466,20 +465,19 @@ function setNotesME($q, $r1, $r2, $f, $s){
                 $n2 = $r2['marks'][$aux];
                 if($n1 && $n2){
                     if($n1 > $n2){
-                        $q[$f]['notes'] = 'Tiene mejores notas en comparación '. comparaNotas($q, $f, $s, true).' a '
+                        $q[$f]['notes'] = get_string('higher_mark','league').' '. comparaNotas($q, $f, $s, true).' - '
                                 . comparaNotas($q, $f, $s, false);
-                        //$q[$f]['notes'] = 'Tiene mejores notas en comparación';
                         return $q;
                     }
                     if($n1 == $n2){
                         $aux += 1;
                     }
                 }else{
-                    $q[$f]['notes'] = 'Empate total';
+                    $q[$f]['notes'] = get_string('total_draw','league');
                     return $q;
                 }
             }else{
-                $q[$f]['notes'] = 'Empate total';
+                $q[$f]['notes'] = get_string('total_draw','league');
                 return $q;
             }
         }
@@ -543,38 +541,63 @@ function print_qualy($q, $iduser = -1, $rol = 'student'){
         ?>
 <table border="1">
     <tr>
-        <td>POS</td>
-        <td>Nombre</td>
-        <td>Usuario</td>
-        <td>ID</td>
-        <td>TE</td>
-        <td>ES</td>
-        <td>NT</td>
-        <td>PERC</td>
-        <td>Apuntes</td>
-        <td colspan="<?= $q[0]['totalexer'] ?>">Mejores notas</td>
+        <td><?= get_string('q_pos','league') ?></td>
+        
+        <?php
+        if($rol == 'student'){
+            ?> <td><?= get_string('q_name_hashed','league') ?></td> <?php
+        }else{
+            ?> <td><?= get_string('q_name','league') ?></td> <?php
+        }
+        ?>
+        <?php if($rol == 'teacher'){ 
+            echo "<td>".get_string('q_user','league')."</td>";
+            echo "<td>".get_string('q_id','league')."</td>";
+        } ?>
+        <td><?= get_string('q_total_exercises','league') ?></td>
+        <td><?= get_string('q_exercises_uploaded','league') ?></td>
+        <td><?= get_string('q_total_mark','league') ?></td>
+        <td><?= get_string('q_percentage','league') ?></td>
+        <td><?= get_string('q_notes','league') ?></td>
+        <?php if($rol == 'teacher'){ 
+            echo '<td colspan="'.$q[0]['totalexer'].'">'.get_string('q_best_marks','league').'</td>';
+        } ?>
+        
     </tr>
         <?php
     foreach ($q as $r){
+        $b = ($r['uid'] == $iduser);
+        $i = $b;
         ?>
     <tr>
-        <td><?= $pos ?></td>
-        <td><?= $r['name'] ?></td>
-        <td><?= $r['uname'] ?></td>
-        <td><?= $r['uid'] ?></td>
-        <td><?= $r['totalexer'] ?></td>
-        <td><?= $r['exeruplo'] ?></td>
-        <td><?= $r['totalmark'] ?></td>
-        <td><?= ($r['totalexer'] > 0 ? number_format(($r['totalmark'] / ($r['totalexer'] * 100)) * 100, 2, ',', ' ') . ' %' : 'NaN') ?></td>
-        <td><?= $r['notes'] ?></td>
-        <?php 
-            if($rol === 'teacher'){
-                foreach ($r['marks'] as $n){
-                    if($n){
-                        echo "<td>$n</td>";
-                    }
+        <?php
+        echo tdtable($pos, $b, $i);
+        
+        if($rol == 'teacher'){ 
+            echo tdtable($r['name'], $b, $i);
+            echo tdtable($r['uname'], $b, $i);
+        } else if($rol == 'student'){ 
+            if($r['uid'] == $iduser){
+                echo tdtable($r['name'], $b, $i);
+            } else {
+                echo tdtable(md5($r['name']." - ".$r['uname']), $b, $i);
+            }
+        } 
+        if($rol == 'teacher'){
+            echo tdtable($r['uid'], $b, $i);
+        }
+        echo tdtable($r['totalexer'], $b, $i);
+        echo tdtable($r['exeruplo'], $b, $i);
+        echo tdtable($r['totalmark'], $b, $i);
+        echo tdtable(($r['totalexer'] > 0 ? number_format(($r['totalmark'] / ($r['totalexer'] * 100)) * 100, 2, ',', ' ') . ' %' : 'NaN'), $b, $i);
+        echo tdtable($r['notes'], $b, $i);
+        if($rol === 'teacher'){
+            foreach ($r['marks'] as $n){
+                if($n){
+                    echo tdtable($n, $b, $i);
                 }
             }
+        }
         ?>
     </tr>
 
@@ -582,6 +605,25 @@ function print_qualy($q, $iduser = -1, $rol = 'student'){
         $pos += 1;
     }
     ?> </table> <?php
+}
+
+function tdtable($content, $bold = false, $italic = false){
+    $ret = '<td>';
+    if($bold){
+        $ret .= '<b>';
+    }
+    if($italic){
+        $ret .= '<i>';
+    }
+    $ret .= $content;
+    if($italic){
+        $ret .= '</i>';
+    }
+    if($bold){
+        $ret .= '</b>';
+    }
+    $ret .= '</td>';
+    return $ret;
 }
 
 function getArrayMarkByStudent($idleague, $iduser){
@@ -613,7 +655,7 @@ function getArrayMarkByStudent($idleague, $iduser){
         if ($d['mark'] != -1){
             array_push($mark, $d['mark']);
         }else{
-            array_push($mark, 'TBA');
+            array_push($mark, get_string('q_tba','league'));
         }
     }
     return $mark;
