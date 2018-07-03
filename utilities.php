@@ -350,7 +350,7 @@ function get_qualy_array($idleague, $idcurso, $rol, $method){
             $fila += array('totalexer' => $d2['te']);
             $fila += array('exeruplo' => $d2['eu']);
             $fila += array('totalmark' => $d2['acum'] + $d2['sc']);
-            $fila += array('marks' => getArrayMarkByStudent($idleague, $d['userid']));
+            $fila += array('marks' => getArrayMarkByStudent($idleague, $d['userid'], true));
             $fila += array('notes' => "");
         }
         array_push($q, $fila);
@@ -626,10 +626,10 @@ function tdtable($content, $bold = false, $italic = false){
     return $ret;
 }
 
-function getArrayMarkByStudent($idleague, $iduser){
+function getArrayMarkByStudent($idleague, $iduser, $toprint){
     global $DB;
     //Lista de estudiantes de un curso
-    $var="select a.id, b.mark
+    $var="select a.id, b.mark, a.published
             from mdl_exercise as a
             left outer join
             (
@@ -653,10 +653,31 @@ function getArrayMarkByStudent($idleague, $iduser){
     foreach ($data as $d){
         $d = get_object_vars($d);
         if ($d['mark'] != -1){
-            array_push($mark, $d['mark']);
+            if($toprint || $d['published'] == 1){
+                array_push($mark, $d['mark']);
+            }
         }else{
-            array_push($mark, get_string('q_tba','league'));
+            if($toprint){
+                array_push($mark, get_string('q_tba','league'));
+            }
         }
     }
     return $mark;
+}
+
+function publishedMarks($exercise){
+    global $DB;
+    //Lista de estudiantes de un curso
+    $var="select a.published
+        from mdl_exercise as a
+        where id = $exercise";
+    $data = $DB->get_records_sql($var);
+    foreach ($data as $d){
+        $d = get_object_vars($d);
+        if ($d['published'] == 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
 }

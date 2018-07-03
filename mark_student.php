@@ -114,7 +114,7 @@ if($valido == 0){
             $new_mark = $data->mark;
             $new_observaciones = $data->observations;
             
-            attempt_update_instance($league, $idat, $new_mark, $new_observaciones);
+            attempt_update_instance($league, $idat, $new_mark, $new_observaciones, $id_exer);
             
             
             ?>

@@ -8,6 +8,8 @@ require_once('./forms.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
+$itemnumber = optional_param('itemnumber', 0, PARAM_INT); // Item number, may be != 0 for activities that allow more than one grade per user
+$userid = optional_param('userid', 0, PARAM_INT); // Graded user ID (optional)
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 $info = get_fast_modinfo($course);
@@ -52,7 +54,7 @@ $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
 // Print header.
-$PAGE->set_title(format_string(get_string('grade', 'league')));
+$PAGE->set_title(format_string(get_string('title_grade', 'league')));
 //$PAGE->add_body_class('forumtype-'.$league->type);
 $PAGE->set_heading(format_string($course->fullname));
 
@@ -63,7 +65,7 @@ if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities'
     notice(get_string("activityiscurrentlyhidden"));
 }
 
-if (!has_capability('mod/league:view', $context)) {
+if (!has_capability('mod/league:view', $context) || ($userid && $userid != $USER->id)) {
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
 
@@ -96,27 +98,23 @@ foreach ($data as $rowclass)
 
 if ($rol == 'student'){
     
-    //echo $output->inicio_estudiante();
-    //echo "Hola, Mundo! Estudiante, ya te pondremos aqui las calificaciones.";
+    print_notas_alumno($league->id, $cmid, $USER->id);
+    
+    ?>
     
     
-    $grading = league_get_grades($league, $USER->id);
-    print_r($grading);
+    <form action="qualy.php" method="get">
+        <input type="hidden" name="id" value="<?= $cmid ?>" />
+        <input type="submit" value="<?= get_string('view_qualy_button', 'league') ?>"/>
+    </form>
+    
+        <?php
     
     
 }else if($rol == 'teacher'){
-    ?>
-
-<h1><?= get_string('teacher_panel', 'league') ?></h1>
-<form action="management.php" method="get">
-    <input type="hidden" name="id" value="<?= $cmid ?>" />
-    <input type="hidden" name="lid" value="<?= $cm->id ?>" />
-    <input type="hidden" name="uid" value="<?= $USER->id ?>" />
-    <input type="submit" value="<?= get_string('manage_exercises_button', 'league') ?>"/>
-</form>
     
-
-    <?php
+    redirect('qualy.php?id='.$cmid);
+    
 }else{
     notice(get_string('noviewdiscussionspermission', 'league'));
 }

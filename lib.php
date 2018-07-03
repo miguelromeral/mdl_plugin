@@ -92,7 +92,7 @@ function exercise_add_instance($course, $name, $statement, $league) {
     }
 }
 
-function exercise_update_instance($course, $name, $statement, $league, $idexer, $enabled, $pub) {
+function exercise_update_instance($leagueinstance, $course, $name, $statement, $league, $idexer, $enabled, $pub) {
     global $DB;
     $record = new stdClass();
     $record->id = $idexer;
@@ -106,6 +106,7 @@ function exercise_update_instance($course, $name, $statement, $league, $idexer, 
     $record->enabled = $enabled;
     $record->published = $pub;
     $id = $DB->update_record('exercise', $record);
+    league_update_grades($leagueinstance);
     
     if($id){
         return true;
@@ -153,7 +154,7 @@ function attempt_add_instance($course, $id_user, $exercise, $id_file, $url, $nam
     }
 }
 
-function attempt_update_instance($league, $idat, $mark, $observations) {
+function attempt_update_instance($league, $idat, $mark, $observations, $idexer) {
     global $DB;
     $record = new stdClass();
     $record->id = $idat;
@@ -174,8 +175,9 @@ function attempt_update_instance($league, $idat, $mark, $observations) {
     //echo "<br>----<br>";
   
     $id = $DB->update_record('attempt', $record);
-    league_update_grades($league);
-    
+    if(publishedMarks($idexer)){
+        league_update_grades($league);
+    }
     if($id){
         return true;
     }else{
@@ -188,98 +190,120 @@ function attempt_update_instance($league, $idat, $mark, $observations) {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-function league_grade_item_update($league, $grades=null) {
-    global $CFG;
-    require_once($CFG->dirroot.'/lib/gradelib.php');
-    
-    // sanity check on $hotpot->id
-    if (empty($league->id) || empty($league->course)) {
-        return;
-    }
-    
-    // set up params for grade_update()
-    $params = array(
-        'itemname' => $league->name
-    );
-    if ($grades==='reset') {
-        $params['reset'] = true;
-        $grades = null;
-    }
-    if (isset($league->cmidnumber)) {
-        //cmidnumber may not be always present
-        $params['idnumber'] = $league->cmidnumber;
-    }
-    if ($league->gradeweighting) {
-        $params['gradetype'] = GRADE_TYPE_VALUE;
-        $params['grademax']  = $league->gradeweighting;
-        $params['grademin']  = 0;
-    } else {
-        $params['gradetype'] = GRADE_TYPE_NONE;
-        // Note: when adding a new activity, a gradeitem will *not*
-        // be created in the grade book if gradetype==GRADE_TYPE_NONE
-        // A gradeitem will be created later if gradetype changes to GRADE_TYPE_VALUE
-        // However, the gradeitem will *not* be deleted if the activity's
-        // gradetype changes back from GRADE_TYPE_VALUE to GRADE_TYPE_NONE
-        // Therefore, we force the removal of empty gradeitems
-        $params['deleted'] = true;
-    }
-    return grade_update('mod/league', $league->course, 'mod', 'league', $league->id, 0, $grades, $params);
-}
-
-
-function league_update_grades($league, $userid=0, $nullifnone=true) {
+/*
+ * Debería actualizara los grades del usuario indicado. Esto opdría ser tan simple como obtener los grades
+ * de un usuario para una actividad (con sus tablas específicas del modulo) y entonces llamar a league_grade_item_update()
+ * 
+ * $league : instancia del modulo
+ * $userid : un ID específico o 0 para todos.
+ * $nullifnone : si solo se especifica un usuario en concreto. Si es true y el usuario no tiene grade entonces un grade item
+ * con un rawgrade nulo deberá ser insertado.
+ */
+function league_update_grades($league, $userid=0, $nullifnone=true){
     global $CFG, $DB;
     require_once($CFG->libdir.'/gradelib.php');
  
-    if (! isset($league->id)) {
-        return false;
-    }
-
-    $grades = league_get_grades($league, $userid);
-
-    if (count($grades)) {
-        return league_grade_item_update($league, $grades);
-
+    
+        //Si sí es gradable, trata de recuperar las grades de los usuarios
+        //league_get_user_grades pertenece a la Rating API, pero podemos acceder a las tablas
+        // de nuestra actividad.
+    if ($grades = league_get_user_grades($league, $userid)) {
+        league_grade_item_update($league, $grades);
+ 
+        //Si el usuario no tiene notas (o el usuario es 0) y $nullifnone entonces se inserta una nota NULL
     } else if ($userid and $nullifnone) {
         $grade = new stdClass();
         $grade->userid   = $userid;
         $grade->rawgrade = NULL;
-        return league_grade_item_update($league, $grade);
+        league_grade_item_update($league, $grade);
  
     } else {
-        return league_grade_item_update($league);
+        league_grade_item_update($league);
     }
 }
 
-require_once($CFG->dirroot.'/rating/lib.php');
+/*
+ *          ***********************************
+ *          *                                 *
+ *          *   ***********  **               *
+ *          *   ***********  **         **    *
+ *          *   **       **  **      ***      *
+ *          *   **       **  **    ***        *
+ *          *   **       **  *** ***          *
+ *          *   **       **  *****            *
+ *          *   **       **  **  ***          *
+ *          *   ***********  **     ***       *
+ *          *   ***********  **       ***     *
+ *          *                                 *
+ *          ***********************************
+ *           (Aparentemente)
+ */
+//Debería crear o actualizar el grade item para una instancia de actividad llamando a grade_update().
+//Puede actualizar tanto el grade de la actividad como del grade de usuario si se les proporciona el parametro $grades.
+//Normalmente, $grades acepta el string 'reset' que seignifica que los grades en el gradebook deben ser reiniciados.
+function league_grade_item_update($league, $grades=NULL){
+    global $CFG;
+    if (!function_exists('grade_update')) { //workaround for buggy PHP versions
+        require_once($CFG->libdir.'/gradelib.php');
+    }
+ 
+    $params = array('itemname'=>$league->name);
+    if (isset($league->cmidnumber)) {
+        //cmidnumber may not be always present
+        $params['idnumber'] = $league->cmidnumber;
+    }
+    
+    $params['gradetype'] = GRADE_TYPE_VALUE;
+    //$params['grademax']  = $league->gradeweighting;
+    $params['grademax']  = 100;
+    $params['grademin']  = 0;
 
-function league_get_user_grades($league, $userid){
-    $ratingoptions = new stdClass;
-    $ratingoptions->component = 'mod_league';
-    $ratingoptions->ratingarea = 'post';
-    $ratingoptions->modulename = 'league';
-    $ratingoptions->moduleid   = $league->id;
-    $ratingoptions->userid = $userid;
-    //$ratingoptions->aggregationmethod = $league->assessed;
-    //$ratingoptions->scaleid = $league->scale;
-    //$ratingoptions->itemtable = 'forum_posts';
-    $ratingoptions->itemtableusercolumn = 'userid';
-
-    $rm = new rating_manager();
-    return $rm->get_user_grades($ratingoptions);
+ 
+    //HABRÍA QUE ARREGLAR ESTO:
+    /*
+    if ($grades  === 'reset') {
+        $params['reset'] = true;
+        $grades = NULL;
+    }*/
+ 
+    return grade_update('mod/league', $league->course, 'mod', 'league', $league->id, 0, $grades, $params);
 }
 
-function league_get_grades($league, $userid = null) {
+////////////////////////////////////////////////////////////////////////////////
+// Rating API                                                              //
+////////////////////////////////////////////////////////////////////////////////
+
+//Devuelve las notas delos usuarios. IMPLEMENTAR SI USERID = 0
+function league_get_user_grades($league, $userid = 0){
     global $DB;
-
-    $where = (isset($userid) ? "where id_user = ".$userid : "");
-    
-    $sql = "select * from mdl_attempt $where";
-
+    require_once('utilities.php');
     $grades = array();
-    if ($aggregates = $DB->get_records_sql($sql)) {
-        foreach ($aggregates as $userid => $aggregate) {
-            $grades[$userid] = (object)array('userid'=>$userid, 'rawgrade'=>$aggregate->mark, 'maxstatus' => 100);
+    if($userid != 0){
+        $notas = getArrayMarkByStudent($league->id, $userid, false);
+        $n = sizeof($notas);
+        $t = array_sum($notas);
+            $media = ($n ? (int) $t / $n : 0);
+        $grades[$userid] = (object)array('userid'=>$userid, 'rawgrade'=>$media);
+    }else{
+        $var="SELECT DISTINCT u.id AS userid, c.id AS courseid, u.firstname, u.lastname, u.username
+        FROM mdl_user u
+        JOIN mdl_user_enrolments ue ON ue.userid = u.id
+        JOIN mdl_enrol e ON e.id = ue.enrolid
+        JOIN mdl_role_assignments ra ON ra.userid = u.id
+        JOIN mdl_context ct ON ct.id = ra.contextid AND ct.contextlevel = 50
+        JOIN mdl_course c ON c.id = ct.instanceid AND e.courseid = c.id
+        JOIN mdl_role r ON r.id = ra.roleid AND r.shortname = 'student'
+        WHERE e.status = 0 AND u.suspended = 0 AND u.deleted = 0
+          AND (ue.timeend = 0 OR ue.timeend > NOW()) AND ue.status = 0 and c.id = $league->course";
+        $data = $DB->get_records_sql($var);
+        foreach($data as $user){
+            $d = get_object_vars($user);
+            $uid = $d['userid'];
+            $notas = getArrayMarkByStudent($league->id, $uid, false);
+            $n = sizeof($notas);
+            $t = array_sum($notas);
+            $media = ($n ? (int) $t / $n : 0);
+            $grades[$uid] = (object)array('userid'=>$uid, 'rawgrade'=>$media);
         }
     }
     return $grades;

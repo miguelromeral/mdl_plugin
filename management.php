@@ -118,7 +118,7 @@ if($valido == 0){
             //Negamos el cambio, si estába des, lo activamos, y si estaba activado, lo des.
             $cambio = ($exer_enabled_post == 0 ? 1 : 0);
             
-            exercise_update_instance($course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $cambio, $pub);
+            exercise_update_instance($league, $course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $cambio, $pub);
 
             ?>
             <div>
@@ -135,7 +135,7 @@ if($valido == 0){
 
             //Negamos la accion qeu esta ahora
             $cambio = ($pub == 0 ? 1 : 0);
-            exercise_update_instance($course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $exer_enabled_post, $cambio);
+            exercise_update_instance($league, $course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $exer_enabled_post, $cambio);
 
             ?>
             <div>

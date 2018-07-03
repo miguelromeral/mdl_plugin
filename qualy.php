@@ -129,20 +129,10 @@ AND  roleid = 5
 AND c.id = 2
 
 ORDER BY c.fullname";
-/*
-echo "--> course\n". print_r($course);
-echo "--> CFG\n". print_r($CFG);
-echo "--> USER\n". print_r($USER);
-echo "--> cm\n". print_r($cm);
-echo "--> league\n". print_r($league);
-*/
-
 
 $q = get_qualy_array($league->id, $course->id, $rol, $league->method);
 
 if ($rol == 'student' || $rol == 'teacher'){
-        
-        echo "Metodo: $league->method<br>";
         
         echo "<h1>".get_string('qualy_title', 'league')."</h1>";
         print_qualy($q, $USER->id, $rol);

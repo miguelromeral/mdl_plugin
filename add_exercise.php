@@ -86,20 +86,16 @@ if($valido == 0){
     <?php
 }else{
     
+        
+        $name = optional_param('name', '', PARAM_TEXT);
+        $description = optional_param('statement', '', PARAM_TEXT);
+    
      
-        if($id_exer == -1){
-            $mform = new exercise_form(null,
-                    array('id'=>$cmid,
-                        'id_exer'=>-1));
-        }else{
-            $name = required_param('name', PARAM_TEXT);
-            $description = required_param('statement', PARAM_TEXT);
-            $mform = new exercise_form(null,
-                    array('id'=>$cmid,
-                        'id_exer'=>$id_exer,
-                        'name'=>$name,
-                        'statement'=>$description));
-        }
+        $mform = new exercise_form(null,
+                array('id'=>$cmid,
+                    'id_exer'=>$id_exer,
+                    'name'=>$name,
+                    'statement'=>$description));
         
         
         //Form processing and displaying is done here
@@ -125,12 +121,10 @@ if($valido == 0){
 
             if(empty($errores)){
                 $course = $cm->course;
-                $league = $league->id;
-
                 if($id_exer == -1){
-                    $correcto = exercise_add_instance($course, $name, $statement, $league);
+                    $correcto = exercise_add_instance($course, $name, $statement, $league->id);
                 }else{
-                    $correcto = exercise_update_instance($course, $name, $statement, $league, $id_exer, 0);
+                    $correcto = exercise_update_instance($league, $course, $name, $statement, $league->id, $id_exer, 0, 0);
                 }
                 
                 if($correcto){
@@ -147,6 +141,13 @@ if($valido == 0){
             <div>
                 <?= get_string('ae_errors','league') ?><br>
                 <strong><?php echo $errores ?></strong><br>
+                <form action="add_exercise.php" method="get">
+                    <input type="hidden" name="id" value="<?= $cmid ?>" />
+                    <input type="hidden" name="id_exer" value="<?= $id_exer ?>" />
+                    <input type="hidden" name="name" value="<?= $name ?>" />
+                    <input type="hidden" name="statement" value="<?= $description ?>" />
+                    <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
+                </form>
             </div>
                 <?php
             }

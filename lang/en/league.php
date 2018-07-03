@@ -160,7 +160,7 @@ $string['mark_sent_success'] = 'Nota actualizada con éxito.';
  *      GRADEBOOK
  */
 
-$string['grade'] = 'Hola, Mundo!';
+$string['title_grade'] = 'Calificaciones';
 
 /**
  *      NOTAS PARA ALUMNOS
