@@ -132,7 +132,7 @@ if($valido == 0){
         } else if ($data = $mform->get_data()) {
             
             $component = 'mod_league';
-            $filearea = 'fa_'.$id_exer;
+            $filearea = 'exuplod';
             $name = $mform->get_new_filename('userfile');
             
             if($name){
@@ -140,14 +140,24 @@ if($valido == 0){
                 $success = $mform->save_stored_file('userfile', $context->id, $component, $filearea, $itemid);
                 
                 $fs = get_file_storage();
-                //print_r($fs);
+                
                 if ($files = $fs->get_area_files($contextid, $component, $filearea, $itemid, 'sortorder', false)) {               
                     foreach ($files as $file) {
-                        $fileurl = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());           
+                        //Ha cambiado el make_pluginfile desde la 2.2 hasta la 3.0
+                        //$mu = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());           
                         $contenthash = $file->get_contenthash();
                         $id_file = getIDFileFromContenthash($contenthash);
                         
-                        $exito = league_attempt_add_instance($course->id, $USER->id, $id_exer, $id_file, $fileurl, $name);
+                        
+                        $url = $CFG->wwwroot;
+                        $url .= "/pluginfile.php/";
+                        $url .= ($file->get_contextid())."/";
+                        $url .= ($file->get_component())."/";
+                        $url .= ($file->get_filearea())."/";
+                        $url .= ($file->get_itemid())."/";
+                        $url .= $name;
+                        
+                        $exito = league_attempt_add_instance($course->id, $USER->id, $id_exer, $id_file, $url, $name);
 
                         if($exito){
                             ?>

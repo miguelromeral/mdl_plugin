@@ -135,7 +135,14 @@ $q = get_qualy_array($league->id, $course->id, $rol, $league->method);
 if ($rol == 'student' || $rol == 'teacher'){
         
         echo "<h1>".get_string('qualy_title', 'league')."</h1>";
-        print_qualy($q, $USER->id, $rol);
+        print_qualy($q, $rol, $USER->id);
+        
+        if($rol == 'teacher'){
+            echo "<h2>".get_string('qualy_title_student', 'league')."</h2>";
+            $qs = get_qualy_array($league->id, $course->id, 'student', $league->method);
+            print_qualy($qs, $rol);
+        }
+        
         ?>
             
             <form action="view.php" method="get">

@@ -138,10 +138,6 @@ function league_attempt_add_instance($course, $id_user, $exercise, $id_file, $ur
     $record->mark = -1;
     $record->id_file = $id_file;
     $record->url = $url;
-    
-    //echo "Voy a añadir:<br>";
-    //print_r($record);
-    //echo "<br>----<br>";
   
     $id = $DB->insert_record('league_attempt', $record);
    
@@ -320,10 +316,10 @@ function league_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
         return false; 
     }
  
-  /*  if ($filearea !== 'expectedfilearea' && $filearea !== 'anotherexpectedfilearea') {
+    
+   if ($filearea !== 'exuplod') {
         return false;
     }
- */
     // Make sure the user is logged in and has access to the module (plugins that are not course modules should leave out the 'cm' part).
     //require_login($course, true, $cm);
     require_login();
@@ -352,7 +348,7 @@ function league_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
     
     // We can now send the file back to the browser - in this case with a cache lifetime of 1 day and no filtering. 
     // From Moodle 2.3, use send_stored_file instead.
-    send_stored_file($file, 0, 0, true, $filename); // download MUST be forced - security!
+    send_stored_file($file, 0, 0, true); // download MUST be forced - security!
 }
 
 ////////////////////////////////////////////////////////////////////////////////

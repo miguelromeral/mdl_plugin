@@ -168,8 +168,6 @@ if($valido == 0){
     </form>
     
 
-
-<script src="scripts/checker.js"></script> 
         
 <?php
 echo $OUTPUT->footer();

@@ -69,6 +69,7 @@ $string['my_marks'] = 'Mis notas';
  */
 
 $string['qualy_title'] = 'Clasificación';
+$string['qualy_title_student'] = 'Clasificación (Vista para estudiantes)';
 $string['q_pos'] = 'POS';
 $string['q_name'] = 'Nombre';
 $string['q_user'] = 'Usuario';

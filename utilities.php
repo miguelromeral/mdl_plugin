@@ -12,7 +12,7 @@ function print_exercises($idliga, $rol, $cmid){
     
     ?>
 
-<table border="1">
+<table>
     <tr>
         <td><?= get_string('exercise', 'league') ?></td>
         <td><?= get_string('timemofied', 'league') ?></td>
@@ -96,7 +96,7 @@ function print_exercises($idliga, $rol, $cmid){
         
         ?>
 
-<table border="1">
+<table>
     <tr>
         <td><?= get_string('exercise', 'league') ?></td>
         <td><?= get_string('timemofied', 'league') ?></td>
@@ -157,7 +157,7 @@ function print_students_exercise($cmid, $id_exer, $name){
 
 <h1><?= $name ?></h1>
 
-<table border="1">
+<table>
     <tr>
         <td><?= get_string('student', 'league') ?></td>
         <td><?= get_string('upload_time', 'league') ?></td>
@@ -247,7 +247,7 @@ function print_notas_alumno($idleague, $cmid, $userid){
     $data = $DB->get_records_sql($var);
     ?>
 
-<table border="1">
+<table>
     <tr>
         <td><?= get_string('exercise', 'league') ?></td>
         <td><?= get_string('upload_time', 'league') ?></td>
@@ -536,10 +536,11 @@ function mejoresNotasSegundo($q, $r1, $r2){
     }
 }
 
-function print_qualy($q, $iduser = -1, $rol = 'student'){
+function print_qualy($q, $rol = 'student', $iduser = -1){
     $pos = 1;
         ?>
-<table border="1">
+<link rel="stylesheet" type="text/css" href="styles.css">
+<table id="qualy">
     <tr>
         <td><?= get_string('q_pos','league') ?></td>
         
@@ -559,7 +560,7 @@ function print_qualy($q, $iduser = -1, $rol = 'student'){
         <td><?= get_string('q_total_mark','league') ?></td>
         <td><?= get_string('q_percentage','league') ?></td>
         <td><?= get_string('q_notes','league') ?></td>
-        <?php if($rol == 'teacher'){ 
+        <?php if($rol == 'teacher' && $iduser != -1){ 
             echo '<td colspan="'.$q[0]['totalexer'].'">'.get_string('q_best_marks','league').'</td>';
         } ?>
         
@@ -591,7 +592,7 @@ function print_qualy($q, $iduser = -1, $rol = 'student'){
         echo tdtable($r['totalmark'], $b, $i);
         echo tdtable(($r['totalexer'] > 0 ? number_format(($r['totalmark'] / ($r['totalexer'] * 100)) * 100, 2, ',', ' ') . ' %' : 'NaN'), $b, $i);
         echo tdtable($r['notes'], $b, $i);
-        if($rol === 'teacher'){
+        if($rol === 'teacher' && $iduser != -1){
             foreach ($r['marks'] as $n){
                 if($n){
                     echo tdtable($n, $b, $i);

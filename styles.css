@@ -1,0 +1,31 @@
+
+/**
+ * mod/league/styles.css
+ *
+ * @package   mod_league
+ * @copyright 2018 Miguel Romeral <miguelangel.garciar@edu.uah.es>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+#qualy {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#qualy td, #qualy th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#qualy tr:nth-child(even){background-color: #f2f2f2;}
+
+#qualy tr:hover {background-color: #ddd;}
+
+#qualy th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}

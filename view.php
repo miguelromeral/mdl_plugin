@@ -50,6 +50,8 @@ if ($cmid) {
  * dependiendo de nuestras necesidades
  */
 $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+
 $PAGE->set_context($context);
 
 //Pone como diseño el estandar de Moodle

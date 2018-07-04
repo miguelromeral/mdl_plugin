@@ -102,7 +102,7 @@ if($valido == 0){
         if ($mform->is_cancelled()) {
             ?>
                 <h1><?= get_string('ae_cancel','league') ?></h1>
-                <form action="management.php" method="get" >
+                <form action="view.php" method="get" >
                     <input type="hidden" name="id" value="<?= $cmid ?>" />
                     <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
                 </form>
@@ -130,7 +130,7 @@ if($valido == 0){
                 if($correcto){
                     ?>
                     <?= get_string('ae_success','league') ?><br>
-                        <form action="management.php" method="get">
+                        <form action="view.php" method="get">
                             <input type="hidden" name="id" value="<?= $cmid ?>" />
                             <input type="submit" value="<?= get_string('manage_exercises_button', 'league') ?>"/>
                         </form>
