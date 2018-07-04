@@ -32,7 +32,7 @@ function print_exercises($idliga, $rol, $cmid){
         <td><?= ($exer['enabled'] == 0 ? get_string('no','league') : "<i><strong>".get_string('yes','league')."</strong></i>") ?></td>
         <td><?= ($exer['published'] == 0 ? get_string('no','league') : "<i><strong>".get_string('yes','league')."</strong></i>") ?></td>
         <td>
-            <form action="management.php" method="post" >
+            <form action="view.php" method="post" >
                 <input type="hidden" name="id" value="<?= $cmid ?>" />
                 <input type="hidden" name="action" value="delete" />
                 <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
@@ -51,7 +51,7 @@ function print_exercises($idliga, $rol, $cmid){
                 <input type="submit" value="<?= get_string('modify_exercise_button', 'league') ?>"/>
             </form>
         </td>
-        <td><form action="management.php" method="post" >
+        <td><form action="view.php" method="post" >
                 <input type="hidden" name="id" value="<?= $cmid ?>" />
                 <input type="hidden" name="action" value="enable_disable" />
                 <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
@@ -71,7 +71,7 @@ function print_exercises($idliga, $rol, $cmid){
             </form>
         </td>
         <td>
-            <form action="management.php" method="post" >
+            <form action="view.php" method="post" >
                 <input type="hidden" name="id" value="<?= $cmid ?>" />
                 <input type="hidden" name="action" value="publish" />
                 <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />

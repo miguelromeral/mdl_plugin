@@ -106,9 +106,18 @@ foreach ($data as $rowclass)
 
 if ($rol == 'student'){
     
+    ?>
+<h1><?= get_string('main_panel_student','league') ?></h1>
+<h2><?= get_string('availables_exercises','league') ?></h2>
+    <?php
     //echo $output->inicio_estudiante();
     
     print_exercises($league->id, 'student', $cmid);
+    
+    ?>
+<h2><?= get_string('my_marks','league') ?></h2>
+    <?php
+    
     print_notas_alumno($league->id, $cmid, $USER->id);
     
     
@@ -124,19 +133,97 @@ if ($rol == 'student'){
     <?php
     
 }else if($rol == 'teacher'){
+    
     ?>
+    
+    <h1><?= get_string('h_manag_exer','league') ?></h1>
+        
+    <?php
+    
+    if($_POST)
+    {
+        $id_exer_post = $_POST['id_exer'];
+        $exer_name_post = $_POST['exer_name'];
+        $exer_description_post = $_POST['exer_description'];
+        $exer_enabled_post = $_POST['exer_enabled'];
+        $pub = $_POST['exer_published'];
+        $course = $cm->course;
+        $league_post = $league->id;
 
-<h1><?= get_string('teacher_panel', 'league') ?></h1>
-<form action="management.php" method="get">
-    <input type="hidden" name="id" value="<?= $cmid ?>" />
-    <input type="hidden" name="lid" value="<?= $cm->id ?>" />
-    <input type="hidden" name="uid" value="<?= $USER->id ?>" />
-    <input type="submit" value="<?= get_string('manage_exercises_button', 'league') ?>"/>
-</form>
-<form action="qualy.php" method="get">
-    <input type="hidden" name="id" value="<?= $cmid ?>" />
-    <input type="submit" value="<?= get_string('view_qualy_button', 'league') ?>"/>
-</form>
+        if ($_POST['action'] == 'delete'){
+            
+            $exito = false;
+            
+            //Si está deshabilitado, podremos eliminarlo
+            if ($exer_enabled_post == 0){
+                $exito = exercise_delete_instance($id_exer_post);
+            }
+            
+            ?>
+            <div>
+                <strong><?php
+                if ($exito){
+                    echo get_string('exercise_deleted', 'league');
+                } else {
+                    echo get_string('exercise_not_deleted', 'league');
+                }
+                ?></strong><br>
+            </div>
+            <?php
+            
+        } else if ($_POST['action'] == 'enable_disable'){
+
+            //Negamos el cambio, si estába des, lo activamos, y si estaba activado, lo des.
+            $cambio = ($exer_enabled_post == 0 ? 1 : 0);
+            
+            exercise_update_instance($league, $course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $cambio, $pub);
+
+            ?>
+            <div>
+                <strong><?php
+                if ($cambio == 0){
+                    echo get_string('exercise_disabled', 'league');
+                } else {
+                    echo get_string('exercise_enabled', 'league');
+                }
+                ?></strong><br>
+            </div>
+            <?php
+        } else if ($_POST['action'] == 'publish'){
+
+            //Negamos la accion qeu esta ahora
+            $cambio = ($pub == 0 ? 1 : 0);
+            exercise_update_instance($league, $course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $exer_enabled_post, $cambio);
+
+            ?>
+            <div>
+                <strong><?php
+                if ($cambio == 0){
+                    echo get_string('currently_unpublished', 'league');
+                } else {
+                    echo get_string('currently_published', 'league');
+                }
+                ?></strong><br>
+            </div>
+            <?php
+        }
+        
+    }
+    
+    //Aquí mostraremos una lista con todas las actividades
+    print_exercises($league->id, 'teacher', $cmid);
+
+    ?>
+    
+    <form action="add_exercise.php" method="get">
+        <input type="hidden" name="id" value="<?= $cmid ?>" />
+        <input type="hidden" name="id_exer" value="-1" />
+        <input type="submit" value="<?= get_string('add_exercise_button', 'league') ?>"/>
+    </form>
+    <form action="qualy.php" method="get">
+        <input type="hidden" name="id" value="<?= $cmid ?>" />
+        <input type="submit" value="<?= get_string('view_qualy_button', 'league') ?>"/>
+    </form>
     
 
     <?php

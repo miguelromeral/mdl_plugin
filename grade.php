@@ -98,6 +98,10 @@ foreach ($data as $rowclass)
 
 if ($rol == 'student'){
     
+    ?>
+<h1><?= get_string('my_marks','league') ?></h1>
+    <?php
+    
     print_notas_alumno($league->id, $cmid, $USER->id);
     
     ?>

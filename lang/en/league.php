@@ -60,6 +60,9 @@ $string['noviewdiscussionspermission'] = 'No tiene los suficientes permisos para
 $string['view_qualy_button'] = 'Ver clasificación';
 $string['manage_exercises_button'] = 'Administrar ejercicios';
 $string['teacher_panel'] = 'Panel del profesor';
+$string['main_panel_student'] = 'Panel de control del alumno';
+$string['availables_exercises'] = 'Ejercicios disponibles';
+$string['my_marks'] = 'Mis notas';
 
 /**
  *      CLASIFICACIÓN
@@ -102,6 +105,7 @@ $string['publish'] = 'Publicar notas';
 $string['unpublish'] = 'Ocultar notas';
 $string['currently_published'] = 'Las notas han sido publicadas. A partir de ahora, los alumnos podrán ver sus notas para este ejercicio.';
 $string['currently_unpublished'] = 'Retirada la publicación de notas. Ningún alumno puede ver su nota para este ejercicio.';
+$string['h_manag_exer'] = 'Administrar ejercicios de la Liga';
 
 /**
  *      AÑADIR EJERCICIOS
