@@ -4,12 +4,12 @@
  *      BÁSICO:
  */
 
-$string['modulename'] = 'Activities League';
+$string['modulename'] = 'League';
 $string['modulename_help'] = 'Ayuda del modulo';
 $string['modulename_link'] = 'mod/league/view';
-$string['modulenameplural'] = 'Activities League';
+$string['modulenameplural'] = 'Leagues';
 $string['pluginadministration'] = 'League Administration';
-$string['pluginname'] = 'League module';
+$string['pluginname'] = 'Activities League';
 $string['fill_course'] = 'Introduce el ID del curso';
 $string['no'] = 'No';
 $string['yes'] = 'Sí';

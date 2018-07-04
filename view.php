@@ -156,7 +156,7 @@ if ($rol == 'student'){
             
             //Si está deshabilitado, podremos eliminarlo
             if ($exer_enabled_post == 0){
-                $exito = exercise_delete_instance($id_exer_post);
+                $exito = league_exercise_delete_instance($id_exer_post);
             }
             
             ?>
@@ -176,7 +176,7 @@ if ($rol == 'student'){
             //Negamos el cambio, si estába des, lo activamos, y si estaba activado, lo des.
             $cambio = ($exer_enabled_post == 0 ? 1 : 0);
             
-            exercise_update_instance($league, $course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $cambio, $pub);
+            league_exercise_update_instance($league, $course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $cambio, $pub);
 
             ?>
             <div>
@@ -193,7 +193,7 @@ if ($rol == 'student'){
 
             //Negamos la accion qeu esta ahora
             $cambio = ($pub == 0 ? 1 : 0);
-            exercise_update_instance($league, $course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $exer_enabled_post, $cambio);
+            league_exercise_update_instance($league, $course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $exer_enabled_post, $cambio);
 
             ?>
             <div>

@@ -3,7 +3,7 @@
 function print_exercises($idliga, $rol, $cmid){
     global $DB;
     $var="SELECT * 
-    FROM mdl_exercise
+    FROM mdl_league_exercise
     WHERE league = $idliga
     ORDER BY id";
     $data = $DB->get_records_sql($var);
@@ -140,10 +140,10 @@ function print_students_exercise($cmid, $id_exer, $name){
     global $DB;
     //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
     $var="select *
-    from mdl_attempt as a
+    from mdl_league_attempt as a
     inner join (
             select max(c.id) as id, c.id_user, d.firstname, d.lastname
-            from mdl_attempt as c
+            from mdl_league_attempt as c
             inner join mdl_user as d
             on c.id_user = d.id
             where c.exercise = $id_exer
@@ -227,16 +227,16 @@ function print_notas_alumno($idleague, $cmid, $userid){
     global $DB;
     //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
     $var="select *
-    from mdl_exercise as a
+    from mdl_league_exercise as a
     left outer join
     (
         select a.id as idat, a.timemodified as tma,
 		a.observations, a.course as ca, a.name as fname,
 		a.exercise, b.id_user, a.mark, a.id_file, a.url
-		from mdl_attempt as a
+		from mdl_league_attempt as a
 		inner join (
 			select max(id) as m, id_user
-			from mdl_attempt
+			from mdl_league_attempt
 			where id_user = $userid
 			group by exercise
 		) as b
@@ -320,16 +320,16 @@ function get_qualy_array($idleague, $idcurso, $rol, $method){
     foreach ($data as $d){
         $d = get_object_vars($d);
         $var2 = "select count(id) as te, count(idat) as eu, sum(mark) as acum, COUNT(CASE WHEN mark = -1 THEN 1 END) as sc
-        from mdl_exercise as a
+        from mdl_league_exercise as a
         left outer join
         (
             select a.id as idat, a.timemodified as tma,
                     a.observations, a.course as ca, a.name as fname,
                     a.exercise, b.id_user, a.mark, a.id_file, a.url
-                    from mdl_attempt as a
+                    from mdl_league_attempt as a
                     inner join (
                             select max(id) as m, id_user
-                            from mdl_attempt
+                            from mdl_league_attempt
                             where id_user = ${d['userid']}
                             group by exercise
                     ) as b
@@ -630,16 +630,16 @@ function getArrayMarkByStudent($idleague, $iduser, $toprint){
     global $DB;
     //Lista de estudiantes de un curso
     $var="select a.id, b.mark, a.published
-            from mdl_exercise as a
+            from mdl_league_exercise as a
             left outer join
             (
                 select a.id as idat, a.timemodified as tma,
                         a.observations, a.course as ca, a.name as fname,
                         a.exercise, b.id_user, a.mark, a.id_file, a.url
-                        from mdl_attempt as a
+                        from mdl_league_attempt as a
                         inner join (
                                 select max(id) as m, id_user
-                                from mdl_attempt
+                                from mdl_league_attempt
                                 where id_user = $iduser
                                 group by exercise
                         ) as b
@@ -669,7 +669,7 @@ function publishedMarks($exercise){
     global $DB;
     //Lista de estudiantes de un curso
     $var="select a.published
-        from mdl_exercise as a
+        from mdl_league_exercise as a
         where id = $exercise";
     $data = $DB->get_records_sql($var);
     foreach ($data as $d){

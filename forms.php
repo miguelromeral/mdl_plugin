@@ -74,7 +74,7 @@ class mark_form extends moodleform {
         $mark = ($this->_customdata['mark'] ? $this->_customdata['mark'] : -1);
         $obs = ($this->_customdata['observations'] ? $this->_customdata['observations'] : "");
         
-        $result = $DB->get_records_sql('SELECT * FROM {exercise} WHERE id = ?', array($id_exer)); //El 1 no, que es el moodle completo.
+        $result = $DB->get_records_sql('SELECT * FROM {league_exercise} WHERE id = ?', array($id_exer)); //El 1 no, que es el moodle completo.
         $name_exer = "";
         foreach ($result as $rowclass)
         {

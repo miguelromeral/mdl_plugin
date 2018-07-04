@@ -70,7 +70,7 @@ function league_delete_instance($id) {
 }
 
 
-function exercise_add_instance($course, $name, $statement, $league) {
+function league_exercise_add_instance($course, $name, $statement, $league) {
     global $DB;
     $record = new stdClass();
     $record->course = $course;
@@ -83,7 +83,7 @@ function exercise_add_instance($course, $name, $statement, $league) {
     $record->enabled = 0;
     $record->published = 0;
   
-    $id = $DB->insert_record('exercise', $record);
+    $id = $DB->insert_record('league_exercise', $record);
    
     if($id){
         return true;
@@ -92,7 +92,7 @@ function exercise_add_instance($course, $name, $statement, $league) {
     }
 }
 
-function exercise_update_instance($leagueinstance, $course, $name, $statement, $league, $idexer, $enabled, $pub) {
+function league_exercise_update_instance($leagueinstance, $course, $name, $statement, $league, $idexer, $enabled, $pub) {
     global $DB;
     $record = new stdClass();
     $record->id = $idexer;
@@ -105,7 +105,7 @@ function exercise_update_instance($leagueinstance, $course, $name, $statement, $
     $record->league = $league;
     $record->enabled = $enabled;
     $record->published = $pub;
-    $id = $DB->update_record('exercise', $record);
+    $id = $DB->update_record('league_exercise', $record);
     league_update_grades($leagueinstance);
     
     if($id){
@@ -115,18 +115,16 @@ function exercise_update_instance($leagueinstance, $course, $name, $statement, $
     }
 }
 
-function exercise_delete_instance($id) {
+function league_exercise_delete_instance($id) {
     global $DB;
-    if (! $exercise = $DB->get_record('exercise', array('id' => $id))) {
+    if (! $exercise = $DB->get_record('league_exercise', array('id' => $id))) {
         return false;
     }
-    // Delete any dependent records here.
-    $DB->delete_records('exercise', array('id' => $exercise->id));
-    //newmodule_grade_item_delete($league);
+    $DB->delete_records('league_exercise', array('id' => $exercise->id));
     return true;
 }
 
-function attempt_add_instance($course, $id_user, $exercise, $id_file, $url, $name = null) {
+function league_attempt_add_instance($course, $id_user, $exercise, $id_file, $url, $name = null) {
     global $DB;
     $record = new stdClass();
     $record->course = $course;
@@ -145,7 +143,7 @@ function attempt_add_instance($course, $id_user, $exercise, $id_file, $url, $nam
     //print_r($record);
     //echo "<br>----<br>";
   
-    $id = $DB->insert_record('attempt', $record);
+    $id = $DB->insert_record('league_attempt', $record);
    
     if($id){
         return true;
@@ -154,7 +152,7 @@ function attempt_add_instance($course, $id_user, $exercise, $id_file, $url, $nam
     }
 }
 
-function attempt_update_instance($league, $idat, $mark, $observations, $idexer) {
+function league_attempt_update_instance($league, $idat, $mark, $observations, $idexer) {
     global $DB;
     $record = new stdClass();
     $record->id = $idat;
@@ -174,7 +172,7 @@ function attempt_update_instance($league, $idat, $mark, $observations, $idexer) 
     //print_r($record);
     //echo "<br>----<br>";
   
-    $id = $DB->update_record('attempt', $record);
+    $id = $DB->update_record('league_attempt', $record);
     if(publishedMarks($idexer)){
         league_update_grades($league);
     }

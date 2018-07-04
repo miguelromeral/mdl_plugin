@@ -147,7 +147,7 @@ if($valido == 0){
                         $contenthash = $file->get_contenthash();
                         $id_file = getIDFileFromContenthash($contenthash);
                         
-                        $exito = attempt_add_instance($course->id, $USER->id, $id_exer, $id_file, $fileurl, $name);
+                        $exito = league_attempt_add_instance($course->id, $USER->id, $id_exer, $id_file, $fileurl, $name);
 
                         if($exito){
                             ?>

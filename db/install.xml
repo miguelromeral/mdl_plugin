@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="league" COMMENT="Tabla principal de la actividad. Contiene el id de la liga y el curso al que pertenece." NEXT="exercise">
+    <TABLE NAME="league" COMMENT="Tabla principal de la actividad. Contiene el id de la liga y el curso al que pertenece." NEXT="league_exercise">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="course"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Identificador del curso" PREVIOUS="id" NEXT="name"/>
@@ -20,7 +20,7 @@
         <KEY NAME="fk-course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id" COMMENT="FK de curso" PREVIOUS="primary"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="exercise" COMMENT="Tabla que almacena los ejercicios que pertenecen a la liga." PREVIOUS="league" NEXT="attempt">
+    <TABLE NAME="league_exercise" COMMENT="Tabla que almacena los ejercicios que pertenecen a la liga." PREVIOUS="league" NEXT="league_attempt">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="course"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Referencia al curso al que pertenece." PREVIOUS="id" NEXT="name"/>
@@ -39,7 +39,7 @@
         <KEY NAME="fk-league" TYPE="foreign" FIELDS="league" REFTABLE="league" REFFIELDS="id" COMMENT="FK de leauge" PREVIOUS="fk-course"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="attempt" COMMENT="Intento de los alumnos" PREVIOUS="exercise">
+    <TABLE NAME="league_attempt" COMMENT="Intento de los alumnos" PREVIOUS="league_exercise">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="course"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="ID Course" PREVIOUS="id" NEXT="name"/>
@@ -58,7 +58,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="fk-course"/>
         <KEY NAME="fk-course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id" COMMENT="FK del course" PREVIOUS="primary" NEXT="fk-id_user"/>
         <KEY NAME="fk-id_user" TYPE="foreign" FIELDS="id_user" REFTABLE="user" REFFIELDS="id" COMMENT="FK del id_user" PREVIOUS="fk-course" NEXT="fk-exercise"/>
-        <KEY NAME="fk-exercise" TYPE="foreign" FIELDS="exercise" REFTABLE="exercise" REFFIELDS="id" COMMENT="FK del exercise" PREVIOUS="fk-id_user" NEXT="fk-id_file"/>
+        <KEY NAME="fk-exercise" TYPE="foreign" FIELDS="exercise" REFTABLE="league_exercise" REFFIELDS="id" COMMENT="FK del exercise" PREVIOUS="fk-id_user" NEXT="fk-id_file"/>
         <KEY NAME="fk-id_file" TYPE="foreign" FIELDS="id_file" REFTABLE="files" REFFIELDS="id" COMMENT="FK del ID file" PREVIOUS="fk-exercise"/>
       </KEYS>
     </TABLE>
