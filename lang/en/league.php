@@ -5,7 +5,7 @@
  */
 
 $string['modulename'] = 'League';
-$string['modulename_help'] = 'Ayuda del modulo';
+$string['modulename_help'] = 'A CAMBIAR: Texto que sale al crear el recurso del modulo';
 $string['modulename_link'] = 'mod/league/view';
 $string['modulenameplural'] = 'Leagues';
 $string['pluginadministration'] = 'League Administration';
@@ -69,7 +69,8 @@ $string['my_marks'] = 'Mis notas';
  */
 
 $string['qualy_title'] = 'Clasificación';
-$string['qualy_title_student'] = 'Clasificación (Vista para estudiantes)';
+$string['qts'] = '';
+$string['qts'] = 'Clasificación (Vista para estudiantes)';
 $string['q_pos'] = 'POS';
 $string['q_name'] = 'Nombre';
 $string['q_user'] = 'Usuario';
@@ -95,6 +96,7 @@ $string['add_exercise_button'] = 'Añadir ejercicio';
 $string['modify_exercise_button'] = 'Modificar';
 $string['enable_exercise_button'] = 'Habilitar';
 $string['disable_exercise_button'] = 'Deshabilitar';
+$string['del'] = 'Eliminar';
 $string['exercise_enabled'] = 'El ejercicio está habilitado para todos los alumnos del curso. Ahora podrán subir la tarea.';
 $string['exercise_disabled'] = 'El ejercicio está deshabilitado. Los alumnos no pueden ver este ejercicio actualmente.';
 $string['exercise_deleted'] = 'El ejercicio ha sido eliminado con éxito.';

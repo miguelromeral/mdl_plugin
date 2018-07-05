@@ -12,9 +12,13 @@ class upload_form extends moodleform {
         $mform = $this->_form; // Don't forget the underscore! 
         
         $mform->addElement('hidden', 'id_exer', $this->_customdata['id_exer']);
+        $mform->setType('id_exer', PARAM_INT);
         $mform->addElement('hidden', 'id', $this->_customdata['id']);
+        $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'name', $this->_customdata['name']);
+        $mform->setType('name', PARAM_TEXT);
         $mform->addElement('hidden', 'statement', $this->_customdata['statement']);
+        $mform->setType('statement', PARAM_TEXT);
         
         $mform->addElement('filepicker', 'userfile', get_string('upload_exercise_file', 'league'), null,
                    array('maxbytes' => $this->_customdata['max_bytes'], 'accepted_types' => '*'));
@@ -43,11 +47,13 @@ class exercise_form extends moodleform {
         }
         //ID ejercicio
         $mform->addElement('hidden', 'id_exer', $id_exer);
+        $mform->setType('id_exer', PARAM_INT);
         $mform->addElement('hidden', 'id', $this->_customdata['id']);
         $mform->setType('id', PARAM_RAW);
         //Nombre del ejercicio
         $name = (empty($this->_customdata['name']) ? "" : $this->_customdata['name']);
         $mform->addElement('text', 'name', get_string('ae_name', 'league'), array('size'=>'50'));
+        $mform->setType('name', PARAM_TEXT);
         $mform->setDefault('name', $name);
         //Descripción del ejercicio
         $statement = (empty($this->_customdata['statement']) ? "" : $this->_customdata['statement']);
@@ -87,11 +93,15 @@ class mark_form extends moodleform {
        
         //ID ejercicio
         $mform->addElement('hidden', 'id_exer', $id_exer);
+        $mform->setType('id_exer', PARAM_INT);
         $mform->addElement('hidden', 'id_user', $id_user);
+        $mform->setType('id_user', PARAM_INT);
         $mform->addElement('hidden', 'id', $this->_customdata['id']);
+        $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'idat', $this->_customdata['idat']);
+        $mform->setType('idat', PARAM_INT);
         $mform->addElement('hidden', 'name', $this->_customdata['name_exer']);
-        $mform->setType('id', PARAM_RAW);
+        $mform->setType('name', PARAM_TEXT);
         
         $options[-1] = "Sin calificar";
         for ($i = 0; $i <= 100; $i++)
@@ -104,6 +114,7 @@ class mark_form extends moodleform {
         $mform->setDefault('mark', $options[$mark]);
         
         $mform->addElement('textarea', 'observations', get_string("set_observation", "league"), 'wrap="virtual" rows="20" cols="50"');
+        $mform->setType('observations', PARAM_TEXT);
         $mform->setDefault('observations', $obs);
         
         $this->add_action_buttons();

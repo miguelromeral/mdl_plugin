@@ -49,7 +49,7 @@ if ($cmid) {
         $PAGE->set_context(context_module::instance($moduleid));
  * dependiendo de nuestras necesidades
  */
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+$context = context_module::instance($cm->id);
 $PAGE->set_context($context);
 
 //Pone como diseño el estandar de Moodle
@@ -131,14 +131,16 @@ AND c.id = 2
 ORDER BY c.fullname";
 
 $q = get_qualy_array($league->id, $course->id, $rol, $league->method);
-
+?> 
+<link rel="stylesheet" type="text/css" href="styles.css">    
+<?php
 if ($rol == 'student' || $rol == 'teacher'){
         
         echo "<h1>".get_string('qualy_title', 'league')."</h1>";
         print_qualy($q, $rol, $USER->id);
         
         if($rol == 'teacher'){
-            echo "<h2>".get_string('qualy_title_student', 'league')."</h2>";
+            echo "<h2>".get_string('qts', 'league')."</h2>";
             $qs = get_qualy_array($league->id, $course->id, 'student', $league->method);
             print_qualy($qs, $rol);
         }

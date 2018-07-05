@@ -49,7 +49,7 @@ if ($cmid) {
         $PAGE->set_context(context_module::instance($moduleid));
  * dependiendo de nuestras necesidades
  */
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+$context = context_module::instance($cm->id);
 
 
 $PAGE->set_context($context);
@@ -105,6 +105,7 @@ foreach ($data as $rowclass)
             break;
     }
 }
+?> <link rel="stylesheet" type="text/css" href="styles.css"> <?php
 
 if ($rol == 'student'){
     

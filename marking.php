@@ -42,7 +42,7 @@ if ($cmid) {
     print_error('missingparameter');
 }
 
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+$context = context_module::instance($cm->id);
 $PAGE->set_context($context);
 
 //Pone como diseño el estandar de Moodle
@@ -78,6 +78,7 @@ $bc = new block_contents();
 // Recuperamos el ID del profesor y del modulo, si no coinciden, se mostrará un aviso para que salga.
 $var="SELECT c.id as course, c.shortname, u.id as teacher, u.username, u.firstname || ' ' || u.lastname AS name FROM mdl_course c LEFT OUTER JOIN mdl_context cx ON c.id = cx.instanceid LEFT OUTER JOIN mdl_role_assignments ra ON cx.id = ra.contextid AND ra.roleid = '3' LEFT OUTER JOIN mdl_user u ON ra.userid = u.id WHERE cx.contextlevel = '50' AND c.id = $cm->course AND u.id = $USER->id";
 $valido = $DB->get_records_sql($var);
+?> <link rel="stylesheet" type="text/css" href="styles.css"> <?php
 
 if($valido == 0){
     ?>

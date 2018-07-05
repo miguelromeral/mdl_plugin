@@ -11,13 +11,14 @@ function print_exercises($idliga, $rol, $cmid){
     if ($rol == 'teacher'){
     
     ?>
-
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <table>
     <tr>
-        <td><?= get_string('exercise', 'league') ?></td>
-        <td><?= get_string('timemofied', 'league') ?></td>
-        <td><?= get_string('enabled', 'league') ?></td>
-        <td><?= get_string('published_marks', 'league') ?></td>
+        <th><?= get_string('exercise', 'league') ?></th>
+        <th><?= get_string('timemofied', 'league') ?></th>
+        <th><?= get_string('enabled', 'league') ?></th>
+        <th><?= get_string('published_marks', 'league') ?></th>
+        <th colspan="5"></th>
     </tr>
     
     <?php
@@ -27,10 +28,17 @@ function print_exercises($idliga, $rol, $cmid){
         //print_r($exer);
         ?>
     <tr>
-        <td><?= $exer['name'] ?></td>
+        <td id="thb"><?= $exer['name'] ?></td>
         <td><?= date("H:i:s, d (D) M Y", $exer['timemodified']) ?></td>
-        <td><?= ($exer['enabled'] == 0 ? get_string('no','league') : "<i><strong>".get_string('yes','league')."</strong></i>") ?></td>
-        <td><?= ($exer['published'] == 0 ? get_string('no','league') : "<i><strong>".get_string('yes','league')."</strong></i>") ?></td>
+        <td><?= ($exer['enabled'] == 0 ? 
+                '<img src="images/no.png" width="20" height="20"/>' : 
+                '<img src="images/yes.png" width="30" height="30"/>') ?>
+        </td>
+        <td><?= 
+                ($exer['published'] == 0 ? 
+                '<img src="images/no.png" width="20" height="20"/>' : 
+                '<img src="images/yes.png" width="30" height="30"/>') ?>
+        </td>
         <td>
             <form action="view.php" method="post" >
                 <input type="hidden" name="id" value="<?= $cmid ?>" />
@@ -40,7 +48,8 @@ function print_exercises($idliga, $rol, $cmid){
                 <input type="hidden" name="exer_description" value="<?= $exer['statement'] ?>" />
                 <input type="hidden" name="exer_enabled" value="<?= $exer['enabled'] ?>" />
                 <input type="hidden" name="exer_published" value="<?= $exer['published'] ?>" />
-                <input type="image" name="submit_red"  value="red"  alt="red " src="images/delete.png" width="20" height="20">
+                <!--<input class="button buttonBlue" type="submit" value="<?= get_string('del', 'league') ?>"/>-->
+                <input type="submit" value="<?= 'DELETE (TBA)' ?>"/>
             </form>
         </td>
         <td><form action="add_exercise.php" method="get" >
@@ -98,9 +107,9 @@ function print_exercises($idliga, $rol, $cmid){
 
 <table>
     <tr>
-        <td><?= get_string('exercise', 'league') ?></td>
-        <td><?= get_string('timemofied', 'league') ?></td>
-        <td><?= get_string('send_exercise', 'league') ?></td>
+        <th><?= get_string('exercise', 'league') ?></th>
+        <th><?= get_string('timemofied', 'league') ?></th>
+        <th><?= get_string('send_exercise', 'league') ?></th>
     </tr>
     
     <?php
@@ -112,7 +121,7 @@ function print_exercises($idliga, $rol, $cmid){
         
         ?>
     <tr>
-        <td><?= $exer['name'] ?></td>
+        <td id="thb"><?= $exer['name'] ?></td>
         <td><?= date("H:i:s, d (D) M Y", $exer['timemodified']) ?></td>
         <td>
              <form action="upload.php" method="post" >
@@ -159,9 +168,9 @@ function print_students_exercise($cmid, $id_exer, $name){
 
 <table>
     <tr>
-        <td><?= get_string('student', 'league') ?></td>
-        <td><?= get_string('upload_time', 'league') ?></td>
-        <td><?= get_string('mark', 'league') ?></td>
+        <th><?= get_string('student', 'league') ?></th>
+        <th><?= get_string('upload_time', 'league') ?></th>
+        <th colspan="3"><?= get_string('mark', 'league') ?></th>
     </tr>
     
     <?php
@@ -169,9 +178,9 @@ function print_students_exercise($cmid, $id_exer, $name){
     foreach ($data as $d){
         $d = get_object_vars($d);
         ?> <tr> 
-            <td><?php echo $d['firstname']." ".$d['lastname']; ?></td>
+            <td id="thb"><?php echo $d['firstname']." ".$d['lastname']; ?></td>
             <td><?= date("H:i:s, d (D) M Y", $d['timemodified']) ?></td>
-            <td><?php 
+            <td id="thb"><?php 
             if($d['mark'] == -1){
                 echo get_string('no_mark_yet', 'league');
             }else{
@@ -249,11 +258,11 @@ function print_notas_alumno($idleague, $cmid, $userid){
 
 <table>
     <tr>
-        <td><?= get_string('exercise', 'league') ?></td>
-        <td><?= get_string('upload_time', 'league') ?></td>
-        <td><?= get_string('file_uploaded', 'league') ?></td>
-        <td><?= get_string('mark', 'league') ?></td>
-        <td><?= get_string('reviews', 'league') ?></td>
+        <th><?= get_string('exercise', 'league') ?></th>
+        <th><?= get_string('upload_time', 'league') ?></th>
+        <th><?= get_string('file_uploaded', 'league') ?></th>
+        <th><?= get_string('mark', 'league') ?></th>
+        <th><?= get_string('reviews', 'league') ?></th>
     </tr>
     
     <?php
@@ -264,16 +273,16 @@ function print_notas_alumno($idleague, $cmid, $userid){
         
         
         ?> <tr> 
-            <td><?= $d['name'] ?></td>
+            <td id="thb"><?= $d['name'] ?></td>
             <td><?= ($d['tma'] ? date("H:i:s, d (D) M Y", $d['tma']) : "") ?></td>
             <td>
                 <?php
                     if($d['url']){
-                        echo "<a href=".$d['url'].">".get_string('download_file_button', 'league')."</a>";
+                        echo '<a href="'.$d['url'].'">'.get_string('download_file_button', 'league')."</a>";
                     }
                 ?>
             </td>
-            <td><?php 
+            <td id="thb"><?php 
             if($d['mark'] == -1 || $d['published'] == 0){
                 echo get_string('no_mark_yet', 'league');
             }else{
@@ -539,29 +548,28 @@ function mejoresNotasSegundo($q, $r1, $r2){
 function print_qualy($q, $rol = 'student', $iduser = -1){
     $pos = 1;
         ?>
-<link rel="stylesheet" type="text/css" href="styles.css">
 <table id="qualy">
     <tr>
-        <td><?= get_string('q_pos','league') ?></td>
+        <th><?= get_string('q_pos','league') ?></th>
         
         <?php
         if($rol == 'student'){
-            ?> <td><?= get_string('q_name_hashed','league') ?></td> <?php
+            ?> <th><?= get_string('q_name_hashed','league') ?></th> <?php
         }else{
-            ?> <td><?= get_string('q_name','league') ?></td> <?php
+            ?> <th><?= get_string('q_name','league') ?></th> <?php
         }
         ?>
         <?php if($rol == 'teacher'){ 
-            echo "<td>".get_string('q_user','league')."</td>";
-            echo "<td>".get_string('q_id','league')."</td>";
+            echo "<th>".get_string('q_user','league')."</th>";
+            echo "<th>".get_string('q_id','league')."</th>";
         } ?>
-        <td><?= get_string('q_total_exercises','league') ?></td>
-        <td><?= get_string('q_exercises_uploaded','league') ?></td>
-        <td><?= get_string('q_total_mark','league') ?></td>
-        <td><?= get_string('q_percentage','league') ?></td>
-        <td><?= get_string('q_notes','league') ?></td>
+        <th><?= get_string('q_total_exercises','league') ?></th>
+        <th><?= get_string('q_exercises_uploaded','league') ?></th>
+        <th><?= get_string('q_total_mark','league') ?></th>
+        <th><?= get_string('q_percentage','league') ?></th>
+        <th><?= get_string('q_notes','league') ?></th>
         <?php if($rol == 'teacher' && $iduser != -1){ 
-            echo '<td colspan="'.$q[0]['totalexer'].'">'.get_string('q_best_marks','league').'</td>';
+            echo '<th colspan="'.$q[0]['totalexer'].'">'.get_string('q_best_marks','league').'</th>';
         } ?>
         
     </tr>
