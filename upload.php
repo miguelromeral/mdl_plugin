@@ -111,12 +111,15 @@ if($valido == 0){
     <?php
 }else{
     
+        $name_ex = required_param('name', PARAM_TEXT);
+        $stam_ex = required_param('statement', PARAM_TEXT);
+    
         $maxbytes = 10000000;
         $mform = new upload_form(null,
                     array('id'=>$cmid,
                         'id_exer'=>$id_exer,
-                        'name'=>$_POST['name'],
-                        'statement'=>$_POST['statement'],
+                        'name'=>$name_ex,
+                        'statement'=>$stam_ex,
                         'max_bytes'=>$maxbytes));
     
         //Form processing and displaying is done here
@@ -176,8 +179,8 @@ if($valido == 0){
         } else {
         ?>
 
-            <h1><?= $_POST['name'] ?></h1>
-            <div><?= $_POST['statement'] ?></div>
+            <h1><?= $name_ex ?></h1>
+            <div><?= $stam_ex ?></div>
             <br>
 
 

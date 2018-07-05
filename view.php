@@ -143,17 +143,21 @@ if ($rol == 'student'){
         
     <?php
     
-    if($_POST)
+    $action = optional_param('action', 'no-act', PARAM_TEXT);
+        
+    if($action != 'no-act')
     {
-        $id_exer_post = $_POST['id_exer'];
-        $exer_name_post = $_POST['exer_name'];
-        $exer_description_post = $_POST['exer_description'];
-        $exer_enabled_post = $_POST['exer_enabled'];
-        $pub = $_POST['exer_published'];
+        
+        
+        $id_exer_post = required_param('id_exer', PARAM_INT);
+        $exer_name_post = required_param('exer_name', PARAM_TEXT);
+        $exer_description_post = required_param('exer_description', PARAM_TEXT);
+        $exer_enabled_post = required_param('exer_enabled', PARAM_INT);
+        $pub = required_param('exer_published', PARAM_INT);
         $course = $cm->course;
         $league_post = $league->id;
 
-        if ($_POST['action'] == 'delete'){
+        if ($action == 'delete'){
             
             $exito = false;
             
@@ -174,7 +178,7 @@ if ($rol == 'student'){
             </div>
             <?php
             
-        } else if ($_POST['action'] == 'enable_disable'){
+        } else if ($action == 'enable_disable'){
 
             //Negamos el cambio, si estába des, lo activamos, y si estaba activado, lo des.
             $cambio = ($exer_enabled_post == 0 ? 1 : 0);
@@ -192,7 +196,7 @@ if ($rol == 'student'){
                 ?></strong><br>
             </div>
             <?php
-        } else if ($_POST['action'] == 'publish'){
+        } else if ($action == 'publish'){
 
             //Negamos la accion qeu esta ahora
             $cambio = ($pub == 0 ? 1 : 0);
