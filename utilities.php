@@ -11,7 +11,6 @@ function print_exercises($idliga, $rol, $cmid){
     if ($rol == 'teacher'){
     
     ?>
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <table>
     <tr>
         <th><?= get_string('exercise', 'league') ?></th>

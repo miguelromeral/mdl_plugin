@@ -174,3 +174,9 @@ $string['title_grade'] = 'Calificaciones';
  */
 
 $string['not_sent_yet'] = 'SIN HACER EJERCICIO';
+
+
+/**
+ *  PRUEBAS SOBRE EVENTS
+ */
+$string['eventleaguecreated'] = 'League has been created';

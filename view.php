@@ -18,6 +18,7 @@ $info = get_fast_modinfo($course);
  */
 
 require_login($course, true, $cm);
+
 /*
  * ABSOLUTAMENTE NECESARIO PONER EL URL.
  * Por lo menos, el id, después se pueden poner otras 'key' => 'value'
@@ -51,6 +52,14 @@ if ($cmid) {
  */
 $context = context_module::instance($cm->id);
 
+
+$params = array(
+    'objectid' => $league->id,
+    'context' => $context
+);
+
+$event = \mod_quiz\event\course_module_viewed::create($params);
+$event->trigger();
 
 $PAGE->set_context($context);
 
@@ -110,7 +119,7 @@ foreach ($data as $rowclass)
 if ($rol == 'student'){
     
     ?>
-<h1><?= get_string('main_panel_student','league') ?></h1>
+<h1><img src="images/league.gif" width="40" height="40"/>  <?= get_string('main_panel_student','league') ?></h1>
 <h2><?= get_string('availables_exercises','league') ?></h2>
     <?php
     //echo $output->inicio_estudiante();
@@ -139,7 +148,7 @@ if ($rol == 'student'){
     
     ?>
     
-    <h1><?= get_string('h_manag_exer','league') ?></h1>
+    <h1><img src="images/league.gif" width="40" height="40"/>  <?= get_string('h_manag_exer','league') ?></h1>
         
     <?php
     

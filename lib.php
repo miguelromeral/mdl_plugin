@@ -1,6 +1,9 @@
 <?php
 
 defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->libdir . '/eventslib.php');
+
 /**
  * Saves a new instance of the newmodule into the database
  *
@@ -22,6 +25,18 @@ function league_add_instance(stdClass $league, mod_league_mod_form $mform = null
     $league->id = $DB->insert_record('league', $league);
     //Creamos Gradebook
     league_grade_item_update($league);
+    
+    
+    
+    
+    $event = \mod_league\event\league_created::create(array(
+        'objectid' => $league->id,
+        'context' => context_module::instance($league->coursemodule)
+    ));
+    
+    //$event = \mod_league\event\league_created::create(array());
+    $event->trigger();
+    
     
     
     return $league->id;
