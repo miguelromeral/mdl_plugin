@@ -29,7 +29,11 @@ class mod_league_mod_form extends moodleform_mod {
         $mform->addRule('method', 'MENSAJE DE ERROR', 'required', null, 'client');
         $mform->addHelpButton('method', 'select_method', 'league');
         
-        $this->standard_coursemodule_elements();
+        $features = new object();
+        $features->groups           = false;
+        $features->groupings        = false;
+        $features->groupmembersonly = true;
+        $this->standard_coursemodule_elements($features);
         $this->add_action_buttons();
     }
     //Custom validation should be added here

@@ -8,7 +8,7 @@ $string['modulename'] = 'League';
 $string['modulename_help'] = 'A CAMBIAR: Texto que sale al crear el recurso del modulo';
 $string['modulename_link'] = 'mod/league/view';
 $string['modulenameplural'] = 'Leagues';
-$string['pluginadministration'] = 'League Administration';
+$string['pluginadministration'] = 'Administrar Liga';
 $string['pluginname'] = 'Activities League';
 $string['fill_course'] = 'Introduce el ID del curso';
 $string['no'] = 'No';
@@ -180,3 +180,9 @@ $string['not_sent_yet'] = 'SIN HACER EJERCICIO';
  *  PRUEBAS SOBRE EVENTS
  */
 $string['eventleaguecreated'] = 'League has been created';
+
+/**
+ *  PERMISOS
+ */
+$string['league:addinstance'] = "A CAMBIAR - Addinstance";
+$string['league:view'] = "A CAMBIAR - View";

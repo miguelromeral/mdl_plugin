@@ -135,7 +135,7 @@ if($valido == 0){
         } else if ($data = $mform->get_data()) {
             
             $component = 'mod_league';
-            $filearea = 'exuplod';
+            $filearea = $league->filearea;
             $name = $mform->get_new_filename('userfile');
             
             if($name){
@@ -160,7 +160,7 @@ if($valido == 0){
                         $url .= ($file->get_itemid())."/";
                         $url .= $name;
                         
-                        $exito = league_attempt_add_instance($course->id, $USER->id, $id_exer, $id_file, $url, $name);
+                        $exito = league_attempt_add_instance($course->id, $USER->id, $id_exer, $id_file, $url, $name, $league->id);
 
                         if($exito){
                             ?>

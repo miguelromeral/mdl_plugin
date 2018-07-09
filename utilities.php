@@ -239,7 +239,7 @@ function print_notas_alumno($idleague, $cmid, $userid){
     left outer join
     (
         select a.id as idat, a.timemodified as tma,
-		a.observations, a.course as ca, a.name as fname,
+		a.observations, a.name as fname,
 		a.exercise, b.id_user, a.mark, a.id_file, a.url
 		from mdl_league_attempt as a
 		inner join (
@@ -332,7 +332,7 @@ function get_qualy_array($idleague, $idcurso, $rol, $method){
         left outer join
         (
             select a.id as idat, a.timemodified as tma,
-                    a.observations, a.course as ca, a.name as fname,
+                    a.observations, a.name as fname,
                     a.exercise, b.id_user, a.mark, a.id_file, a.url
                     from mdl_league_attempt as a
                     inner join (
@@ -642,7 +642,7 @@ function getArrayMarkByStudent($idleague, $iduser, $toprint){
             left outer join
             (
                 select a.id as idat, a.timemodified as tma,
-                        a.observations, a.course as ca, a.name as fname,
+                        a.observations, a.name as fname,
                         a.exercise, b.id_user, a.mark, a.id_file, a.url
                         from mdl_league_attempt as a
                         inner join (

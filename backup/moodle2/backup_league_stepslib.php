@@ -14,7 +14,7 @@ class backup_league_activity_structure_step extends backup_activity_structure_st
         
 // Define each element separated
         $league = new backup_nested_element('league', array('id'), array(
-            'name', 'intro', 'introformat', 'timemodified',
+            'name', 'filearea', 'timemodified',
             'gradeweighting', 'method'));
  
         $exercises = new backup_nested_element('exercises');
@@ -22,13 +22,12 @@ class backup_league_activity_structure_step extends backup_activity_structure_st
         $exercise = new backup_nested_element('exercise', array('id'), array(
             'name', 'timemodified',
             'statement', 'enabled','league','published'));
-        //En teoria, league no lo necesitariamos por estar en la tabla league ???
  
         $attempts = new backup_nested_element('attempts');
  
         $attempt = new backup_nested_element('attempt', array('id'), array(
             'name', 'timemodified', 'intro', 'introformat',
-            'exercise', 'id_user', 'mark', 'observations', 'id_file', 'url'));
+            'exercise', 'id_user', 'mark', 'observations', 'id_file', 'url', 'league'));
         
         
 // Build the tree
@@ -52,8 +51,8 @@ class backup_league_activity_structure_step extends backup_activity_structure_st
             $attempt->set_source_sql('
                 SELECT *
                   FROM {league_attempt}
-                 WHERE course = ?',
-                array(backup::VAR_COURSEID));
+                 WHERE league = ?',
+                array(backup::VAR_PARENTID));
         }
         
         
@@ -63,7 +62,7 @@ class backup_league_activity_structure_step extends backup_activity_structure_st
         
         
 // Define file annotations
-        $league->annotate_files('mod_league', 'exuplod', null);
+        $league->annotate_files('mod_league', 'filearea', null);
         
         
 // Return the root element (League), wrapped into standard activity structure

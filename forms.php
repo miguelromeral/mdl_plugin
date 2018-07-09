@@ -22,7 +22,7 @@ class upload_form extends moodleform {
         
         $mform->addElement('filepicker', 'userfile', get_string('upload_exercise_file', 'league'), null,
                    array('maxbytes' => $this->_customdata['max_bytes'], 'accepted_types' => '*'));
-                        
+        
         $this->add_action_buttons();
     }
     //Custom validation should be added here
@@ -57,7 +57,7 @@ class exercise_form extends moodleform {
         $mform->setDefault('name', $name);
         //Descripción del ejercicio
         $statement = (empty($this->_customdata['statement']) ? "" : $this->_customdata['statement']);
-        $mform->addElement('textarea', 'statement', get_string("introtext", "survey"), 'wrap="virtual" rows="20" cols="50"');
+        $mform->addElement('textarea', 'statement', get_string("ae_description", "league"), 'wrap="virtual" rows="20" cols="50"');
         $mform->setDefault('statement', $statement);
         
         $this->add_action_buttons();

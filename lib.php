@@ -27,6 +27,7 @@ function league_add_instance(stdClass $league, mod_league_mod_form $mform = null
     global $DB;
     $league->timemodified = time();
     $league->gradeweighting = 100;
+    $league->filearea = 'exuplod';
     //print_r($league);
     
     $league->id = $DB->insert_record('league', $league);
@@ -92,12 +93,9 @@ function league_delete_instance($id) {
 function league_exercise_add_instance($course, $name, $statement, $league) {
     global $DB;
     $record = new stdClass();
-    $record->course = $course;
     $record->name = $name;
     $record->timemodified = time();
     $record->statement = $statement;
-    $record->intro = null;
-    $record->introformat = null;
     $record->league = $league;
     $record->enabled = 0;
     $record->published = 0;
@@ -115,12 +113,9 @@ function league_exercise_update_instance($leagueinstance, $course, $name, $state
     global $DB;
     $record = new stdClass();
     $record->id = $idexer;
-    $record->course = $course;
     $record->name = $name;
     $record->timemodified = time();
     $record->statement = $statement;
-    $record->intro = null;
-    $record->introformat = null;
     $record->league = $league;
     $record->enabled = $enabled;
     $record->published = $pub;
@@ -143,20 +138,18 @@ function league_exercise_delete_instance($id) {
     return true;
 }
 
-function league_attempt_add_instance($course, $id_user, $exercise, $id_file, $url, $name = null) {
+function league_attempt_add_instance($course, $id_user, $exercise, $id_file, $url, $name, $league) {
     global $DB;
     $record = new stdClass();
-    $record->course = $course;
     $time = time();
     $record->name = ($name ? $name : "$id_user-$exercise-$time");
     $record->timemodified = $time;
     $record->id_user = $id_user;
-    $record->intro = null;
-    $record->introformat = null;
     $record->exercise = $exercise;
     $record->mark = -1;
     $record->id_file = $id_file;
     $record->url = $url;
+    $record->league = $league;
   
     $id = $DB->insert_record('league_attempt', $record);
    
