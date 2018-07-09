@@ -4,6 +4,13 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/eventslib.php');
 
+function league_supports($feature) {
+    switch($feature) {
+        case FEATURE_BACKUP_MOODLE2:          return true;
+        default: return null;
+    }
+}
+
 /**
  * Saves a new instance of the newmodule into the database
  *
@@ -34,10 +41,7 @@ function league_add_instance(stdClass $league, mod_league_mod_form $mform = null
         'context' => context_module::instance($league->coursemodule)
     ));
     
-    //$event = \mod_league\event\league_created::create(array());
     $event->trigger();
-    
-    
     
     return $league->id;
 }

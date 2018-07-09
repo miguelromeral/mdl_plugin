@@ -30,12 +30,12 @@ function print_exercises($idliga, $rol, $cmid){
         <td id="thb"><?= $exer['name'] ?></td>
         <td><?= date("H:i:s, d (D) M Y", $exer['timemodified']) ?></td>
         <td><?= ($exer['enabled'] == 0 ? 
-                '<img src="images/no.png" width="20" height="20"/>' : 
+                '<img src="images/no.png" width="30" height="30"/>' : 
                 '<img src="images/yes.png" width="30" height="30"/>') ?>
         </td>
         <td><?= 
                 ($exer['published'] == 0 ? 
-                '<img src="images/no.png" width="20" height="20"/>' : 
+                '<img src="images/no.png" width="30" height="30"/>' : 
                 '<img src="images/yes.png" width="30" height="30"/>') ?>
         </td>
         <td>

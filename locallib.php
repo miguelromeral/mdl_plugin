@@ -25,5 +25,5 @@ function league_created_handler($event) {
     
     //return quiz_send_notification_messages($course, $quiz, $attempt,
     //        context_module::instance($cm->id), $cm);
-    return true;      
+    //return true;      
 }
