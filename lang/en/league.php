@@ -22,6 +22,7 @@ $string['upload_time'] = 'Fecha de subida';
 $string['mark'] = 'Nota';
 $string['reviews'] = 'Observaciones';
 $string['download_file'] = 'Descargar fichero';
+$string['cant_create_url'] = 'No se ha podido generar el URL';
 $string['file_uploaded'] = 'Fichero subido';
 $string['to_mark'] = 'Corregir';
 $string['modify'] = 'Modificar';

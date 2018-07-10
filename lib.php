@@ -85,6 +85,8 @@ function league_delete_instance($id) {
     }
     // Delete any dependent records here.
     $DB->delete_records('league', array('id' => $league->id));
+    league_exercise_delete_instance($league->id);
+    league_attempt_delete_instance($league->id);
     //newmodule_grade_item_delete($league);
     return true;
 }
@@ -131,10 +133,10 @@ function league_exercise_update_instance($leagueinstance, $course, $name, $state
 
 function league_exercise_delete_instance($id) {
     global $DB;
-    if (! $exercise = $DB->get_record('league_exercise', array('id' => $id))) {
+    if (! $exercise = $DB->get_record('league_exercise', array('league' => $id))) {
         return false;
     }
-    $DB->delete_records('league_exercise', array('id' => $exercise->id));
+    $DB->delete_records('league_exercise', array('league' => $exercise->id));
     return true;
 }
 
@@ -190,6 +192,19 @@ function league_attempt_update_instance($league, $idat, $mark, $observations, $i
         return false;
     }
 }
+
+function league_attempt_delete_instance($id) {
+    global $DB;
+    if (! $exercise = $DB->get_record('league_attempt', array('league' => $id))) {
+        return false;
+    }
+    deleteFileAttempt();
+    $DB->delete_records('league_attempt', array('league' => $id));
+    return true;
+}
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Gradebook API                                                              //
@@ -327,8 +342,6 @@ function league_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
     if ($context->contextlevel != CONTEXT_MODULE) {
         return false; 
     }
- 
-    
    if ($filearea !== 'exuplod') {
         return false;
     }

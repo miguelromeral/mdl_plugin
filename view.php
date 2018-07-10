@@ -95,10 +95,6 @@ $groupmode = groups_get_activity_groupmode($cm);
 
 $bc = new block_contents();
 
-
-
-echo "--> cmid: $cmid <---";
-
 $var="SELECT * 
 FROM mdl_role as er
 INNER JOIN mdl_role_assignments as era 

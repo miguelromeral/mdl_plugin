@@ -49,14 +49,12 @@ class restore_league_activity_structure_step extends restore_activity_structure_
     protected function process_league_attempt($data) {
         global $DB;
  
-        $data = (object)$data;
- 
-        //print_r($data);
+        $data = (object)$data;        
         
         $data->league = $this->get_new_parentid('league');
         $data->exercise = $this->get_mappingid('league_exercise', $data->exercise);
         $data->id_user = $this->get_mappingid('user', $data->id_user);
-        /*if (!function_exists('restoreURLFile')) { //workaround for buggy PHP versions
+        /*if (!function_exists('restoreURLFile')) {
             require_once('../../utilities.php');
         }
         $newfile = restoreURLFile();
@@ -70,6 +68,6 @@ class restore_league_activity_structure_step extends restore_activity_structure_
  
     protected function after_execute() {
         // Add league related files, no need to match by itemname (just internally handled context)
-        $this->add_related_files('mod_league', 'filearea', null);
+        $this->add_related_files('mod_league', 'exuplod', null);
     }
 }

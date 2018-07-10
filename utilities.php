@@ -188,16 +188,14 @@ function print_students_exercise($cmid, $id_exer, $name, $contextid){
             ?></td>
             <td>
                 <?php
-                /*if($d['id_file']){
+                if($d['id_file']){
                     $file = restoreURLFile($contextid, $d['id_file']);
                     if($file){
                         echo '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
                     }else{
-                        echo "Fallo al restaurar el URL.";
+                        echo get_string('cant_create_url', 'league');
                     }
                 }
-                 */
-                echo '<a href="'.$d['url'].'">'.get_string('download_file_button', 'league')."</a>";
                 ?>
             </td>
             <td>
@@ -287,28 +285,29 @@ function print_notas_alumno($idleague, $cmid, $userid, $contextid){
             <td><?= ($d['tma'] ? date("H:i:s, d (D) M Y", $d['tma']) : "") ?></td>
             <td>
                 <?php
-                //echo "(Context ID: $contextid, ID File: ${d['id_file']})<br>";
-                
-                /*if($d['id_file']){
+                if($d['id_file']){
                     $file = restoreURLFile($contextid, $d['id_file']);
                     if($file){
                         echo '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
                     }else{
-                        echo "Fallo al restaurar el URL.";
+                        echo get_string('cant_create_url', 'league');
                     }
-                }*/
-                echo '<a href="'.$d['url'].'">'.get_string('download_file_button', 'league')."</a>";
+                }
                 ?>
             </td>
             <td id="thb"><?php 
-            if($d['mark'] == -1 || $d['published'] == 0){
-                echo get_string('no_mark_yet', 'league');
-            }else{
-                if($d['mark']){
-                    echo $d['mark']."%";
+            if($d['mark']){
+                if($d['mark'] == -1){
+                    echo get_string('no_mark_yet', 'league');
                 }else{
-                    echo "<b><i>".get_string('not_sent_yet', 'league')."</i></b>";
+                    if($d['published'] == 0){
+                        echo get_string('no_mark_yet', 'league');
+                    }else{
+                        echo $d['mark']."%";
+                    }
                 }
+            }else{
+                echo "<b><i>".get_string('not_sent_yet', 'league')."</i></b>";
             }
             ?></td>
             <td><?php
@@ -744,3 +743,16 @@ function restoreURLFile($contextid, $itemid){
     }
     return null;
 }
+/*
+function deleteFileAttempt($contextid, $itemid){
+    $component = 'mod_league';
+    $filearea = 'exuplod';
+    $fs = get_file_storage();
+    if ($files = $fs->get_area_files($contextid, $component, $filearea, $itemid, 'sortorder', false)) {               
+        foreach ($files as $file) {
+            $file->delete();
+            return true;
+        }
+    }
+    return false;
+}*/
