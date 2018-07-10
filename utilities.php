@@ -144,7 +144,7 @@ function print_exercises($idliga, $rol, $cmid){
     }
 }
 
-function print_students_exercise($cmid, $id_exer, $name){
+function print_students_exercise($cmid, $id_exer, $name, $contextid){
     global $DB;
     //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
     $var="select *
@@ -187,7 +187,18 @@ function print_students_exercise($cmid, $id_exer, $name){
             }
             ?></td>
             <td>
-                <a href="<?= $d['url'] ?>"><?= get_string('download_file_button', 'league') ?></a>
+                <?php
+                /*if($d['id_file']){
+                    $file = restoreURLFile($contextid, $d['id_file']);
+                    if($file){
+                        echo '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
+                    }else{
+                        echo "Fallo al restaurar el URL.";
+                    }
+                }
+                 */
+                echo '<a href="'.$d['url'].'">'.get_string('download_file_button', 'league')."</a>";
+                ?>
             </td>
             <td>
              <form action="mark_student.php" method="post" >
@@ -231,7 +242,7 @@ function getIDFileFromContenthash($contenthash){
     return $id;
 }
 
-function print_notas_alumno($idleague, $cmid, $userid){
+function print_notas_alumno($idleague, $cmid, $userid, $contextid){
     global $DB;
     //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
     $var="select *
@@ -276,9 +287,17 @@ function print_notas_alumno($idleague, $cmid, $userid){
             <td><?= ($d['tma'] ? date("H:i:s, d (D) M Y", $d['tma']) : "") ?></td>
             <td>
                 <?php
-                    if($d['url']){
-                        echo '<a href="'.$d['url'].'">'.get_string('download_file_button', 'league')."</a>";
+                //echo "(Context ID: $contextid, ID File: ${d['id_file']})<br>";
+                
+                /*if($d['id_file']){
+                    $file = restoreURLFile($contextid, $d['id_file']);
+                    if($file){
+                        echo '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
+                    }else{
+                        echo "Fallo al restaurar el URL.";
                     }
+                }*/
+                echo '<a href="'.$d['url'].'">'.get_string('download_file_button', 'league')."</a>";
                 ?>
             </td>
             <td id="thb"><?php 
@@ -688,4 +707,40 @@ function publishedMarks($exercise){
             return true;
         }
     }
+}
+
+function getURLFile($contextid, $component, $filearea, $itemid, $name){
+    global $CFG;
+    
+    $url = $CFG->wwwroot;
+    $url .= "/pluginfile.php/";
+    $url .= ($contextid)."/";
+    $url .= ($component)."/";
+    $url .= ($filearea)."/";
+    $url .= ($itemid)."/";
+    $url .= $name;
+    return $url;
+}
+
+
+function restoreURLFile($contextid, $itemid){
+    $component = 'mod_league';
+    $filearea = 'exuplod';
+    $fs = get_file_storage();
+    if ($files = $fs->get_area_files($contextid, $component, $filearea, $itemid, 'sortorder', false)) {               
+        foreach ($files as $file) {
+            $contenthash = $file->get_contenthash();
+            $id_file = getIDFileFromContenthash($contenthash);
+
+
+            $url = getURLFile($file->get_contextid(), $file->get_component(), 
+                    $file->get_filearea(), $file->get_itemid(), $file->get_filename());
+
+            $resultado = new stdClass();
+            $resultado->id = $id_file;
+            $resultado->url = $url;
+            return $resultado;
+        }
+    }
+    return null;
 }

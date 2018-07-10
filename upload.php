@@ -152,15 +152,10 @@ if($valido == 0){
                         $id_file = getIDFileFromContenthash($contenthash);
                         
                         
-                        $url = $CFG->wwwroot;
-                        $url .= "/pluginfile.php/";
-                        $url .= ($file->get_contextid())."/";
-                        $url .= ($file->get_component())."/";
-                        $url .= ($file->get_filearea())."/";
-                        $url .= ($file->get_itemid())."/";
-                        $url .= $name;
+                        $url = getURLFile($file->get_contextid(), $file->get_component(), 
+                                $file->get_filearea(), $file->get_itemid(), $name);
                         
-                        $exito = league_attempt_add_instance($course->id, $USER->id, $id_exer, $id_file, $url, $name, $league->id);
+                        $exito = league_attempt_add_instance($course->id, $USER->id, $id_exer, $file->get_itemid(), $url, $name, $league->id);
 
                         if($exito){
                             ?>

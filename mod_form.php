@@ -29,7 +29,7 @@ class mod_league_mod_form extends moodleform_mod {
         $mform->addRule('method', 'MENSAJE DE ERROR', 'required', null, 'client');
         $mform->addHelpButton('method', 'select_method', 'league');
         
-        $features = new object();
+        $features = new stdClass();
         $features->groups           = false;
         $features->groupings        = false;
         $features->groupmembersonly = true;

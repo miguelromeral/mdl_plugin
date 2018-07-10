@@ -58,6 +58,7 @@ class backup_league_activity_structure_step extends backup_activity_structure_st
         
 // Define id annotations
         $attempt->annotate_ids('user', 'id_user');
+        $attempt->annotate_ids('files', 'id_file');
  
         
         

@@ -87,7 +87,7 @@ if($valido == 0){
 }else{
     
     if($id_exer){
-        print_students_exercise($cmid, $id_exer, $name_exer);
+        print_students_exercise($cmid, $id_exer, $name_exer, $context->id);
     }
     ?>
         

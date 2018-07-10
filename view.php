@@ -134,7 +134,7 @@ if ($rol == 'student'){
 <h2><?= get_string('my_marks','league') ?></h2>
     <?php
     
-    print_notas_alumno($league->id, $cmid, $USER->id);
+    print_notas_alumno($league->id, $cmid, $USER->id, $context->id);
     
     
     ?>

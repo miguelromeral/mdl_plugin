@@ -56,7 +56,13 @@ class restore_league_activity_structure_step extends restore_activity_structure_
         $data->league = $this->get_new_parentid('league');
         $data->exercise = $this->get_mappingid('league_exercise', $data->exercise);
         $data->id_user = $this->get_mappingid('user', $data->id_user);
- 
+        /*if (!function_exists('restoreURLFile')) { //workaround for buggy PHP versions
+            require_once('../../utilities.php');
+        }
+        $newfile = restoreURLFile();
+        $data->id_file = $newfile->id;
+        $data->url = $newfile->url;
+        */
         $newitemid = $DB->insert_record('league_attempt', $data);
         // No need to save this mapping as far as nothing depend on it
         // (child paths, file areas nor links decoder)
