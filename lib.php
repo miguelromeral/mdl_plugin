@@ -133,10 +133,10 @@ function league_exercise_update_instance($leagueinstance, $course, $name, $state
 
 function league_exercise_delete_instance($id) {
     global $DB;
-    if (! $exercise = $DB->get_record('league_exercise', array('league' => $id))) {
+    if (! $exercise = $DB->get_record('league_exercise', array('id' => $id))) {
         return false;
     }
-    $DB->delete_records('league_exercise', array('league' => $exercise->id));
+    $DB->delete_records('league_exercise', array('id' => $exercise->id));
     return true;
 }
 

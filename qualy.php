@@ -131,9 +131,10 @@ AND c.id = 2
 ORDER BY c.fullname";
 
 $q = get_qualy_array($league->id, $course->id, $rol, $league->method);
-?> 
+/*?> 
 <link rel="stylesheet" type="text/css" href="styles.css">    
 <?php
+*/
 if ($rol == 'student' || ($rol == 'teacher' || (has_capability('mod/league:view', $context, $USER->id && $rol = 'teacher')))){
         
         echo "<h1>".get_string('qualy_title', 'league')."</h1>";

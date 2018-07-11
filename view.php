@@ -122,8 +122,8 @@ foreach ($data as $rowclass)
             break;
     }
 }
-?> <link rel="stylesheet" type="text/css" href="styles.css"> <?php
-
+/*?> <link rel="stylesheet" type="text/css" href="styles.css"> <?php
+*/
 if ($rol == 'student'){
     
     ?>
