@@ -11,28 +11,52 @@ $observers = array(
         // fully qualified event class name or "*" indicating all events
         'eventname'   => '\mod_league\event\league_created',
         // PHP callable type.
-        'callback'    => 'league_created_handler',
+        //'callback'    => 'league_created_handler',
         // optional. File to be included before calling the observer. Path relative to dirroot.
-        'includefile' => '/mod/league/locallib.php',
+        //'includefile' => '/mod/league/locallib.php',
         // optional. Defaults to true. Non-internal observers are not called 
         // during database transactions, but instead after a successful commit of the transaction.
-        'internal'    => false,
+        'internal'    => true,
         // optional. Defaults to 0. Observers with higher priority are notified first.
         //'priority'    => 9999,
     ),
     
     array(
+        'eventname'   => '\mod_league\event\league_updated',
+        'internal'    => true,
+    ),
+    
+    array(
+        'eventname'   => '\mod_league\event\exercise_created',
+        'internal'    => true,
+    ),
+    
+    array(
+        'eventname'   => '\mod_league\event\exercise_updated',
+        'internal'    => true,
+    ),
+    
+    array(
+        'eventname'   => '\mod_league\event\exercise_deleted',
+        'internal'    => true,
+    ),
+    
+    array(
         // fully qualified event class name or "*" indicating all events
         'eventname'   => '\mod_league\event\attempt_submitted',
-        // PHP callable type.
-        'callback'    => 'attempt_submitted_handler',
-        // optional. File to be included before calling the observer. Path relative to dirroot.
-        'includefile' => '/mod/league/locallib.php',
-        // optional. Defaults to true. Non-internal observers are not called 
-        // during database transactions, but instead after a successful commit of the transaction.
-        'internal'    => false,
-        // optional. Defaults to 0. Observers with higher priority are notified first.
-        //'priority'    => 9999,
+        'internal'    => true,
+    ),
+    
+    array(
+        // fully qualified event class name or "*" indicating all events
+        'eventname'   => '\mod_league\event\attempt_downloaded',
+        'internal'    => true,
+    ),
+    
+    array(
+        // fully qualified event class name or "*" indicating all events
+        'eventname'   => '\mod_league\event\attempt_graded',
+        'internal'    => true,
     )
     
 );

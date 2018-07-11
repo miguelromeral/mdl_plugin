@@ -179,8 +179,17 @@ $string['not_sent_yet'] = 'SIN HACER EJERCICIO';
 /**
  *  PRUEBAS SOBRE EVENTS
  */
-$string['eventleaguecreated'] = 'League has been created';
-$string['eventattemptsubmitted'] = 'User submitted an attempt';
+
+// * --> sin probar
+
+$string['eventleaguecreated'] = 'League created';
+$string['eventleagueupdated'] = 'League updated';
+$string['eventexercisecreated'] = 'Exercise created';
+$string['eventexerciseupdated'] = 'Exercise updated';
+$string['eventexercisedeleted'] = 'Exercise deleted';
+$string['eventattemptsubmitted'] = 'Attempt submitted';
+$string['eventattemptdownloaded'] = 'Attempt downloaded *';
+$string['eventattemptgraded'] = 'Attempt graded';
 
 /**
  *  PERMISOS

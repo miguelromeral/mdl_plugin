@@ -762,3 +762,25 @@ function deleteFileAttempt($contextid, $itemid){
     }
     return false;
 }*/
+
+function get_id_and_user_attempt_from_itemid($itemid){
+    global $DB;
+    $res = new stdClass();
+    /*$var="select id, id_user, league
+        from mdl_league_attempt
+        where id_file = $itemid";
+    $data = $DB->get_records_sql($var);
+    foreach ($data as $d){
+        $d = get_object_vars($d);
+        $res['id'] = $d['id'];
+        $res['id_user'] = $d['id_user'];
+        $res['league'] = $d['league'];
+        return $res;
+    }
+     * 
+     */
+    $res['id'] = 16;
+    $res['id_user'] = 3;
+    $res['league'] = 8;
+    return $res;
+}

@@ -122,9 +122,9 @@ if($valido == 0){
             if(empty($errores)){
                 $course = $cm->course;
                 if($id_exer == -1){
-                    $correcto = league_exercise_add_instance($course, $name, $statement, $league->id);
+                    $correcto = league_exercise_add_instance($course, $name, $statement, $league->id, $USER->id, $context);
                 }else{
-                    $correcto = league_exercise_update_instance($league, $course, $name, $statement, $league->id, $id_exer, 0, 0);
+                    $correcto = league_exercise_update_instance($league, $course, $name, $statement, $league->id, $id_exer, 0, 0, $context);
                 }
                 
                 if($correcto){
