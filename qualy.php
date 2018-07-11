@@ -73,7 +73,7 @@ if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities'
     notice(get_string("activityiscurrentlyhidden"));
 }
 
-if (!has_capability('mod/league:view', $context)) {
+if (!has_capability('mod/league:view', $context, $USER->id)) {
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
 
@@ -134,7 +134,7 @@ $q = get_qualy_array($league->id, $course->id, $rol, $league->method);
 ?> 
 <link rel="stylesheet" type="text/css" href="styles.css">    
 <?php
-if ($rol == 'student' || $rol == 'teacher'){
+if ($rol == 'student' || ($rol == 'teacher' || (has_capability('mod/league:view', $context, $USER->id && $rol = 'teacher')))){
         
         echo "<h1>".get_string('qualy_title', 'league')."</h1>";
         print_qualy($q, $rol, $USER->id);

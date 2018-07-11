@@ -155,7 +155,7 @@ if($valido == 0){
                         $url = getURLFile($file->get_contextid(), $file->get_component(), 
                                 $file->get_filearea(), $file->get_itemid(), $name);
                         
-                        $exito = league_attempt_add_instance($course->id, $USER->id, $id_exer, $file->get_itemid(), $url, $name, $league->id);
+                        $exito = league_attempt_add_instance($course->id, $USER->id, $id_exer, $file->get_itemid(), $url, $name, $league->id, $context);
 
                         if($exito){
                             ?>

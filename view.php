@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <?php
 
 require_once('../../config.php');
@@ -53,13 +53,17 @@ if ($cmid) {
 $context = context_module::instance($cm->id);
 
 
+/*
 $params = array(
+
     'objectid' => $league->id,
     'context' => $context
 );
 
-$event = \mod_quiz\event\course_module_viewed::create($params);
+$event = \mod_league\event\course_module_viewed::create($params);
 $event->trigger();
+*/
+
 
 $PAGE->set_context($context);
 
@@ -84,7 +88,9 @@ if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities'
     notice(get_string("activityiscurrentlyhidden"));
 }
 
-if (!has_capability('mod/league:view', $context)) {
+//$mod = mod_league\league($cm);
+        
+if (!has_capability('mod/league:view', $context, $USER->id)) {
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
 
@@ -94,6 +100,8 @@ $currentgroup = groups_get_activity_group($cm);
 $groupmode = groups_get_activity_groupmode($cm);
 
 $bc = new block_contents();
+
+get_enrolled_users($context);
 
 $var="SELECT * 
 FROM mdl_role as er
@@ -144,7 +152,7 @@ if ($rol == 'student'){
     
     <?php
     
-}else if($rol == 'teacher'){
+}else if(has_capability('mod/league:view', $context, $USER->id) || $rol == 'teacher'){
     
     ?>
     
@@ -244,7 +252,7 @@ if ($rol == 'student'){
 
     <?php
 }else{
-    notice(get_string('noviewdiscussionspermission', 'league'));
+    //notice(get_string('noviewdiscussionspermission', 'league'));
 }
 
 echo $OUTPUT->footer();

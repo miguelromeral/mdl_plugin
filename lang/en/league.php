@@ -28,7 +28,6 @@ $string['to_mark'] = 'Corregir';
 $string['modify'] = 'Modificar';
 $string['go_back'] = 'Volver';
 
-
 /*
  *      MOD_FORM:
  */
@@ -181,6 +180,7 @@ $string['not_sent_yet'] = 'SIN HACER EJERCICIO';
  *  PRUEBAS SOBRE EVENTS
  */
 $string['eventleaguecreated'] = 'League has been created';
+$string['eventattemptsubmitted'] = 'User submitted an attempt';
 
 /**
  *  PERMISOS

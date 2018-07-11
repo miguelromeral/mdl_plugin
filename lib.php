@@ -140,7 +140,7 @@ function league_exercise_delete_instance($id) {
     return true;
 }
 
-function league_attempt_add_instance($course, $id_user, $exercise, $id_file, $url, $name, $league) {
+function league_attempt_add_instance($course, $id_user, $exercise, $id_file, $url, $name, $league, $context) {
     global $DB;
     $record = new stdClass();
     $time = time();
@@ -155,6 +155,14 @@ function league_attempt_add_instance($course, $id_user, $exercise, $id_file, $ur
   
     $id = $DB->insert_record('league_attempt', $record);
    
+    $event = \mod_league\event\attempt_submitted::create(array(
+        'objectid' => $id,
+        'other' => array('exercise' => $exercise),
+        'context' => $context
+    ));
+    
+    $event->trigger();
+    
     if($id){
         return true;
     }else{

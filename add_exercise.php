@@ -64,7 +64,7 @@ if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities'
     notice(get_string("activityiscurrentlyhidden"));
 }
 
-if (!has_capability('mod/league:view', $context)) {
+if (!has_capability('mod/league:view', $context, $USER->id)) {
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
 
