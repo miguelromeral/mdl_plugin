@@ -22,16 +22,6 @@ function print_exercises($idliga, $rol, $cmid){
         array_push($align, 'center');
         array_push($headings, get_string('published_marks', 'league'));
         array_push($align, 'center');
-        array_push($headings, "");
-        array_push($align, 'center');
-        array_push($headings, "");
-        array_push($align, 'center');
-        array_push($headings, "");
-        array_push($align, 'center');
-        array_push($headings, "");
-        array_push($align, 'center');
-        array_push($headings, "");
-        array_push($align, 'center');
         $table->head = $headings;
         $table->align = $align;
         
@@ -166,60 +156,51 @@ function print_students_exercise($cmid, $id_exer, $name, $contextid){
 
 <h1><?= $name ?></h1>
 
-<table>
-    <tr>
-        <th><?= get_string('student', 'league') ?></th>
-        <th><?= get_string('upload_time', 'league') ?></th>
-        <th colspan="3"><?= get_string('mark', 'league') ?></th>
-    </tr>
-    
-    <?php
-    
+<?php
+
+    $table = new html_table();
+    $headings = array();
+    $align = array();
+    array_push($headings, get_string('student', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('upload_time', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('mark', 'league'));
+    array_push($align, 'center');
+    $table->head = $headings;
+    $table->align = $align;
+
     foreach ($data as $d){
         $d = get_object_vars($d);
-        ?> <tr> 
-            <td id="thb"><?php echo $d['firstname']." ".$d['lastname']; ?></td>
-            <td><?= date("H:i:s, d (D) M Y", $d['timemodified']) ?></td>
-            <td id="thb"><?php 
-            if($d['mark'] == -1){
-                echo get_string('no_mark_yet', 'league');
-            }else{
-                echo $d['mark']."%";
-            }
-            ?></td>
-            <td>
-                <?php
-                if($d['id_file']){
-                    $file = restoreURLFile($contextid, $d['id_file']);
-                    if($file){
-                        echo '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
-                    }else{
-                        echo get_string('cant_create_url', 'league');
-                    }
-                }
-                ?>
-            </td>
-            <td>
-             <form action="mark_student.php" method="post" >
-                <input type="hidden" name="id" value="<?= $cmid ?>" />
-                <input type="hidden" name="id_exer" value="<?= $id_exer ?>" />
-                <input type="hidden" name="name" value="<?= $name ?>" />
-                <input type="hidden" name="id_user" value="<?= $d['id_user'] ?>" />
-                <input type="hidden" name="idat" value="<?= $d['id'] ?>" />
-                <input type="hidden" name="mark" value="<?= $d['mark'] ?>" />
-                <input type="hidden" name="observations" value="<?= $d['observations'] ?>" />
-                <input type="submit" value="<?= get_string('mark_student_button', 'league') ?>"/>
-            </form>
-            </td>
+        $data = array();
+        $data[] = $d['firstname'];
+        $data[] = date("H:i:s, d (D) M Y", $d['timemodified']);
+        $data[] = (($d['mark'] == -1) ?get_string('no_mark_yet', 'league') : $d['mark']."%");
         
-        </tr>
-        <?php
+        if($d['id_file']){
+            $file = restoreURLFile($contextid, $d['id_file']);
+            if($file){
+                $data[] = '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
+            }else{
+                $data[] = get_string('cant_create_url', 'league');
+            }
+        }
+        
+        $data[] = '<form action="mark_student.php" method="post" >
+                <input type="hidden" name="id" value="'. $cmid .'" />
+                <input type="hidden" name="id_exer" value="'. $id_exer .'" />
+                <input type="hidden" name="name" value="'. $name .'" />
+                <input type="hidden" name="id_user" value="'. $d['id_user'] .'" />
+                <input type="hidden" name="idat" value="'. $d['id'] .'" />
+                <input type="hidden" name="mark" value="'. $d['mark'] .'" />
+                <input type="hidden" name="observations" value="'. $d['observations'] .'" />
+                <input type="submit" value="'. get_string('mark_student_button', 'league') .'"/>
+            </form>';
+        
+        $table->data[] = $data;
     }
-    ?>
-</table>
-
-<?php
     
+    echo html_writer::table($table);
 }
 
 
@@ -263,70 +244,65 @@ function print_notas_alumno($idleague, $cmid, $userid, $contextid){
     on a.id = b.exercise
     where a.league = $idleague";
     $data = $DB->get_records_sql($var);
-    ?>
-
-<table>
-    <tr>
-        <th><?= get_string('exercise', 'league') ?></th>
-        <th><?= get_string('upload_time', 'league') ?></th>
-        <th><?= get_string('file_uploaded', 'league') ?></th>
-        <th><?= get_string('mark', 'league') ?></th>
-        <th><?= get_string('reviews', 'league') ?></th>
-    </tr>
     
-    <?php
+    $table = new html_table();
+    $headings = array();
+    $align = array();
+    array_push($headings, get_string('exercise', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('upload_time', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('file_uploaded', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('mark', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('reviews', 'league'));
+    array_push($align, 'center');
+    $table->head = $headings;
+    $table->align = $align;
     
     foreach ($data as $d){
         $d = get_object_vars($d);
+        
         if($d['enabled'] == 1 || $d['idat']){
-        
-        
-        ?> <tr> 
-            <td id="thb"><?= $d['name'] ?></td>
-            <td><?= ($d['tma'] ? date("H:i:s, d (D) M Y", $d['tma']) : "") ?></td>
-            <td>
-                <?php
-                if($d['id_file']){
-                    $file = restoreURLFile($contextid, $d['id_file']);
-                    if($file){
-                        echo '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
-                    }else{
-                        echo get_string('cant_create_url', 'league');
-                    }
+            $data = array();
+            $data[] = $d['name'];
+            $data[] = ($d['tma'] ? date("H:i:s, d (D) M Y", $d['tma']) : "");
+            
+            if($d['id_file']){
+                $file = restoreURLFile($contextid, $d['id_file']);
+                if($file){
+                    $data[] = '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
+                }else{
+                    $data[] = get_string('cant_create_url', 'league');
                 }
-                ?>
-            </td>
-            <td id="thb"><?php 
+            }
+            
             if($d['mark']){
                 if($d['mark'] == -1){
-                    echo get_string('no_mark_yet', 'league');
+                    $data[] = get_string('no_mark_yet', 'league');
                 }else{
                     if($d['published'] == 0){
-                        echo get_string('no_mark_yet', 'league');
+                        $data[] = get_string('no_mark_yet', 'league');
                     }else{
-                        echo $d['mark']."%";
+                        $data[] = $d['mark']."%";
                     }
                 }
             }else{
-                echo "<b><i>".get_string('not_sent_yet', 'league')."</i></b>";
+                $data[] = "<b><i>".get_string('not_sent_yet', 'league')."</i></b>";
             }
-            ?></td>
-            <td><?php
+            
             if($d['mark'] == -1 || $d['published'] == 0){
-                echo "";
+                $data[] = "";
             }else{
-                echo $d['observations'];
+                $data[] = $d['observations'];
             }
-            ?></td>
-        
-        </tr>
-        <?php
+            
+            $table->data[] = $data;
         }
     }
-    ?>
-</table>
-
-<?php
+    
+    echo html_writer::table($table);
 }
 
 function get_qualy_array($idleague, $idcurso, $rol, $method){
@@ -565,73 +541,84 @@ function mejoresNotasSegundo($q, $r1, $r2){
 
 function print_qualy($q, $rol = 'student', $iduser = -1){
     $pos = 1;
-        ?>
-<table id="qualy">
-    <tr>
-        <th><?= get_string('q_pos','league') ?></th>
-        
-        <?php
-        if($rol == 'student'){
-            ?> <th><?= get_string('q_name_hashed','league') ?></th> <?php
-        }else{
-            ?> <th><?= get_string('q_name','league') ?></th> <?php
-        }
-        ?>
-        <?php if($rol == 'teacher'){ 
-            echo "<th>".get_string('q_user','league')."</th>";
-            echo "<th>".get_string('q_id','league')."</th>";
-        } ?>
-        <th><?= get_string('q_total_exercises','league') ?></th>
-        <th><?= get_string('q_exercises_uploaded','league') ?></th>
-        <th><?= get_string('q_total_mark','league') ?></th>
-        <th><?= get_string('q_percentage','league') ?></th>
-        <th><?= get_string('q_notes','league') ?></th>
-        <?php if($rol == 'teacher' && $iduser != -1){ 
-            echo '<th colspan="'.$q[0]['totalexer'].'">'.get_string('q_best_marks','league').'</th>';
-        } ?>
-        
-    </tr>
-        <?php
+    
+    $table = new html_table();
+    $headings = array();
+    $align = array();
+    array_push($headings, get_string('q_pos', 'league'));
+    array_push($align, 'center');
+    
+    if($rol == 'student'){
+        array_push($headings, get_string('q_name_hashed', 'league'));
+        array_push($align, 'center');
+    }else{
+        array_push($headings, get_string('q_name', 'league'));
+        array_push($align, 'center');
+    }
+    
+    if($rol == 'teacher'){ 
+        array_push($headings, get_string('q_user', 'league'));
+        array_push($align, 'center');
+        array_push($headings, get_string('q_id', 'league'));
+        array_push($align, 'center');
+    }
+    
+    array_push($headings, get_string('q_total_exercises', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('q_exercises_uploaded', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('q_total_mark', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('q_percentage', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('q_notes', 'league'));
+    array_push($align, 'center');
+    
+    if($rol == 'teacher' && $iduser != -1){ 
+        array_push($headings, get_string('q_best_marks', 'league'));
+        array_push($align, 'center');
+    }
+    
+    $table->head = $headings;
+    $table->align = $align;
+    
     foreach ($q as $r){
-        $b = ($r['uid'] == $iduser);
-        $i = $b;
-        ?>
-    <tr>
-        <?php
-        echo tdtable($pos, $b, $i);
-        
+        $data = array();
+        $data[] = $pos;
+
         if($rol == 'teacher'){ 
-            echo tdtable($r['name'], $b, $i);
-            echo tdtable($r['uname'], $b, $i);
+            $data[] = $r['name'];
+            $data[] = $r['uname'];
         } else if($rol == 'student'){ 
             if($r['uid'] == $iduser){
-                echo tdtable($r['name'], $b, $i);
+                $data[] = $r['name'];
             } else {
-                echo tdtable(md5($r['name']." - ".$r['uname']), $b, $i);
+                $data[] = md5($r['name']." - ".$r['uname']);
             }
         } 
+
         if($rol == 'teacher'){
-            echo tdtable($r['uid'], $b, $i);
+            $data[] = $r['uid'];
         }
-        echo tdtable($r['totalexer'], $b, $i);
-        echo tdtable($r['exeruplo'], $b, $i);
-        echo tdtable($r['totalmark'], $b, $i);
-        echo tdtable(($r['totalexer'] > 0 ? number_format(($r['totalmark'] / ($r['totalexer'] * 100)) * 100, 2, ',', ' ') . ' %' : 'NaN'), $b, $i);
-        echo tdtable($r['notes'], $b, $i);
+        
+        $data[] = $r['totalexer'];
+        $data[] = $r['exeruplo'];
+        $data[] = $r['totalmark'];
+        $data[] = ($r['totalexer'] > 0 ? number_format(($r['totalmark'] / ($r['totalexer'] * 100)) * 100, 2, ',', ' ') . ' %' : 'NaN');
+        $data[] = $r['notes'];
         if($rol === 'teacher' && $iduser != -1){
             foreach ($r['marks'] as $n){
                 if($n){
-                    echo tdtable($n, $b, $i);
+                    $data[] = $n;
                 }
             }
         }
-        ?>
-    </tr>
-
-        <?php
+        
+        $table->data[] = $data;
         $pos += 1;
     }
-    ?> </table> <?php
+    
+    echo html_writer::table($table);
 }
 
 function tdtable($content, $bold = false, $italic = false){
