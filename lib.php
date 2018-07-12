@@ -114,15 +114,14 @@ function league_exercise_add_instance($course, $name, $statement, $league, $user
   
     $id = $DB->insert_record('league_exercise', $record);
    
-    /*$event = \mod_league\event\exercise_created::create(array(
+    $event = \mod_league\event\exercise_created::create(array(
         'objectid' => $id,
-        'other' => array('name' => $name,
-                        'league' => $league),
+        'other' => array('league' => $league),
         'context' => $context
     ));
     
     $event->trigger();
-    */
+    
     if($id){
         return true;
     }else{
@@ -144,14 +143,13 @@ function league_exercise_update_instance($leagueinstance, $course, $name, $state
     league_update_grades($leagueinstance);
     
     if($id){
-        /*$event = \mod_league\event\exercise_updated::create(array(
+        $event = \mod_league\event\exercise_updated::create(array(
             'objectid' => $idexer,
-            'other' => array('name' => $name,
-                            'league' => $league),
+            'other' => array('league' => $league),
             'context' => $context
         ));
 
-        $event->trigger();*/
+        $event->trigger();
 
         return true;
     }else{
@@ -166,13 +164,13 @@ function league_exercise_delete_instance($id, $context) {
     }
     $DB->delete_records('league_exercise', array('id' => $exercise->id));
     
-    /*$event = \mod_league\event\exercise_deleted::create(array(
+    $event = \mod_league\event\exercise_deleted::create(array(
         'objectid' => $id,
         'context' => $context
     ));
 
     $event->trigger();
-    */
+    
     return true;
 }
 
@@ -191,14 +189,14 @@ function league_attempt_add_instance($course, $id_user, $exercise, $id_file, $ur
   
     $id = $DB->insert_record('league_attempt', $record);
    
-    /*$event = \mod_league\event\attempt_submitted::create(array(
+    $event = \mod_league\event\attempt_submitted::create(array(
         'objectid' => $id,
         'other' => array('exercise' => $exercise),
         'context' => $context
     ));
     
     $event->trigger();
-    */
+    
     if($id){
         return true;
     }else{
@@ -415,23 +413,39 @@ function league_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
         return false; // The file does not exist.
     }
     
-    //$ids = get_id_and_user_attempt_from_itemid($itemid);
-    
-    $event = \mod_league\event\attempt_downloaded::create(array(
-  //      'objectid' => $ids['id'],
-  //      'relateduserid' => $ids['id_user'],
-  //      'other' => array('league' => $ids['league']),
-  //      'context' => $context
-        'objectid' => 2,
-        'relateduserid' => 3,
-        'other' => array('league' => 8),
-        'context' => $context
-    ));
-    $event->trigger();
-    
+    $ids = get_id_and_user_attempt_from_itemid($itemid);
+    if($ids){
+        $event = \mod_league\event\attempt_downloaded::create(array(
+            'objectid' => $ids->id,
+            'relateduserid' => $ids->id_user,
+            'other' => array('league' => $ids->league,
+                                'exercise' => $ids->exercise),
+            'context' => $context
+        ));
+        $event->trigger();
+    }
+  
     // We can now send the file back to the browser - in this case with a cache lifetime of 1 day and no filtering. 
     // From Moodle 2.3, use send_stored_file instead.
     send_stored_file($file, 0, 0, true); // download MUST be forced - security!
+}
+
+function get_id_and_user_attempt_from_itemid($itemid){
+    global $DB;
+    $res = new stdClass();
+    $var="select id, id_user, league, exercise
+        from mdl_league_attempt
+        where id_file = $itemid";
+    $data = $DB->get_records_sql($var);
+    foreach ($data as $d){
+        $d = get_object_vars($d);
+        $res->id = $d['id'];
+        $res->id_user = $d['id_user'];
+        $res->exercise = $d['exercise'];
+        $res->league = $d['league'];
+        return $res;
+    }
+    return $res;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -15,12 +15,13 @@ class attempt_graded extends \core\event\base {
     }
     
     public static function get_objectid_mapping() {
-        return array('db' => 'league_attempt', 'restore' => 'attempt');
+        return array('db' => 'league_attempt', 'restore' => 'league_attempt');
     }
     
     public static function get_other_mapping() {
-        // Nothing to map.
-        return false;
+        $othermapped = array();
+        $othermapped['exercise'] = array('db' => 'league_exercise', 'restore' => 'league_exercise');
+        return $othermapped;
     }
     
     public static function get_name() {

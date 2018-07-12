@@ -188,7 +188,7 @@ $string['eventexercisecreated'] = 'Exercise created';
 $string['eventexerciseupdated'] = 'Exercise updated';
 $string['eventexercisedeleted'] = 'Exercise deleted';
 $string['eventattemptsubmitted'] = 'Attempt submitted';
-$string['eventattemptdownloaded'] = 'Attempt downloaded *';
+$string['eventattemptdownloaded'] = 'Attempt downloaded';
 $string['eventattemptgraded'] = 'Attempt graded';
 
 /**

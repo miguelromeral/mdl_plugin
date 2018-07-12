@@ -108,45 +108,40 @@ function print_exercises($idliga, $rol, $cmid){
 
     } else if ($rol == 'student'){
         
-        ?>
+        $table = new html_table();
+        $headings = array();
+        $align = array();
+        array_push($headings, get_string('exercise', 'league'));
+        array_push($align, 'center');
+        array_push($headings, get_string('timemofied', 'league'));
+        array_push($align, 'center');
+        array_push($headings, get_string('send_exercise', 'league'));
+        array_push($align, 'center');
+        $table->head = $headings;
+        $table->align = $align;
+        
+        foreach ($data as $exer)
+        {
+            $exer = json_decode(json_encode($exer), True);
+            if($exer['enabled'] == 1){
+                $data = array();
+                $data[] =  $exer['name'];
+                $data[] =  date("H:i:s, d (D) M Y", $exer['timemodified']);
+     
+                $data[] = '<form action="upload.php" method="post" >
+                    <input type="hidden" name="id" value="'. $cmid .'" />
+                    <input type="hidden" name="action" value="begin" />
+                    <input type="hidden" name="id_exer" value="'. $exer['id'] .'" />
+                    <input type="hidden" name="name" value="'. $exer['name'] .'" />
+                    <input type="hidden" name="statement" value="'. $exer['statement'] .'" />
+                    <input type="submit" value="'. get_string('upload_exercise', 'league') .'"/>
+                </form>';
 
-<table>
-    <tr>
-        <th><?= get_string('exercise', 'league') ?></th>
-        <th><?= get_string('timemofied', 'league') ?></th>
-        <th><?= get_string('send_exercise', 'league') ?></th>
-    </tr>
-    
-    <?php
-    foreach ($data as $exer)
-    {
-        $exer = json_decode(json_encode($exer), True);
-        
-        if($exer['enabled'] == 1){
-        
-        ?>
-    <tr>
-        <td id="thb"><?= $exer['name'] ?></td>
-        <td><?= date("H:i:s, d (D) M Y", $exer['timemodified']) ?></td>
-        <td>
-             <form action="upload.php" method="post" >
-                <input type="hidden" name="id" value="<?= $cmid ?>" />
-                <input type="hidden" name="action" value="begin" />
-                <input type="hidden" name="id_exer" value="<?= $exer['id'] ?>" />
-                <input type="hidden" name="name" value="<?= $exer['name'] ?>" />
-                <input type="hidden" name="statement" value="<?= $exer['statement'] ?>" />
-                <input type="submit" value="<?= get_string('upload_exercise', 'league') ?>"/>
-            </form>
-        </td>
-    </tr>
-        <?php
+                $table->data[] = $data;
+            }
         }
-    }
-    
-?>
-</table>
-<?php
         
+        echo html_writer::table($table);
     }
 }
 
@@ -762,25 +757,3 @@ function deleteFileAttempt($contextid, $itemid){
     }
     return false;
 }*/
-
-function get_id_and_user_attempt_from_itemid($itemid){
-    global $DB;
-    $res = new stdClass();
-    /*$var="select id, id_user, league
-        from mdl_league_attempt
-        where id_file = $itemid";
-    $data = $DB->get_records_sql($var);
-    foreach ($data as $d){
-        $d = get_object_vars($d);
-        $res['id'] = $d['id'];
-        $res['id_user'] = $d['id_user'];
-        $res['league'] = $d['league'];
-        return $res;
-    }
-     * 
-     */
-    $res['id'] = 16;
-    $res['id_user'] = 3;
-    $res['league'] = 8;
-    return $res;
-}

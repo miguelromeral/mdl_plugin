@@ -19,8 +19,9 @@ class exercise_updated extends \core\event\base {
     }
     
     public static function get_other_mapping() {
-        // Nothing to map.
-        return false;
+        $othermapped = array();
+        $othermapped['league'] = array('db' => 'league', 'restore' => 'league');
+        return $othermapped;
     }
     
     public static function get_name() {
@@ -29,7 +30,7 @@ class exercise_updated extends \core\event\base {
     
     public function get_description() {
         return "The user with id '$this->userid' updated an exercise "
-                . "with id '$this->objectid' named '".$this->other['name']."' for league with id "
+                . "with id '$this->objectid' for league with id "
                 . "'".$this->other['league']."' with course module id '$this->contextinstanceid'.";
     }
 }
