@@ -116,7 +116,7 @@ if($valido == 0){
             
             league_attempt_update_instance($league, $idat, $new_mark, $new_observaciones, $id_exer);
             
-            $event = \mod_league\event\attempt_graded::create(array(
+            /*$event = \mod_league\event\attempt_graded::create(array(
                 'objectid' => $idat,
                 'relateduserid' => $id_user,
                 'other' => array('exercise' => $id_exer,
@@ -124,7 +124,7 @@ if($valido == 0){
                 'context' => $context
             ));
             $event->trigger();
-            
+            */
             ?>
             <?= get_string('mark_sent_success','league') ?><br>
                 <form action="marking.php" method="get">

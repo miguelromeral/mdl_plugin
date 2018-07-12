@@ -218,8 +218,7 @@ if ($rol == 'student'){
             //Negamos la accion qeu esta ahora
             $cambio = ($pub == 0 ? 1 : 0);
             league_exercise_update_instance($league, $course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $exer_enabled_post, $cambio, $context);
-            redirect('view.php');
-            /*?>
+            ?>
             <div>
                 <strong><?php
                 if ($cambio == 0){
@@ -229,7 +228,7 @@ if ($rol == 'student'){
                 }
                 ?></strong><br>
             </div>
-            <?php*/
+            <?php
         }
         
     }

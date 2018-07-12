@@ -20,7 +20,7 @@ class attempt_downloaded extends \core\event\base {
     
     public function get_description() {
         return "The user with id '$this->userid' downloaded an attempt with id '"
-            .$this->objectid."' for the league with id '"
+            .$this->objectid."' for the league with '"
                 . "id '".$this->other['league']."' with course module id '$this->contextinstanceid'.";
     }
 }

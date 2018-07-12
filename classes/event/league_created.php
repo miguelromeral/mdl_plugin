@@ -13,7 +13,16 @@ class league_created extends \core\event\base {
         $this->data['crud'] = 'c'; // c(reate), r(ead), u(pdate), d(elete)
         $this->data['edulevel'] = self::LEVEL_TEACHING;
     }
+
+    public static function get_objectid_mapping() {
+        return array('db' => 'league', 'restore' => 'league');
+    }
     
+    public static function get_other_mapping() {
+        // Nothing to map.
+        return false;
+    }
+
     public static function get_name() {
         return get_string('eventleaguecreated', 'league');
     }

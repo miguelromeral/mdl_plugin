@@ -14,6 +14,15 @@ class attempt_submitted extends \core\event\base {
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
     }
     
+    public static function get_objectid_mapping() {
+        return array('db' => 'league_attempt', 'restore' => 'attempt');
+    }
+    
+    public static function get_other_mapping() {
+        // Nothing to map.
+        return false;
+    }
+    
     public static function get_name() {
         return get_string('eventattemptsubmitted', 'league');
     }

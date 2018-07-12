@@ -114,7 +114,7 @@ function league_exercise_add_instance($course, $name, $statement, $league, $user
   
     $id = $DB->insert_record('league_exercise', $record);
    
-    $event = \mod_league\event\exercise_created::create(array(
+    /*$event = \mod_league\event\exercise_created::create(array(
         'objectid' => $id,
         'other' => array('name' => $name,
                         'league' => $league),
@@ -122,7 +122,7 @@ function league_exercise_add_instance($course, $name, $statement, $league, $user
     ));
     
     $event->trigger();
-    
+    */
     if($id){
         return true;
     }else{
@@ -144,14 +144,14 @@ function league_exercise_update_instance($leagueinstance, $course, $name, $state
     league_update_grades($leagueinstance);
     
     if($id){
-        $event = \mod_league\event\exercise_updated::create(array(
+        /*$event = \mod_league\event\exercise_updated::create(array(
             'objectid' => $idexer,
             'other' => array('name' => $name,
                             'league' => $league),
             'context' => $context
         ));
 
-        $event->trigger();
+        $event->trigger();*/
 
         return true;
     }else{
@@ -166,13 +166,13 @@ function league_exercise_delete_instance($id, $context) {
     }
     $DB->delete_records('league_exercise', array('id' => $exercise->id));
     
-    $event = \mod_league\event\exercise_deleted::create(array(
+    /*$event = \mod_league\event\exercise_deleted::create(array(
         'objectid' => $id,
         'context' => $context
     ));
 
     $event->trigger();
-    
+    */
     return true;
 }
 
@@ -191,14 +191,14 @@ function league_attempt_add_instance($course, $id_user, $exercise, $id_file, $ur
   
     $id = $DB->insert_record('league_attempt', $record);
    
-    $event = \mod_league\event\attempt_submitted::create(array(
+    /*$event = \mod_league\event\attempt_submitted::create(array(
         'objectid' => $id,
         'other' => array('exercise' => $exercise),
         'context' => $context
     ));
     
     $event->trigger();
-    
+    */
     if($id){
         return true;
     }else{

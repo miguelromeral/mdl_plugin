@@ -30,6 +30,7 @@ class restore_league_activity_structure_step extends restore_activity_structure_
         $newitemid = $DB->insert_record('league', $data);
         // immediately after inserting "activity" record, call this
         $this->apply_activity_instance($newitemid);
+        $this->set_mapping('league', $oldid, $newitemid);
     }
  
     protected function process_league_exercise($data) {
@@ -38,8 +39,6 @@ class restore_league_activity_structure_step extends restore_activity_structure_
         $data = (object)$data;
         $oldid = $data->id;
  
-        //print_r($data);
-        
         $data->league = $this->get_new_parentid('league');
  
         $newitemid = $DB->insert_record('league_exercise', $data);
@@ -49,21 +48,15 @@ class restore_league_activity_structure_step extends restore_activity_structure_
     protected function process_league_attempt($data) {
         global $DB;
  
-        $data = (object)$data;        
+        $data = (object)$data;       
+        $oldid = $data->id; 
         
         $data->league = $this->get_new_parentid('league');
         $data->exercise = $this->get_mappingid('league_exercise', $data->exercise);
         $data->id_user = $this->get_mappingid('user', $data->id_user);
-        /*if (!function_exists('restoreURLFile')) {
-            require_once('../../utilities.php');
-        }
-        $newfile = restoreURLFile();
-        $data->id_file = $newfile->id;
-        $data->url = $newfile->url;
-        */
+        
         $newitemid = $DB->insert_record('league_attempt', $data);
-        // No need to save this mapping as far as nothing depend on it
-        // (child paths, file areas nor links decoder)
+        $this->set_mapping('league_attempt', $oldid, $newitemid);
     }
  
     protected function after_execute() {

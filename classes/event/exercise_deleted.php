@@ -14,6 +14,15 @@ class exercise_deleted extends \core\event\base {
         $this->data['edulevel'] = self::LEVEL_TEACHING;
     }
     
+    public static function get_objectid_mapping() {
+        return array('db' => 'league_exercise', 'restore' => 'league_exercise');
+    }
+    
+    public static function get_other_mapping() {
+        // Nothing to map.
+        return false;
+    }
+    
     public static function get_name() {
         return get_string('eventexercisedeleted', 'league');
     }

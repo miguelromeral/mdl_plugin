@@ -14,6 +14,15 @@ class league_updated extends \core\event\base {
         $this->data['edulevel'] = self::LEVEL_TEACHING;
     }
     
+    public static function get_objectid_mapping() {
+        return array('db' => 'league', 'restore' => 'league');
+    }
+    
+    public static function get_other_mapping() {
+        // Nothing to map.
+        return false;
+    }
+    
     public static function get_name() {
         return get_string('eventleagueupdated', 'league');
     }
