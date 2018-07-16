@@ -1,5 +1,60 @@
 <?php
 
+function get_students(){
+    global $COURSE, $DB;
+    $cContext = context_course::instance($COURSE->id);
+
+    $query = 'select u.id as id, firstname, lastname, picture, imagealt, '
+            . 'email, u.* from mdl_role_assignments as a, mdl_user as u where '
+            . 'contextid=' . $cContext->id . ' and roleid=5 and a.userid=u.id';
+    $rs = $DB->get_recordset_sql( $query );
+    /*foreach( $rs as $r ) {
+       echo $OUTPUT->user_picture($r, array('size' => 50, 'courseid'=>$COURSE->id));
+       echo $r->firstname . ' ' . $r->lastname . '<br>';
+    }*/
+    return $rs;
+}
+
+function is_student($userid){
+    $everyone = get_students();
+    foreach( $everyone as $r ) {
+       if($r->id == $userid){
+           return true;
+       }
+    }
+    return false;
+}
+
+function get_editing_users(){
+    global $COURSE, $DB;
+    $cContext = context_course::instance($COURSE->id);
+
+    $query = 'select u.id as id, firstname, lastname, picture, imagealt, '
+            . 'email, u.* from mdl_role_assignments as a, mdl_user as u where '
+            . 'contextid=' . $cContext->id . ' and roleid < 4 and a.userid=u.id';
+    $rs = $DB->get_recordset_sql( $query );
+    return $rs;
+}
+
+function is_editing_user($userid){
+    $everyone = get_editing_users();
+    foreach( $everyone as $r ) {
+       if($r->id == $userid){
+           return true;
+       }
+    }
+    return false;
+}
+
+function get_role_user($userid){
+    if(is_student($userid)){
+        return 'student';
+    }else if(is_editing_user($userid)){
+        return 'teacher';
+    }else
+        return 'nouser';
+}
+
 function get_exercises_from_id($idliga){
     global $DB;
     $var="SELECT * 

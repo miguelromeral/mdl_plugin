@@ -10,18 +10,8 @@ $cmid = required_param('id', PARAM_INT);    // Course Module ID
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
-/*
- * La variable $PAGE configura la página
- * La variable $OUTPUT muestra la página
- */
-
 require_login($course, true, $cm);
 
-/*
- * ABSOLUTAMENTE NECESARIO PONER EL URL.
- * Por lo menos, el id, después se pueden poner otras 'key' => 'value'
- * Convierte todo lo que le pasamos a un objeto moodle_url
- */
 $PAGE->set_url('/mod/league/view.php', array('id' => $cm->id));
 
 if ($cmid) {
@@ -39,33 +29,9 @@ if ($cmid) {
     print_error('missingparameter');
 }
 
-
-/*
- * ABSOLUTAMENTE NECESARIO. Podriamos poner:
-        $PAGE->set_context(context_system::instance());
-        $PAGE->set_context(context_coursecat::instance($categoryid));
-        $PAGE->set_context(context_course::instance($courseid));
-        $PAGE->set_context(context_module::instance($moduleid));
- * dependiendo de nuestras necesidades
- */
 $context = context_module::instance($cm->id);
-
-
-/*
-$params = array(
-
-    'objectid' => $league->id,
-    'context' => $context
-);
-
-$event = \mod_league\event\course_module_viewed::create($params);
-$event->trigger();
-*/
-
-
 $PAGE->set_context($context);
 
-//Pone como diseño el estandar de Moodle
 $PAGE->set_pagelayout('standard');
 
 // Mark viewed if required
@@ -82,15 +48,10 @@ $buttonqualy = '<form action="qualy.php" method="get">
                 </form>';
 $PAGE->set_button($buttonqualy);
 
-
-
-/// Some capability checks.
 if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities', $context)) {
     notice(get_string("activityiscurrentlyhidden"));
 }
-
-//$mod = mod_league\league($cm);
-        
+   
 if (!has_capability('mod/league:view', $context, $USER->id)) {
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
@@ -100,25 +61,9 @@ groups_print_activity_menu($cm, $CFG->wwwroot . '/mod/league/view.php?id=' . $cm
 $currentgroup = groups_get_activity_group($cm);
 $groupmode = groups_get_activity_groupmode($cm);
 
-$var="SELECT * 
-FROM mdl_role as er
-INNER JOIN mdl_role_assignments as era 
-ON era.roleid=er.id
-WHERE userid = $USER->id";
-$data = $DB->get_records_sql($var);
-$rol = null;
-foreach ($data as $rowclass)
-{
-    $rowclass = json_decode(json_encode($rowclass), True);
-    switch ($rowclass['shortname']){
-        case 'student':
-            $rol = 'student';
-            break;
-        case 'teacher' || 'editingteacher':
-            $rol = 'teacher';
-            break;
-    }
-}
+
+
+$rol = get_role_user($USER->id);
 
 $output = $PAGE->get_renderer('mod_league');
 

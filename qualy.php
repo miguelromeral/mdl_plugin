@@ -9,20 +9,9 @@ require_once('utilities.php');
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-$info = get_fast_modinfo($course);
-//print_object($info);
-
-/*
- * La variable $PAGE configura la página
- * La variable $OUTPUT muestra la página
- */
 
 require_login($course, true, $cm);
-/*
- * ABSOLUTAMENTE NECESARIO PONER EL URL.
- * Por lo menos, el id, después se pueden poner otras 'key' => 'value'
- * Convierte todo lo que le pasamos a un objeto moodle_url
- */
+
 $PAGE->set_url('/mod/league/qualy.php', array('id' => $cm->id));
 
 if ($cmid) {
@@ -40,19 +29,9 @@ if ($cmid) {
     print_error('missingparameter');
 }
 
-
-/*
- * ABSOLUTAMENTE NECESARIO. Podriamos poner:
-        $PAGE->set_context(context_system::instance());
-        $PAGE->set_context(context_coursecat::instance($categoryid));
-        $PAGE->set_context(context_course::instance($courseid));
-        $PAGE->set_context(context_module::instance($moduleid));
- * dependiendo de nuestras necesidades
- */
 $context = context_module::instance($cm->id);
 $PAGE->set_context($context);
 
-//Pone como diseño el estandar de Moodle
 $PAGE->set_pagelayout('standard');
 
 // Mark viewed if required
@@ -61,12 +40,7 @@ $completion->set_module_viewed($cm);
 
 // Print header.
 $PAGE->set_title(format_string($league->name." - ".get_string('qualy_title', 'league')));
-//$PAGE->add_body_class('forumtype-'.$league->type);
 $PAGE->set_heading(format_string($course->fullname));
-
-$output = $PAGE->get_renderer('mod_league');
-
-echo $OUTPUT->header();
 
 /// Some capability checks.
 if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities', $context)) {
