@@ -188,3 +188,86 @@ function print_notas_alumno($data, $contextid){
     
     return html_writer::table($table);
 }
+
+
+function print_qualy($q, $rol = 'student', $iduser = -1){
+    $pos = 1;
+    
+    $table = new html_table();
+    $headings = array();
+    $align = array();
+    array_push($headings, get_string('q_pos', 'league'));
+    array_push($align, 'center');
+    
+    if($rol == 'student'){
+        array_push($headings, get_string('q_name_hashed', 'league'));
+        array_push($align, 'center');
+    }else{
+        array_push($headings, get_string('q_name', 'league'));
+        array_push($align, 'center');
+    }
+    
+    if($rol == 'teacher'){ 
+        array_push($headings, get_string('q_user', 'league'));
+        array_push($align, 'center');
+        array_push($headings, get_string('q_id', 'league'));
+        array_push($align, 'center');
+    }
+    
+    array_push($headings, get_string('q_total_exercises', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('q_exercises_uploaded', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('q_total_mark', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('q_percentage', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('q_notes', 'league'));
+    array_push($align, 'center');
+    
+    if($rol == 'teacher' && $iduser != -1){ 
+        array_push($headings, get_string('q_best_marks', 'league'));
+        array_push($align, 'center');
+    }
+    
+    $table->head = $headings;
+    $table->align = $align;
+    
+    foreach ($q as $r){
+        $data = array();
+        $data[] = $pos;
+
+        if($rol == 'teacher'){ 
+            $data[] = $r['name'];
+            $data[] = $r['uname'];
+        } else if($rol == 'student'){ 
+            if($r['uid'] == $iduser){
+                $data[] = $r['name'];
+            } else {
+                $data[] = md5($r['name']." - ".$r['uname']);
+            }
+        } 
+
+        if($rol == 'teacher'){
+            $data[] = $r['uid'];
+        }
+        
+        $data[] = $r['totalexer'];
+        $data[] = $r['exeruplo'];
+        $data[] = $r['totalmark'];
+        $data[] = ($r['totalexer'] > 0 ? number_format(($r['totalmark'] / ($r['totalexer'] * 100)) * 100, 2, ',', ' ') . ' %' : 'NaN');
+        $data[] = $r['notes'];
+        if($rol === 'teacher' && $iduser != -1){
+            foreach ($r['marks'] as $n){
+                if($n){
+                    $data[] = $n;
+                }
+            }
+        }
+        
+        $table->data[] = $data;
+        $pos += 1;
+    }
+    
+    return html_writer::table($table);
+}
