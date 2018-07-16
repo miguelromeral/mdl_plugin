@@ -66,7 +66,7 @@ function get_exercises_from_id($idliga){
     return $data;
 }
 
-function print_students_exercise($cmid, $id_exer, $name, $contextid){
+function get_students_exercise($id_exer){
     global $DB;
     //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
     $var="select *
@@ -83,55 +83,7 @@ function print_students_exercise($cmid, $id_exer, $name, $contextid){
     on a.id = b.id
     group by b.id_user";
     $data = $DB->get_records_sql($var);
-    ?>
-
-<h1><?= $name ?></h1>
-
-<?php
-
-    $table = new html_table();
-    $headings = array();
-    $align = array();
-    array_push($headings, get_string('student', 'league'));
-    array_push($align, 'center');
-    array_push($headings, get_string('upload_time', 'league'));
-    array_push($align, 'center');
-    array_push($headings, get_string('mark', 'league'));
-    array_push($align, 'center');
-    $table->head = $headings;
-    $table->align = $align;
-
-    foreach ($data as $d){
-        $d = get_object_vars($d);
-        $data = array();
-        $data[] = $d['firstname'];
-        $data[] = date("H:i:s, d (D) M Y", $d['timemodified']);
-        $data[] = (($d['mark'] == -1) ?get_string('no_mark_yet', 'league') : $d['mark']."%");
-        
-        if($d['id_file']){
-            $file = restoreURLFile($contextid, $d['id_file']);
-            if($file){
-                $data[] = '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
-            }else{
-                $data[] = get_string('cant_create_url', 'league');
-            }
-        }
-        
-        $data[] = '<form action="mark_student.php" method="post" >
-                <input type="hidden" name="id" value="'. $cmid .'" />
-                <input type="hidden" name="id_exer" value="'. $id_exer .'" />
-                <input type="hidden" name="name" value="'. $name .'" />
-                <input type="hidden" name="id_user" value="'. $d['id_user'] .'" />
-                <input type="hidden" name="idat" value="'. $d['id'] .'" />
-                <input type="hidden" name="mark" value="'. $d['mark'] .'" />
-                <input type="hidden" name="observations" value="'. $d['observations'] .'" />
-                <input type="submit" value="'. get_string('mark_student_button', 'league') .'"/>
-            </form>';
-        
-        $table->data[] = $data;
-    }
-    
-    echo html_writer::table($table);
+    return $data;
 }
 
 

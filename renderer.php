@@ -37,6 +37,17 @@ class qualy_view implements renderable {
     }
 }
  
+class attempts_view implements renderable {
+ 
+    public function __construct($cmid, $attempts, $idexer, $name, $contextid) {
+        $this->cmid = $cmid;
+        $this->idexer = $idexer;
+        $this->attempts = $attempts;
+        $this->name = $name;
+        $this->contextid = $contextid;
+    }
+}
+
 class mod_league_renderer extends plugin_renderer_base {
  
     protected function render_main_view(\main_view $view) {
@@ -82,6 +93,20 @@ class mod_league_renderer extends plugin_renderer_base {
             $out .= $this->output->heading(format_string(get_string('qts', 'league')), 3);
             $out  .= $this->output->container(print_qualy($view->qualy_aux, $view->role));
         }
+        $button = '<form action="view.php" method="get">
+                    <input type="hidden" name="id" value="'. $view->cmid .'" />
+                    <input type="submit" value="'. get_string('go_back', 'league') .'"/>
+                </form>';
+            $out  .= $this->output->container($button, 'button');
+        return $this->output->container($out, 'main');
+    }
+    
+    protected function render_attempts_view(\attempts_view $view) {
+        $out = $this->output->heading(format_string($view->name), 2);
+        $out .= $this->output->container(
+                print_students_exercise($view->attempts, $view->cmid, $view->idexer, 
+                        $view->name, $view->contextid));
+        
         $button = '<form action="view.php" method="get">
                     <input type="hidden" name="id" value="'. $view->cmid .'" />
                     <input type="submit" value="'. get_string('go_back', 'league') .'"/>

@@ -271,3 +271,52 @@ function print_qualy($q, $rol = 'student', $iduser = -1){
     
     return html_writer::table($table);
 }
+
+
+function print_students_exercise($exercises, $cmid, $id_exer, $name, $contextid){
+    
+    $table = new html_table();
+    $headings = array();
+    $align = array();
+    array_push($headings, get_string('student', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('upload_time', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('mark', 'league'));
+    array_push($align, 'center');
+    $table->head = $headings;
+    $table->align = $align;
+
+    foreach ($exercises as $d){
+        $d = get_object_vars($d);
+        $data = array();
+        $data[] = $d['firstname'];
+        $data[] = date("H:i:s, d (D) M Y", $d['timemodified']);
+        $data[] = (($d['mark'] == -1) ?get_string('no_mark_yet', 'league') : $d['mark']."%");
+        
+        if($d['id_file']){
+            $file = restoreURLFile($contextid, $d['id_file']);
+            if($file){
+                $data[] = '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
+            }else{
+                $data[] = get_string('cant_create_url', 'league');
+            }
+        }
+        
+        $data[] = '<form action="mark_student.php" method="post" >
+                <input type="hidden" name="id" value="'. $cmid .'" />
+                <input type="hidden" name="id_exer" value="'. $id_exer .'" />
+                <input type="hidden" name="name" value="'. $name .'" />
+                <input type="hidden" name="id_user" value="'. $d['id_user'] .'" />
+                <input type="hidden" name="idat" value="'. $d['id'] .'" />
+                <input type="hidden" name="mark" value="'. $d['mark'] .'" />
+                <input type="hidden" name="observations" value="'. $d['observations'] .'" />
+                <input type="submit" value="'. get_string('mark_student_button', 'league') .'"/>
+            </form>';
+        
+        $table->data[] = $data;
+    }
+    
+    return html_writer::table($table);
+}
+
