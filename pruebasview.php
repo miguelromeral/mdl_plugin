@@ -10,11 +10,6 @@ $cmid = required_param('id', PARAM_INT);    // Course Module ID
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
-/*
- * La variable $PAGE configura la página
- * La variable $OUTPUT muestra la página
- */
-
 require_login($course, true, $cm);
 
 /*
@@ -22,7 +17,7 @@ require_login($course, true, $cm);
  * Por lo menos, el id, después se pueden poner otras 'key' => 'value'
  * Convierte todo lo que le pasamos a un objeto moodle_url
  */
-$PAGE->set_url('/mod/league/view.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/league/pruebasview.php', array('id' => $cm->id));
 
 if ($cmid) {
     if (!$cm = get_coursemodule_from_id('league', $cmid)) {
@@ -74,7 +69,7 @@ $completion->set_module_viewed($cm);
 
 // Print header.
 $PAGE->set_title(format_string($league->name));
-$PAGE->set_heading(format_string($course->fullname));
+$PAGE->set_heading(format_string($course->fullname).": ".$league->name);
 
 $buttonqualy = '<form action="qualy.php" method="get">
                     <input type="hidden" name="id" value="'. $cmid .'" />
@@ -124,18 +119,22 @@ $output = $PAGE->get_renderer('mod_league');
 
 echo $output->header();
 
+$exercises = get_exercises_from_id($league->id);
+
 if ($rol == 'student'){
     
-    $exercises = get_exercises_from_id($league->id);
     $notas = get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
-    $panel = new main_view($exercises, $cmid, $context->id, 'student', null, $notas);
+    $panel = new main_view($exercises, $cmid, $context->id, 'student', $notas);
     echo $output->render($panel);
     
     
     
 }else if(has_capability('mod/league:view', $context, $USER->id) || $rol == 'teacher'){
     
-    $alert = null;
+    
+    $panel = new main_view($exercises, $cmid, $context->id, 'teacher');
+    echo $output->render($panel);
+    
     
     $action = optional_param('action', 'no-act', PARAM_TEXT);
         
@@ -160,11 +159,17 @@ if ($rol == 'student'){
                 $exito = league_exercise_delete_instance($id_exer_post, $context);
             }
             
-            if ($exito){
-                $alert = get_string('exercise_deleted', 'league');
-            } else {
-                $alert = get_string('exercise_not_deleted', 'league');
-            }
+            ?>
+            <div>
+                <strong><?php
+                if ($exito){
+                    echo get_string('exercise_deleted', 'league');
+                } else {
+                    echo get_string('exercise_not_deleted', 'league');
+                }
+                ?></strong><br>
+            </div>
+            <?php
             
         } else if ($action == 'enable_disable'){
 
@@ -173,36 +178,48 @@ if ($rol == 'student'){
             
             league_exercise_update_instance($league, $course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $cambio, $pub, $context);
 
-            
-            if ($cambio == 0){
-                $alert = get_string('exercise_disabled', 'league');
-            } else {
-                $alert = get_string('exercise_enabled', 'league');
-            }
-            
-                
+            ?>
+            <div>
+                <strong><?php
+                if ($cambio == 0){
+                    echo get_string('exercise_disabled', 'league');
+                } else {
+                    echo get_string('exercise_enabled', 'league');
+                }
+                ?></strong><br>
+            </div>
+            <?php
         } else if ($action == 'publish'){
 
             //Negamos la accion qeu esta ahora
             $cambio = ($pub == 0 ? 1 : 0);
             league_exercise_update_instance($league, $course, $exer_name_post, $exer_description_post, $league_post, $id_exer_post, $exer_enabled_post, $cambio, $context);
-            
-            
-            if ($cambio == 0){
-                $alert = get_string('currently_unpublished', 'league');
-            } else {
-                $alert = get_string('currently_published', 'league');
-            }
-                
+            ?>
+            <div>
+                <strong><?php
+                if ($cambio == 0){
+                    echo get_string('currently_unpublished', 'league');
+                } else {
+                    echo get_string('currently_published', 'league');
+                }
+                ?></strong><br>
+            </div>
+            <?php
         }
         
     }
     
-    $exercises = get_exercises_from_id($league->id);
-    $panel = new main_view($exercises, $cmid, $context->id, 'teacher', $alert);
-    echo $output->render($panel);
+    ?>
+    
+    <form action="add_exercise.php" method="get">
+        <input type="hidden" name="id" value="<?= $cmid ?>" />
+        <input type="hidden" name="id_exer" value="-1" />
+        <input type="submit" value="<?= get_string('add_exercise_button', 'league') ?>"/>
+    </form>
     
     
+
+    <?php
 }else{
     //notice(get_string('noviewdiscussionspermission', 'league'));
 }
