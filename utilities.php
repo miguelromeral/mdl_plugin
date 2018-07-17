@@ -3,15 +3,10 @@
 function get_students(){
     global $COURSE, $DB;
     $cContext = context_course::instance($COURSE->id);
-
     $query = 'select u.id as id, firstname, lastname, picture, imagealt, '
             . 'email, u.* from mdl_role_assignments as a, mdl_user as u where '
             . 'contextid=' . $cContext->id . ' and roleid=5 and a.userid=u.id';
     $rs = $DB->get_recordset_sql( $query );
-    /*foreach( $rs as $r ) {
-       echo $OUTPUT->user_picture($r, array('size' => 50, 'courseid'=>$COURSE->id));
-       echo $r->firstname . ' ' . $r->lastname . '<br>';
-    }*/
     return $rs;
 }
 
@@ -66,13 +61,30 @@ function get_exercises_from_id($idliga){
     return $data;
 }
 
+function get_exercises_from_id_by_user($idliga, $iduser){
+    global $DB;
+    $var="SELECT e.*, a.num 
+        FROM mdl_league_exercise e
+        LEFT JOIN (
+                select count(id) as num, exercise
+                from mdl_league_attempt
+                where id_user = $iduser
+        ) a 
+        ON e.id = a.exercise
+        WHERE league = $idliga
+        ORDER BY id";
+    $data = $DB->get_records_sql($var);
+    
+    return $data;
+}
+
 function get_students_exercise($id_exer){
     global $DB;
     //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
     $var="select *
     from mdl_league_attempt as a
     inner join (
-            select max(c.id) as id, c.id_user, d.firstname, d.lastname
+            select max(c.id) as id, count(c.id) as num, c.id_user, d.firstname, d.lastname
             from mdl_league_attempt as c
             inner join mdl_user as d
             on c.id_user = d.id
@@ -81,7 +93,8 @@ function get_students_exercise($id_exer){
             order by c.id desc
     ) as b
     on a.id = b.id
-    group by b.id_user";
+    group by b.id_user
+    order by a.timemodified desc";
     $data = $DB->get_records_sql($var);
     return $data;
 }
@@ -232,7 +245,7 @@ function sort_qualy_array_more_exercises($q){
             //echo "<br> Miro ".$j." y ".($j+1)." ( ${r1['totalmark']} / ${r2['totalmark']}) <br>";
             if($r2['exeruplo'] > $r1['exeruplo'] ||
                     ($r2['exeruplo'] === $r1['exeruplo'] && 
-                        ($r2['totalmark'] > $r1['totalmark'] || mejoresNotasSegundo($q, $r1, $r2)))){
+                        ($r2['totalmark'] > $r1['totalmark']))){
                 //echo "<br>CAMBIO<br>";
                 $q = exchange($q, $j, $j+1);
             }
@@ -266,6 +279,11 @@ function setNotesBM($q, $r1, $r2, $f, $s){
                         }
                         if($n1 == $n2){
                             $aux += 1;
+                        }else{
+                            if($n2 == get_string('q_tba', 'league')){
+                                //$q[$f]['notes'] = "REVISAR";
+                                return $q;
+                            }
                         }
                     }else{
                         $q[$f]['notes'] = get_string('total_draw','league');
@@ -281,6 +299,7 @@ function setNotesBM($q, $r1, $r2, $f, $s){
     return $q;
 }
 function setNotesME($q, $r1, $r2, $f, $s){
+    
     $aux = 0;
     $s = $r1['exeruplo'];
     if($r1['exeruplo'] != $r2['exeruplo']){
@@ -288,27 +307,34 @@ function setNotesME($q, $r1, $r2, $f, $s){
             $q[$f]['notes'] = get_string('more_exercises_uploaded','league');
         }
     }else{
-        while (true) {
-            if($s != $aux){
-                $n1 = $r1['marks'][$aux];
-                $n2 = $r2['marks'][$aux];
-                if($n1 && $n2){
-                    if($n1 > $n2){
-                        $q[$f]['notes'] = get_string('higher_mark','league').' '. comparaNotas($q, $f, $s, true).' - '
-                                . comparaNotas($q, $f, $s, false);
+        if($r1['totalmark'] === $r2['totalmark']){
+            while (true) {
+                if($s != $aux){
+                    $n1 = $r1['marks'][$aux];
+                    $n2 = $r2['marks'][$aux];
+                    if($n1 && $n2){
+                        if($n1 > $n2){
+                            $q[$f]['notes'] = get_string('higher_mark','league').' '. comparaNotas($q, $f, $s, true).' - '
+                                    . comparaNotas($q, $f, $s, false);
+                            return $q;
+                        }
+                        if($n1 == $n2){
+                            $aux += 1;
+                        }else{
+                            if($n2 == get_string('q_tba', 'league')){
+                                //$q[$f]['notes'] = "REVISAR";
+                                return $q;
+                            }
+                        }
+                    }else{
+                        $q[$f]['notes'] = get_string('total_draw','league');
                         return $q;
-                    }
-                    if($n1 == $n2){
-                        $aux += 1;
                     }
                 }else{
                     $q[$f]['notes'] = get_string('total_draw','league');
                     return $q;
                 }
-            }else{
-                $q[$f]['notes'] = get_string('total_draw','league');
-                return $q;
-            }
+            } 
         }
     }
     return $q;
@@ -317,14 +343,22 @@ function setNotesME($q, $r1, $r2, $f, $s){
 function comparaNotas($q, $i, $j, $primero){
     $notas1 = $q[$i]['marks'];
     $notas2 = $q[$j]['marks'];
+    //$ant1 = -1;
+    //$ant2 = -1;
     $i = 0;
     while (true) {
-        $n1 = ($notas1[$i] ? $notas1[$i] : -1);
-        $n2 = ($notas2[$i] ? $notas2[$i] : -1);
+        $n1 = (isset($notas1[$i]) ? $notas1[$i] : -1);
+        $n2 = (isset($notas2[$i]) ? $notas2[$i] : -1);
         if($n2 != $n1){
             return ($primero ? $n1 : $n2);
         }
         if($n1 == $n2){
+            if($n1 == -1){
+                return get_string('q_tba', 'league');
+                //return ($primero ? $ant1 : $ant2);
+            }
+            //$ant1 = $n1;
+            //$ant2 = $n2;
             $i += 1;
         }
     }
@@ -333,56 +367,29 @@ function comparaNotas($q, $i, $j, $primero){
 // TRUE si r2 tiene mejores notas
 function mejoresNotasSegundo($q, $r1, $r2){
     $i = 0;
-    $s = $r1['exeruplo'];
-    if($r1['exeruplo'] != $r2['exeruplo']){
-        if($r1['exeruplo'] > $r2['exeruplo']){
-            return false;
-        }else{
-            return true;
-        }
-    }else{
-        while (true) {
-            if($i != $s){
-                $n1 = ($r1['marks'][$i] ? $r1['marks'][$i] : null);
-                $n2 = ($r2['marks'][$i] ? $r2['marks'][$i] : null);
-                if($n1 && $n2){
-                    if($n2 > $n1){
-                        return true;
-                    }
-                    if($n1 > $n2){
-                        return false;
-                    }
-                    if($n1 == $n2){
-                        $i += 1;
-                    }
-                }else{
+    $s = max($r1['exeruplo'],$r2['exeruplo']);
+    while (true) {
+        if($i != $s){
+            $n1 = ($r1['marks'][$i] ? $r1['marks'][$i] : null);
+            $n2 = ($r2['marks'][$i] ? $r2['marks'][$i] : null);
+            if($n1 && $n2){
+                if($n2 > $n1){
+                    return true;
+                }
+                if($n1 > $n2){
                     return false;
+                }
+                if($n1 == $n2){
+                    $i += 1;
                 }
             }else{
                 return false;
             }
+        }else{
+            return false;
         }
     }
-}
-
-
-function tdtable($content, $bold = false, $italic = false){
-    $ret = '<td>';
-    if($bold){
-        $ret .= '<b>';
-    }
-    if($italic){
-        $ret .= '<i>';
-    }
-    $ret .= $content;
-    if($italic){
-        $ret .= '</i>';
-    }
-    if($bold){
-        $ret .= '</b>';
-    }
-    $ret .= '</td>';
-    return $ret;
+    
 }
 
 function getArrayMarkByStudent($idleague, $iduser, $toprint){
@@ -489,7 +496,7 @@ function deleteFileAttempt($contextid, $itemid){
     }
     return false;
 }*/
-
+/*
 function get_num_attempts_by_exer($idexer, $iduser){
     global $DB;
     //Lista de estudiantes de un curso
@@ -509,4 +516,4 @@ function attempt_already_sent($idexer, $iduser){
         return true;
     }
     return false;
-}
+}*/

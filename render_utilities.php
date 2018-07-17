@@ -1,6 +1,7 @@
 <?php
 
 function print_exercises($rol, $cmid, $data){
+    global $CFG;
     if ($rol == 'teacher'){
     
         $table = new html_table();
@@ -99,6 +100,8 @@ function print_exercises($rol, $cmid, $data){
         array_push($align, 'center');
         array_push($headings, get_string('send_exercise', 'league'));
         array_push($align, 'center');
+        array_push($headings, get_string('remaining_attempts', 'league'));
+        array_push($align, 'center');
         $table->head = $headings;
         $table->align = $align;
         
@@ -110,15 +113,35 @@ function print_exercises($rol, $cmid, $data){
                 $data[] =  $exer['name'];
                 $data[] =  date("H:i:s, d (D) M Y", $exer['timemodified']);
      
-                $data[] = '<form action="upload.php" method="post" >
-                    <input type="hidden" name="id" value="'. $cmid .'" />
-                    <input type="hidden" name="action" value="begin" />
-                    <input type="hidden" name="id_exer" value="'. $exer['id'] .'" />
-                    <input type="hidden" name="name" value="'. $exer['name'] .'" />
-                    <input type="hidden" name="statement" value="'. $exer['statement'] .'" />
-                    <input type="submit" value="'. get_string('upload_exercise', 'league') .'"/>
-                </form>';
-
+                if(!isset($exer['num'])){
+                    $exer['num'] = 0;
+                }
+                
+                if($CFG->league_max_num_attempts > $exer['num']){
+                    $data[] = '<form action="upload.php" method="post" >
+                        <input type="hidden" name="id" value="'. $cmid .'" />
+                        <input type="hidden" name="action" value="begin" />
+                        <input type="hidden" name="id_exer" value="'. $exer['id'] .'" />
+                        <input type="hidden" name="name" value="'. $exer['name'] .'" />
+                        <input type="hidden" name="statement" value="'. $exer['statement'] .'" />
+                        <input type="submit" value="'. get_string('upload_exercise', 'league') .'"/>
+                    </form>';
+                    
+                    $restantes = $CFG->league_max_num_attempts - $exer['num'];
+                
+                    if($restantes == 1){
+                        //$data[] = get_string('last_attempt', 'league');
+                    }else{
+                        //$data[] = $restantes;
+                        //$data[] = $restantes ." = ". $CFG->league_max_num_attempts . " - " . $exer['num'];
+                    }
+                    
+                }else{
+                    $data[] = get_string('max_attempts_reached', 'league');
+                    //$data[] = " ";
+                }
+                $data[] = " REPARAR ";
+                
                 $table->data[] = $data;
             }
         }
@@ -203,6 +226,8 @@ function print_qualy($q, $rol = 'student', $iduser = -1){
         array_push($headings, get_string('q_name_hashed', 'league'));
         array_push($align, 'center');
     }else{
+        array_push($headings, get_string('image', 'league'));
+        array_push($align, 'center');
         array_push($headings, get_string('q_name', 'league'));
         array_push($align, 'center');
     }
@@ -238,6 +263,7 @@ function print_qualy($q, $rol = 'student', $iduser = -1){
         $data[] = $pos;
 
         if($rol == 'teacher'){ 
+            $data[] = get_user_image($r['uid'], 40);
             $data[] = $r['name'];
             $data[] = $r['uname'];
         } else if($rol == 'student'){ 
@@ -272,15 +298,33 @@ function print_qualy($q, $rol = 'student', $iduser = -1){
     return html_writer::table($table);
 }
 
+function get_user_image($iduser, $size){
+    global $COURSE, $DB, $OUTPUT;
+    $cContext = context_course::instance($COURSE->id);
+    $query = 'select u.id as id, firstname, lastname, picture, imagealt, '
+            . 'email, u.* from mdl_role_assignments as a, mdl_user as u where '
+            . 'contextid=' . $cContext->id . ' and roleid=5 and a.userid=u.id';
+    $rs = $DB->get_recordset_sql( $query );
+    foreach( $rs as $r ) {
+        if($r->id == $iduser){
+            return $OUTPUT->user_picture($r, array('size' => $size, 'courseid'=>$COURSE->id));
+        }
+    }
+    return null;
+}
 
 function print_students_exercise($exercises, $cmid, $id_exer, $name, $contextid){
     
     $table = new html_table();
     $headings = array();
     $align = array();
+    array_push($headings, get_string('image', 'league'));
+    array_push($align, 'center');
     array_push($headings, get_string('student', 'league'));
     array_push($align, 'center');
     array_push($headings, get_string('upload_time', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('num_attempt', 'league'));
     array_push($align, 'center');
     array_push($headings, get_string('mark', 'league'));
     array_push($align, 'center');
@@ -290,8 +334,10 @@ function print_students_exercise($exercises, $cmid, $id_exer, $name, $contextid)
     foreach ($exercises as $d){
         $d = get_object_vars($d);
         $data = array();
-        $data[] = $d['firstname'];
+        $data[] = get_user_image($d['id_user'], 40);
+        $data[] = $d['firstname'] . " " . $d['lastname'];
         $data[] = date("H:i:s, d (D) M Y", $d['timemodified']);
+        $data[] = $d['num'];
         $data[] = (($d['mark'] == -1) ?get_string('no_mark_yet', 'league') : $d['mark']."%");
         
         if($d['id_file']){

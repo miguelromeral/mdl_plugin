@@ -71,7 +71,7 @@ echo $output->header();
 
 if ($rol == 'student'){
     
-    $exercises = get_exercises_from_id($league->id);
+    $exercises = get_exercises_from_id_by_user($league->id, $USER->id);
     $notas = get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
     $panel = new main_view($exercises, $cmid, $context->id, 'student', null, $notas);
     echo $output->render($panel);

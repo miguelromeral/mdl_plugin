@@ -14,8 +14,12 @@ $string['fill_course'] = 'Introduce el ID del curso';
 $string['no'] = 'No';
 $string['yes'] = 'Sí';
 $string['exercise'] = 'Ejercicio';
+$string['image'] = 'Foto';
+$string['num_attempt'] = '# Intento';
+$string['last_attempt'] = 'Último íntento';
 $string['timemofied'] = 'Fecha de modificación';
 $string['send_exercise'] = 'Enviar ejercicio';
+$string['remaining_attempts'] = 'Intentos restantes';
 $string['enabled'] = 'Habilitado';
 $string['student'] = 'Alumno';
 $string['upload_time'] = 'Fecha de subida';
@@ -205,6 +209,8 @@ $string['league:view'] = "A CAMBIAR - View";
  * CONFIGURACIÓN
  */
 
-$string['many_attempts'] = "Varios intentos por ejercicio";
-$string['many_attempts_desc'] = "El alumno puede enviar varios"
-        . " intentos para un mismo ejercicio.";
+$string['max_attempts_reached'] = "Ha alcanzado el máximo número de intentos";
+$string['only_one_attempt'] = "Sólo un intento";
+$string['max_num_attempts'] = "Máximo número de intentos";
+$string['max_num_attempts_desc'] = "Establece el número máximo de "
+        . "intentos que un usuario tiene para enviar un ejercicio.";
