@@ -4,12 +4,12 @@
  *      BÁSICO:
  */
 
-$string['modulename'] = 'League';
+$string['modulename'] = 'Liga';
 $string['modulename_help'] = 'A CAMBIAR: Texto que sale al crear el recurso del modulo';
 $string['modulename_link'] = 'mod/league/view';
-$string['modulenameplural'] = 'Leagues';
+$string['modulenameplural'] = 'Ligas';
 $string['pluginadministration'] = 'Administrar Liga';
-$string['pluginname'] = 'Activities League';
+$string['pluginname'] = 'Liga de Actividades';
 $string['fill_course'] = 'Introduce el ID del curso';
 $string['no'] = 'No';
 $string['yes'] = 'Sí';
@@ -72,14 +72,20 @@ $string['qualy_title'] = 'Clasificación';
 $string['qts'] = '';
 $string['qts'] = 'Clasificación (Vista para estudiantes)';
 $string['q_pos'] = 'POS';
+$string['q_pos_des'] = 'Posición en la clasificación.';
 $string['q_name'] = 'Nombre';
 $string['q_user'] = 'Usuario';
 $string['q_id'] = 'ID';
 $string['q_total_exercises'] = 'TE';
+$string['q_total_exercises_des'] = 'Número total de ejercicios.';
 $string['q_exercises_uploaded'] = 'ES';
+$string['q_exercises_uploaded_des'] = 'Número de ejercicios realizados.';
 $string['q_total_mark'] = 'NT';
+$string['q_total_mark_des'] = 'Nota total (Suma de todos los ejercicios).';
 $string['q_percentage'] = 'PERC';
+$string['q_percentage_des'] = 'Porcentaje de la nota total (nota del módulo).';
 $string['q_notes'] = 'Criterio';
+$string['q_notes_des'] = 'Criterio de desempate en caso de haberlo.';
 $string['q_best_marks'] = 'Mejores notas';
 $string['total_draw'] = 'Empate total';
 $string['higher_mark'] = 'Tiene una nota más alta';
@@ -180,8 +186,6 @@ $string['not_sent_yet'] = 'SIN HACER EJERCICIO';
  *  PRUEBAS SOBRE EVENTS
  */
 
-// * --> sin probar
-
 $string['eventleaguecreated'] = 'League created';
 $string['eventleagueupdated'] = 'League updated';
 $string['eventexercisecreated'] = 'Exercise created';
@@ -196,3 +200,11 @@ $string['eventattemptgraded'] = 'Attempt graded';
  */
 $string['league:addinstance'] = "A CAMBIAR - Addinstance";
 $string['league:view'] = "A CAMBIAR - View";
+
+/**
+ * CONFIGURACIÓN
+ */
+
+$string['many_attempts'] = "Varios intentos por ejercicio";
+$string['many_attempts_desc'] = "El alumno puede enviar varios"
+        . " intentos para un mismo ejercicio.";

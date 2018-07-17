@@ -93,6 +93,19 @@ class mod_league_renderer extends plugin_renderer_base {
             $out .= $this->output->heading(format_string(get_string('qts', 'league')), 3);
             $out  .= $this->output->container(print_qualy($view->qualy_aux, $view->role));
         }
+        $out  .= $this->output->container(
+                get_string('q_pos','league').': '.get_string('q_pos_des','league'));
+        $out  .= $this->output->container(
+                get_string('q_total_exercises','league').': '.get_string('q_total_exercises_des','league'));
+        $out  .= $this->output->container(
+                get_string('q_exercises_uploaded','league').': '.get_string('q_exercises_uploaded_des','league'));
+        $out  .= $this->output->container(
+                get_string('q_total_mark','league').': '.get_string('q_total_mark_des','league'));
+        $out  .= $this->output->container(
+                get_string('q_percentage','league').': '.get_string('q_percentage_des','league'));
+        $out  .= $this->output->container(
+                get_string('q_notes','league').': '.get_string('q_notes_des','league'));
+        
         $button = '<form action="view.php" method="get">
                     <input type="hidden" name="id" value="'. $view->cmid .'" />
                     <input type="submit" value="'. get_string('go_back', 'league') .'"/>

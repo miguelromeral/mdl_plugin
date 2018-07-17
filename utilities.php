@@ -489,3 +489,24 @@ function deleteFileAttempt($contextid, $itemid){
     }
     return false;
 }*/
+
+function get_num_attempts_by_exer($idexer, $iduser){
+    global $DB;
+    //Lista de estudiantes de un curso
+    $var="select count(id) as c
+    from mdl_league_attempt
+    where id_user = $iduser and exercise = $idexer";
+    $data = $DB->get_records_sql($var);
+    foreach ($data as $d){
+        $d = get_object_vars($d);
+        return $d['c'];
+    }
+    return 0;
+}
+
+function attempt_already_sent($idexer, $iduser){
+    if(get_num_attempts_by_exer($idexer, $iduser) > 0){
+        return true;
+    }
+    return false;
+}
