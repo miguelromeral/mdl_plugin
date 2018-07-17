@@ -10,14 +10,20 @@ class main_view implements renderable {
         $this->cmid = $cmid;
         $this->contextid = $contextid;
         $this->role = $rol;
+        $this->alert = $alert;
         if($rol == 'student'){
             $this->notas = $notas;
-            $this->title = get_string('main_panel_student','league');
-            $this->exercises_title = get_string('availables_exercises','league');
-            $this->marks_title = get_string('my_marks','league');
+            if($alert == 'grades'){
+                $this->title = get_string('my_marks','league');
+                $this->exercises_title = null;
+                $this->marks_title = null;
+            }else{
+                $this->title = get_string('main_panel_student','league');
+                $this->exercises_title = get_string('availables_exercises','league');
+                $this->marks_title = get_string('my_marks','league');
+            }
         }else if($rol == 'teacher'){
             $this->title = get_string('main_panel_student','league');
-            $this->alert = $alert;
             $this->exercises_title = get_string('h_manag_exer','league');
         }
     }
@@ -55,10 +61,12 @@ class mod_league_renderer extends plugin_renderer_base {
         $image = '<img src="images/animated.gif" width="40" height="40"/>';
         if($view->role == 'student'){
             $out  = $this->output->heading($image . format_string($view->title), 2);
-            $out  .= $this->output->heading(format_string($view->exercises_title), 3);
-            $out  .= $this->output->container(print_exercises($view->role, $view->cmid,
-                    $view->exercises));
-            $out  .= $this->output->heading(format_string($view->marks_title), 3);
+            if($view->alert != 'grades'){
+                $out  .= $this->output->heading(format_string($view->exercises_title), 3);
+                $out  .= $this->output->container(print_exercises($view->role, $view->cmid,
+                        $view->exercises));
+                $out  .= $this->output->heading(format_string($view->marks_title), 3);
+            }
             $out  .= $this->output->container(print_notas_alumno($view->notas, $view->contextid));
         }else{
             $out  = $this->output->heading($image . format_string($view->title), 2);

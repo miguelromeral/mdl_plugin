@@ -12,20 +12,9 @@ $itemnumber = optional_param('itemnumber', 0, PARAM_INT); // Item number, may be
 $userid = optional_param('userid', 0, PARAM_INT); // Graded user ID (optional)
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-$info = get_fast_modinfo($course);
-//print_object($info);
-
-/*
- * La variable $PAGE configura la página
- * La variable $OUTPUT muestra la página
- */
 
 require_login($course, true, $cm);
-/*
- * ABSOLUTAMENTE NECESARIO PONER EL URL.
- * Por lo menos, el id, después se pueden poner otras 'key' => 'value'
- * Convierte todo lo que le pasamos a un objeto moodle_url
- */
+
 $PAGE->set_url('/mod/league/grade.php', array('id' => $cm->id));
 
 if ($cmid) {
@@ -55,10 +44,7 @@ $completion->set_module_viewed($cm);
 
 // Print header.
 $PAGE->set_title(format_string(get_string('title_grade', 'league')));
-//$PAGE->add_body_class('forumtype-'.$league->type);
 $PAGE->set_heading(format_string($course->fullname));
-
-echo $OUTPUT->header();
 
 /// Some capability checks.
 if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities', $context)) {
@@ -76,44 +62,18 @@ $groupmode = groups_get_activity_groupmode($cm);
 
 $bc = new block_contents();
 
-$var="SELECT * 
-FROM mdl_role as er
-INNER JOIN mdl_role_assignments as era 
-ON era.roleid=er.id
-WHERE userid = $USER->id";
-$data = $DB->get_records_sql($var);
-$rol = null;
-foreach ($data as $rowclass)
-{
-    $rowclass = json_decode(json_encode($rowclass), True);
-    switch ($rowclass['shortname']){
-        case 'student':
-            $rol = 'student';
-            break;
-        case 'teacher' || 'editingteacher':
-            $rol = 'teacher';
-            break;
-    }
-}
+$rol = get_role_user($USER->id);
+
+$output = $PAGE->get_renderer('mod_league');
+
+echo $output->header();
+
 
 if ($rol == 'student'){
     
-    ?>
-<h1><?= get_string('my_marks','league') ?></h1>
-    <?php
-    
-    print_notas_alumno($league->id, $cmid, $USER->id);
-    
-    ?>
-    
-    
-    <form action="qualy.php" method="get">
-        <input type="hidden" name="id" value="<?= $cmid ?>" />
-        <input type="submit" value="<?= get_string('view_qualy_button', 'league') ?>"/>
-    </form>
-    
-        <?php
-    
+    $notas = get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
+    $panel = new main_view(null, $cmid, $context->id, 'student', 'grades', $notas);
+    echo $output->render($panel);
     
 }else if($rol == 'teacher'){
     
@@ -123,6 +83,6 @@ if ($rol == 'student'){
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
 
-echo $OUTPUT->footer();
+echo $output->footer();
 
 ?>
