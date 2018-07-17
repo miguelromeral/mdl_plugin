@@ -130,17 +130,19 @@ function print_exercises($rol, $cmid, $data){
                     $restantes = $CFG->league_max_num_attempts - $exer['num'];
                 
                     if($restantes == 1){
-                        //$data[] = get_string('last_attempt', 'league');
+                        $data[] = get_string('last_attempt', 'league');
+                    }else if($restantes > 5){
+                        $data[] = get_string('more_than_5_att_remaining', 'league');
                     }else{
-                        //$data[] = $restantes;
+                        $data[] = $restantes;
                         //$data[] = $restantes ." = ". $CFG->league_max_num_attempts . " - " . $exer['num'];
                     }
                     
                 }else{
                     $data[] = get_string('max_attempts_reached', 'league');
-                    //$data[] = " ";
+                    $data[] = " ";
                 }
-                $data[] = " REPARAR ";
+                //$data[] = " REPARAR ";
                 
                 $table->data[] = $data;
             }

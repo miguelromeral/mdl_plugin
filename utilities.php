@@ -69,6 +69,7 @@ function get_exercises_from_id_by_user($idliga, $iduser){
                 select count(id) as num, exercise
                 from mdl_league_attempt
                 where id_user = $iduser
+                group by exercise
         ) a 
         ON e.id = a.exercise
         WHERE league = $idliga

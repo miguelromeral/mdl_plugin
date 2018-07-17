@@ -17,6 +17,7 @@ $string['exercise'] = 'Ejercicio';
 $string['image'] = 'Foto';
 $string['num_attempt'] = '# Intento';
 $string['last_attempt'] = 'Último íntento';
+$string['more_than_5_att_remaining'] = 'Más de 5';
 $string['timemofied'] = 'Fecha de modificación';
 $string['send_exercise'] = 'Enviar ejercicio';
 $string['remaining_attempts'] = 'Intentos restantes';
