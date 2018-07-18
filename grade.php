@@ -51,7 +51,7 @@ if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities'
     notice(get_string("activityiscurrentlyhidden"));
 }
 
-if (!has_capability('mod/league:view', $context) || ($userid && $userid != $USER->id)) {
+if (!has_capability('mod/league:view', $context, $USER->id)) {
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
 
@@ -60,14 +60,20 @@ groups_print_activity_menu($cm, $CFG->wwwroot . '/mod/league/grade.php?id=' . $c
 $currentgroup = groups_get_activity_group($cm);
 $groupmode = groups_get_activity_groupmode($cm);
 
-$bc = new block_contents();
-
 $rol = get_role_user($USER->id);
+
+if($rol == 'teacher'){
+    $buttonqualy = '<form action="qualy.php" method="get">
+                    <input type="hidden" name="id" value="'. $cmid .'" />
+                    <input type="submit" value="'. get_string('view_qualy_button', 'league') .'"/>
+                </form>';
+    $PAGE->set_button($buttonqualy);
+}
+
 
 $output = $PAGE->get_renderer('mod_league');
 
 echo $output->header();
-
 
 if ($rol == 'student'){
     
@@ -76,9 +82,11 @@ if ($rol == 'student'){
     echo $output->render($panel);
     
 }else if($rol == 'teacher'){
-    
-    redirect('qualy.php?id='.$cmid);
-    
+   $exercises = get_exercises_from_id($league->id);
+   get_notas_alumno_para_profesor(3, $league->id);
+   $marks = get_tabla_notas($league->id, get_students());
+   $panel = new grade_view($exercises, $marks);
+   echo $output->render($panel);
 }else{
     notice(get_string('noviewdiscussionspermission', 'league'));
 }

@@ -23,7 +23,7 @@ class main_view implements renderable {
                 $this->marks_title = get_string('my_marks','league');
             }
         }else if($rol == 'teacher'){
-            $this->title = get_string('main_panel_student','league');
+            $this->title = get_string('teacher_panel','league');
             $this->exercises_title = get_string('h_manag_exer','league');
         }
     }
@@ -53,6 +53,15 @@ class attempts_view implements renderable {
         $this->contextid = $contextid;
     }
 }
+
+class grade_view implements renderable {
+ 
+    public function __construct($exercises, $marks) {
+        $this->marks = $marks;
+        $this->exercises = $exercises;
+    }
+}
+
 
 class mod_league_renderer extends plugin_renderer_base {
  
@@ -133,6 +142,12 @@ class mod_league_renderer extends plugin_renderer_base {
                     <input type="submit" value="'. get_string('go_back', 'league') .'"/>
                 </form>';
             $out  .= $this->output->container($button, 'button');
+        return $this->output->container($out, 'main');
+    }
+    
+    protected function render_grade_view(\grade_view $view) {
+        $out = $this->output->heading(format_string(get_string('title_grade', 'league')), 2);
+        $out .= $this->output->container(print_table_grades($view->exercises, $view->marks));
         return $this->output->container($out, 'main');
     }
 }

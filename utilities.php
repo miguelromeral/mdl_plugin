@@ -5,7 +5,8 @@ function get_students(){
     $cContext = context_course::instance($COURSE->id);
     $query = 'select u.id as id, firstname, lastname, picture, imagealt, '
             . 'email, u.* from mdl_role_assignments as a, mdl_user as u where '
-            . 'contextid=' . $cContext->id . ' and roleid=5 and a.userid=u.id';
+            . 'contextid=' . $cContext->id . ' and roleid=5 and a.userid=u.id '
+            . 'order by firstname desc';
     $rs = $DB->get_recordset_sql( $query );
     return $rs;
 }
@@ -484,6 +485,55 @@ function restoreURLFile($contextid, $itemid){
     }
     return null;
 }
+
+function get_notas_alumno_para_profesor($iduser, $idleague){
+    global $DB;
+    //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
+    $var="select *
+    from mdl_league_exercise as a
+    left outer join
+    (
+        select a.id as idat, a.timemodified as tma,
+		a.observations, a.name as fname,
+		a.exercise, b.id_user, a.mark, a.id_file, a.url
+		from mdl_league_attempt as a
+		inner join (
+			select max(id) as m, id_user
+			from mdl_league_attempt
+			where id_user = $iduser
+			group by exercise
+		) as b
+		on a.id = b.m
+    ) as b
+    on a.id = b.exercise
+    where a.league = $idleague";
+    $data = $DB->get_records_sql($var);
+    
+    $total = array();
+    
+    foreach ($data as $d){
+        $d = get_object_vars($d);
+        $notas = new stdClass();
+        $notas->exercise = $d['exercise'];
+        $notas->mark = $d['mark'];
+        array_push($total, $notas);
+    }
+    return $total;
+}
+
+function get_tabla_notas($idliga, $estudiantes){
+    $marks = array();
+    foreach($estudiantes as $e){
+        $fila = new stdClass();
+        $fila->id = $e->id;
+        $fila->firstname = $e->firstname;
+        $fila->lastname = $e->lastname;
+        $fila->notas = get_notas_alumno_para_profesor($e->id, $idliga);
+        array_push($marks, $fila);
+    }
+    return $marks;
+}
+
 /*
 function deleteFileAttempt($contextid, $itemid){
     $component = 'mod_league';

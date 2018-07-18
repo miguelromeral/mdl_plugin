@@ -55,9 +55,16 @@ if (!has_capability('mod/league:view', $context, $USER->id)) {
 groups_print_activity_menu($cm, $CFG->wwwroot . '/mod/league/view.php?id=' . $cm->id);
 $currentgroup = groups_get_activity_group($cm);
 $groupmode = groups_get_activity_groupmode($cm);
-
-
+    
 $rol = get_role_user($USER->id);
+
+if($rol == 'teacher'){
+    $buttonqualy = '<form action="grade.php" method="get">
+                    <input type="hidden" name="id" value="'. $cmid .'" />
+                    <input type="submit" value="'. get_string('view_individual_marks', 'league') .'"/>
+                </form>';
+    $PAGE->set_button($buttonqualy);
+}
 
 $output = $PAGE->get_renderer('mod_league');
 
@@ -72,6 +79,8 @@ if ($rol == 'student' || ($rol == 'teacher' || (has_capability('mod/league:view'
     if($rol == 'student'){
         $panel = new qualy_view($cmid, $q, $USER->id, $rol);
     }else if($rol == 'teacher'){
+        
+        
         $qs = get_qualy_array($league->id, $course->id, 'student', $league->method);
         $panel = new qualy_view($cmid, $q, $USER->id, $rol, $qs);
     }

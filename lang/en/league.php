@@ -73,6 +73,7 @@ $string['my_marks'] = 'Mis notas';
  *      CLASIFICACIÓN
  */
 
+$string['view_individual_marks'] = 'Ver notas individuales';
 $string['qualy_title'] = 'Clasificación';
 $string['qts'] = '';
 $string['qts'] = 'Clasificación (Vista para estudiantes)';
@@ -155,6 +156,7 @@ $string['ue_error_max_size'] = 'Compruebe que el fichero está por debajo del l�
  */
 
 $string['no_mark_yet'] = 'Sin corrección';
+$string['not_done'] = 'Sin hacer';
 $string['mark_student_button'] = 'Calificar alumno';
 $string['download_file_button'] = 'Descargar fichero';
 

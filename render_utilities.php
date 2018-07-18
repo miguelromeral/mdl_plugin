@@ -368,3 +368,56 @@ function print_students_exercise($exercises, $cmid, $id_exer, $name, $contextid)
     return html_writer::table($table);
 }
 
+function print_table_grades($exercises, $marks){
+    
+    $table = new html_table();
+    $headings = array();
+    $align = array();
+    
+    array_push($headings, get_string('image', 'league'));
+    array_push($align, 'center');
+    array_push($headings, get_string('student', 'league'));
+    array_push($align, 'center');
+    
+    //print_r($exercises);
+    
+    $ex_name = array();
+    
+    foreach($exercises as $e){
+        array_push($headings, $e->name);
+        array_push($align, 'center');
+        array_push($ex_name, $e->id);
+    }
+    
+    $table->head = $headings;
+    $table->align = $align;
+
+    foreach ($marks as $d){
+        $d = get_object_vars($d);
+        $data = array();
+        $data[] = get_user_image($d['id'], 40);
+        $data[] = $d['firstname'] . " " . $d['lastname'];
+        
+        foreach($ex_name as $ea){
+            $tienenota = false;
+            foreach($d['notas'] as $n){
+                if($n->exercise == $ea){
+                    $nota = $n->mark;
+                    $tienenota = true;
+                    if($nota == -1){
+                        $data[] = get_string('no_mark_yet','league');
+                    }else{
+                        $data[] = $n->mark;
+                    }
+                    
+                }
+            }
+            if(!$tienenota){
+                $data[] = get_string('not_done','league');
+            }
+        }
+        $table->data[] = $data;
+    }
+    
+    return html_writer::table($table);
+}
