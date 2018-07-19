@@ -252,10 +252,10 @@ function print_qualy($q, $rol = 'student', $iduser = -1){
     array_push($headings, get_string('q_notes', 'league'));
     array_push($align, 'center');
     
-    if($rol == 'teacher' && $iduser != -1){ 
+    /*if($rol == 'teacher' && $iduser != -1){ 
         array_push($headings, get_string('q_best_marks', 'league'));
         array_push($align, 'center');
-    }
+    }*/
     
     $table->head = $headings;
     $table->align = $align;
@@ -265,7 +265,7 @@ function print_qualy($q, $rol = 'student', $iduser = -1){
         $data[] = $pos;
 
         if($rol == 'teacher'){ 
-            $data[] = get_user_image($r['uid'], 40);
+            $data[] = get_user_image($r['uid'], 50);
             $data[] = $r['name'];
             $data[] = $r['uname'];
         } else if($rol == 'student'){ 
@@ -285,13 +285,13 @@ function print_qualy($q, $rol = 'student', $iduser = -1){
         $data[] = $r['totalmark'];
         $data[] = ($r['totalexer'] > 0 ? number_format(($r['totalmark'] / ($r['totalexer'] * 100)) * 100, 2, ',', ' ') . ' %' : 'NaN');
         $data[] = $r['notes'];
-        if($rol === 'teacher' && $iduser != -1){
+        /*if($rol === 'teacher' && $iduser != -1){
             foreach ($r['marks'] as $n){
                 if($n){
                     $data[] = $n;
                 }
             }
-        }
+        }*/
         
         $table->data[] = $data;
         $pos += 1;
@@ -368,7 +368,11 @@ function print_students_exercise($exercises, $cmid, $id_exer, $name, $contextid)
     return html_writer::table($table);
 }
 
-function print_table_grades($exercises, $marks){
+function print_table_grades($exercises, $marks, $url){
+    
+    /*
+    
+    
     
     $table = new html_table();
     $headings = array();
@@ -420,4 +424,5 @@ function print_table_grades($exercises, $marks){
     }
     
     return html_writer::table($table);
+     */
 }

@@ -568,3 +568,90 @@ function attempt_already_sent($idexer, $iduser){
     }
     return false;
 }*/
+
+function cmp($a, $b)
+{
+    return strcmp($a->nombre, $b->nombre);
+}
+
+function sort_grade_rows($rows, $sortby, $headers, $ex_name){
+    $del = explode(', ', $sortby);
+    
+    foreach($del as $d){
+        $n = explode(' ', $d);
+        
+       // echo "<br>";
+       // echo $n[0]. " - ". $n[1];
+       // echo "<br>";
+        
+        $ind = 0;
+        switch($n[0]){
+            case 'userpic': $ind = 0; break;
+            case 'student': $ind = 1; break;
+            default:
+                array_shift($headers);
+                array_shift($headers);
+                //print_r($headers);
+                foreach($headers as $k => $h){
+                    if($n[0] == $h){
+                        $ind = 2 + $k;
+                        break;
+                    }
+                }
+        }
+        
+        $sort = null;
+        switch($n[1]){
+            case 'ASC': $sort = SORT_ASC;
+                break;
+            case 'DESC': $sort = SORT_DESC;
+                break;
+        }
+        //echo "Antes:<br>";
+        //print_r($rows);
+        
+        $rows = array_sort($rows, $ind, $sort);
+        
+        ////echo "Después:<br>";
+        //print_r($rows);
+        return $rows;
+    }
+    
+    
+    
+}
+
+function array_sort($array, $on, $order=SORT_ASC)
+{
+    $new_array = array();
+    $sortable_array = array();
+
+    if (count($array) > 0) {
+        foreach ($array as $k => $v) {
+            if (is_array($v)) {
+                foreach ($v as $k2 => $v2) {
+                    if ($k2 == $on) {
+                        $sortable_array[$k] = $v2;
+                    }
+                }
+            } else {
+                $sortable_array[$k] = $v;
+            }
+        }
+
+        switch ($order) {
+            case SORT_ASC:
+                asort($sortable_array);
+            break;
+            case SORT_DESC:
+                arsort($sortable_array);
+            break;
+        }
+
+        foreach ($sortable_array as $k => $v) {
+            $new_array[$k] = $array[$k];
+        }
+    }
+
+    return $new_array;
+}

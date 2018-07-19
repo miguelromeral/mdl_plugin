@@ -76,8 +76,6 @@ if ($rol == 'student'){
     $panel = new main_view($exercises, $cmid, $context->id, 'student', null, $notas);
     echo $output->render($panel);
     
-    
-    
 }else if(has_capability('mod/league:view', $context, $USER->id) || $rol == 'teacher'){
     
     $alert = null;

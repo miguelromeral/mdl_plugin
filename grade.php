@@ -85,8 +85,74 @@ if ($rol == 'student'){
    $exercises = get_exercises_from_id($league->id);
    get_notas_alumno_para_profesor(3, $league->id);
    $marks = get_tabla_notas($league->id, get_students());
-   $panel = new grade_view($exercises, $marks);
-   echo $output->render($panel);
+   
+   require_once($CFG->libdir . '/tablelib.php');
+    
+    
+    $ex_name = array();
+    $tablecolumns = array('userpic','student');
+    $tableheaders = array(get_string('image', 'league'), get_string('student', 'league'));
+    foreach($exercises as $e){
+        array_push($tablecolumns, $e->name);
+        array_push($tableheaders, $e->name);
+        array_push($ex_name, $e->id);
+    }
+    
+    $table = new flexible_table('mod-league-grade');
+    $table->define_baseurl($PAGE->url);
+    $table->define_columns($tablecolumns);
+    $table->define_headers($tableheaders);
+    $table->sortable(true);
+    $table->no_sorting('userpic');
+    $table->collapsible(false);
+    $table->setup();
+    
+    $filas = array();
+    foreach ($marks as $d){
+        $d = get_object_vars($d);
+        $data = array();
+        $data[] = get_user_image($d['id'], 40);
+        $data[] = $d['firstname'] . " " . $d['lastname'];
+        
+        foreach($ex_name as $ea){
+            $tienenota = false;
+            foreach($d['notas'] as $n){
+                if($n->exercise == $ea){
+                    $nota = $n->mark;
+                    $tienenota = true;
+                    if($nota == -1){
+                        $data[] = "0 (".get_string('no_mark_yet','league').")";
+                    }else{
+                        $data[] = $n->mark . " %";
+                    }
+                    
+                }
+            }
+            if(!$tienenota){
+                $data[] = "0 (". get_string('not_done','league'). ")";
+            }
+        }
+        array_push($filas, $data);
+        
+    }
+    
+    if ($orderby = $table->get_sql_sort()) {
+        $filas = sort_grade_rows($filas, $orderby, $tableheaders, $ex_name);
+    }
+    
+    //echo "---> $orderby <---";
+    
+    $table->initialbars(true);
+    
+    foreach($filas as $r){
+        $table->add_data($r);
+    }
+    
+    $table->print_html();
+   
+   /*
+   $panel = new grade_view($exercises, $marks, $PAGE->url);
+   echo $output->render($panel);*/
 }else{
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
