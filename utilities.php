@@ -602,3 +602,16 @@ function generateRandomFileID(){
     }
     return $r;
 }
+
+function getNameExerByID($id){
+    global $DB;
+    $var="select name
+    from mdl_league_exercise
+    where id = $id";
+    $data = $DB->get_records_sql($var);
+    foreach ($data as $d){
+        $d = get_object_vars($d);
+        return $d['name'];
+    } 
+    return null;
+}

@@ -65,6 +65,14 @@ class grade_view implements renderable {
     }
 }
 
+class fail_view implements renderable {
+ 
+    public function __construct($title, $content, $cmid) {
+        $this->title = $title;
+        $this->cmid = $cmid;
+        $this->content = $content;
+    }
+}
 
 class mod_league_renderer extends plugin_renderer_base {
  
@@ -151,6 +159,17 @@ class mod_league_renderer extends plugin_renderer_base {
     protected function render_grade_view(\grade_view $view) {
         //$out = $this->output->heading(format_string(get_string('individual_marks', 'league')), 2);
         $out = $this->output->container(print_table_grades($view->rows, $view->tablecolumns, $view->tableheaders, $view->ex_name, $view->url));
+        return $this->output->container($out, 'main');
+    }
+    
+    protected function render_fail_view(\fail_view $view) {
+        $out = $this->output->heading(format_string($view->title), 2);
+        $out .= $this->output->container($view->content);
+        $button = '<form action="view.php" method="get">
+                    <input type="hidden" name="id" value="'. $view->cmid .'" />
+                    <input type="submit" value="'. get_string('go_back', 'league') .'"/>
+                </form>';
+        $out  .= $this->output->container($button, 'button');
         return $this->output->container($out, 'main');
     }
 }

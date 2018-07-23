@@ -63,10 +63,9 @@ function print_exercises($rol, $cmid, $data){
             .'"/>
             </form>';
             
-            $data[] = '<form action="marking.php" method="post" >
+            $data[] = '<form action="marking.php" method="get" >
                 <input type="hidden" name="id" value="'. $cmid .'" />
                 <input type="hidden" name="id_exer" value="'. $exer['id'] .'" />
-                <input type="hidden" name="name" value="'. $exer['name'] .'" />
                 <input type="submit" value="'. get_string('mark_exercise', 'league') .'"/>
             </form>';
             

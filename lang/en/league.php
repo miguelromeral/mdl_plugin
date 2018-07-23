@@ -32,6 +32,8 @@ $string['file_uploaded'] = 'Fichero subido';
 $string['to_mark'] = 'Corregir';
 $string['modify'] = 'Modificar';
 $string['go_back'] = 'Volver';
+$string['notallowedpage'] = 'Página no encontrada';
+$string['nopermissionforstudent'] = 'Esta página está restringida a usuarios que pueden editar la actividad.';
 
 /*
  *      MOD_FORM:
@@ -191,7 +193,7 @@ $string['not_sent_yet'] = 'SIN HACER EJERCICIO';
 
 
 /**
- *  PRUEBAS SOBRE EVENTS
+ *  EVENTS
  */
 
 $string['eventleaguecreated'] = 'League created';
@@ -206,8 +208,14 @@ $string['eventattemptgraded'] = 'Attempt graded';
 /**
  *  PERMISOS
  */
-$string['league:addinstance'] = "A CAMBIAR - Addinstance";
-$string['league:view'] = "A CAMBIAR - View";
+$string['league:addinstance'] = "Crear una nueva liga";
+$string['league:view'] = "Ver liga";
+$string['league:manageexercises'] = "Administrar ejercicios";
+$string['league:seequaly'] = "Ver clasificación completa";
+$string['league:seerestrictedqualy'] = "Ver clasificación restringida (para alumnos)";
+$string['league:downloadfiles'] = "Descargar ficheros subidos";
+$string['league:uploadfiles'] = "Subir ficheros para ejercicios";
+$string['league:markstudents'] = "Calificar a alumnos";
 
 /**
  * CONFIGURACIÓN

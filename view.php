@@ -51,7 +51,7 @@ $PAGE->set_button($buttonqualy);
 if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities', $context)) {
     notice(get_string("activityiscurrentlyhidden"));
 }
-   
+
 if (!has_capability('mod/league:view', $context, $USER->id)) {
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
@@ -62,8 +62,23 @@ $currentgroup = groups_get_activity_group($cm);
 $groupmode = groups_get_activity_groupmode($cm);
 
 
+$modinfo = get_fast_modinfo($course);
+$cm_info = $modinfo->get_cm($cmid);
+$mod = new mod_league\league($cm_info,  context_module::instance($cm->id));
 
-$rol = get_role_user($USER->id);
+$rol = null;
+
+if($mod->userview($USER->id)){
+    if($mod->usermanageexercises($USER->id)){
+        $rol = 'teacher';
+    }else{
+        $rol = 'student';
+    }
+}
+
+echo "----> ROL : $rol <--- <br>";
+
+//$rol = get_role_user($USER->id);
 
 $output = $PAGE->get_renderer('mod_league');
 
@@ -76,7 +91,7 @@ if ($rol == 'student'){
     $panel = new main_view($exercises, $cmid, $context->id, 'student', null, $notas);
     echo $output->render($panel);
     
-}else if(has_capability('mod/league:view', $context, $USER->id) || $rol == 'teacher'){
+}else if($rol == 'teacher'){
     
     $alert = null;
     
