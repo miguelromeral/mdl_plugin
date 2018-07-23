@@ -392,10 +392,10 @@ function league_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
     require_login();
  
     // Check the relevant capabilities - these may vary depending on the filearea being accessed.
-    if (!has_capability('mod/league:view', $context)) {
+    if (!has_capability('mod/league:downloadfiles', $context)) {
         return false;
     }
- 
+    
     // Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
     $itemid = (int) array_shift($args);
     $filename = array_pop($args); // The last item in the $args array.

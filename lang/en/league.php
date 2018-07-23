@@ -33,7 +33,7 @@ $string['to_mark'] = 'Corregir';
 $string['modify'] = 'Modificar';
 $string['go_back'] = 'Volver';
 $string['notallowedpage'] = 'Página no encontrada';
-$string['nopermissionforstudent'] = 'Esta página está restringida a usuarios que pueden editar la actividad.';
+$string['nopermission'] = 'No tiene los permisos suficientes para poder ver esta página.';
 
 /*
  *      MOD_FORM:
@@ -216,6 +216,9 @@ $string['league:seerestrictedqualy'] = "Ver clasificación restringida (para alu
 $string['league:downloadfiles'] = "Descargar ficheros subidos";
 $string['league:uploadfiles'] = "Subir ficheros para ejercicios";
 $string['league:markstudents'] = "Calificar a alumnos";
+
+$string['usercantupload'] = "No tiene permisos para subir ficheros.";
+$string['usercantdownload'] = "No tiene permisos para descargar ficheros.";
 
 /**
  * CONFIGURACIÓN

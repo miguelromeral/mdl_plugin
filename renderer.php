@@ -3,29 +3,40 @@
 defined('MOODLE_INTERNAL') || die();
 require_once('render_utilities.php');
 
-class main_view implements renderable {
+class main_student_view implements renderable {
  
-    public function __construct($exercises, $cmid, $contextid, $rol = 'student', $alert = null, $notas = null) {
+    public function __construct($exercises, $cmid, $contextid, $alert = null, $notas = null,
+            $candownload = false, $canupload = false) {
         $this->exercises = $exercises;
         $this->cmid = $cmid;
         $this->contextid = $contextid;
-        $this->role = $rol;
         $this->alert = $alert;
-        if($rol == 'student'){
-            $this->notas = $notas;
-            if($alert == 'grades'){
-                $this->title = get_string('my_marks','league');
-                $this->exercises_title = null;
-                $this->marks_title = null;
-            }else{
-                $this->title = get_string('main_panel_student','league');
-                $this->exercises_title = get_string('availables_exercises','league');
-                $this->marks_title = get_string('my_marks','league');
-            }
-        }else if($rol == 'teacher'){
-            $this->title = get_string('teacher_panel','league');
-            $this->exercises_title = get_string('h_manag_exer','league');
+        $this->notas = $notas;
+        $this->canupload = $canupload;
+        $this->candownload = $candownload;
+        if($alert == 'grades'){
+            $this->title = get_string('my_marks','league');
+            $this->exercises_title = null;
+            $this->marks_title = null;
+        }else{
+            $this->title = get_string('main_panel_student','league');
+            $this->exercises_title = get_string('availables_exercises','league');
+            $this->marks_title = get_string('my_marks','league');
         }
+    }
+}
+
+class main_teacher_view implements renderable {
+ 
+    public function __construct($exercises, $cmid, $contextid, $canmark = false, $alert = null) {
+        $this->exercises = $exercises;
+        $this->cmid = $cmid;
+        $this->contextid = $contextid;
+        $this->canmark = $canmark;
+        $this->alert = $alert;
+        $this->title = get_string('teacher_panel','league');
+        $this->exercises_title = get_string('h_manag_exer','league');
+        
     }
 }
 
@@ -76,40 +87,42 @@ class fail_view implements renderable {
 
 class mod_league_renderer extends plugin_renderer_base {
  
-    protected function render_main_view(\main_view $view) {
+    protected function render_main_student_view(\main_student_view $view) {
         $out = '';
         $image = '<img src="images/animated.gif" width="40" height="40"/>';
-        if($view->role == 'student'){
-            $out  = $this->output->heading($image . format_string($view->title), 2);
-            if($view->alert != 'grades'){
-                $out  .= $this->output->heading(format_string($view->exercises_title), 3);
-                $out  .= $this->output->container(print_exercises($view->role, $view->cmid,
-                        $view->exercises));
-                $out  .= $this->output->heading(format_string($view->marks_title), 3);
-            }
-            $out  .= $this->output->container(print_notas_alumno($view->notas, $view->contextid));
-        }else{
-            $out  = $this->output->heading($image . format_string($view->title), 2);
-            $out  .= $this->output->container(print_exercises($view->role, $view->cmid,
-                    $view->exercises));
-            if($view->alert){
-                $msg = '<p><center>
-                <strong>
-                '.$view->alert.'
-                </strong>
-                </center></p>';
-                $out  .= $this->output->container($msg, 'warning');
-            }
-            
-            $button = '<form action="add_exercise.php" method="get">
-                        <input type="hidden" name="id" value="'. $view->cmid .'" />
-                        <input type="hidden" name="id_exer" value="-1" />
-                        <input type="submit" value="'. get_string('add_exercise_button', 'league') .'"/>
-                    </form>';
-            $out  .= $this->output->container($button, 'button');
+        $out  = $this->output->heading($image . format_string($view->title), 2);
+        if($view->alert != 'grades'){
+            $out  .= $this->output->heading(format_string($view->exercises_title), 3);
+            $out  .= $this->output->container(print_exercises('student', $view->cmid,
+                    $view->exercises, $view->canupload));
+            $out  .= $this->output->heading(format_string($view->marks_title), 3);
         }
-        //$out .= $this->output->container(format_text('nada', FORMAT_HTML), 'content');
-        //contianer --> Elemento y "class"
+        $out  .= $this->output->container(print_notas_alumno($view->notas, $view->contextid, $view->candownload));
+        return $this->output->container($out, 'main');
+    }
+    
+    protected function render_main_teacher_view(\main_teacher_view $view) {
+        $out = '';
+        $image = '<img src="images/animated.gif" width="40" height="40"/>';
+        $out  = $this->output->heading($image . format_string($view->title), 2);
+        $out  .= $this->output->container(print_exercises('teacher', $view->cmid,
+                $view->exercises, false, $view->canmark));
+        if($view->alert){
+            $msg = '<p><center>
+            <strong>
+            '.$view->alert.'
+            </strong>
+            </center></p>';
+            $out  .= $this->output->container($msg, 'warning');
+        }
+
+        $button = '<form action="add_exercise.php" method="get">
+                    <input type="hidden" name="id" value="'. $view->cmid .'" />
+                    <input type="hidden" name="id_exer" value="-1" />
+                    <input type="submit" value="'. get_string('add_exercise_button', 'league') .'"/>
+                </form>';
+        $out  .= $this->output->container($button, 'button');
+        
         return $this->output->container($out, 'main');
     }
     

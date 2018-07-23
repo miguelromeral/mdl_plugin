@@ -78,7 +78,7 @@ echo $output->header();
 if ($rol == 'student'){
     
     $notas = get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
-    $panel = new main_view(null, $cmid, $context->id, 'student', 'grades', $notas);
+    $panel = new main_teacher_view(null, $cmid, $context->id, 'student', 'grades', $notas);
     echo $output->render($panel);
     
 }else if($rol == 'teacher'){

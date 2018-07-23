@@ -76,7 +76,7 @@ if($mod->userview($USER->id)){
     }
 }
 
-echo "----> ROL : $rol <--- <br>";
+//echo "----> ROL : $rol <--- <br>";
 
 //$rol = get_role_user($USER->id);
 
@@ -88,7 +88,8 @@ if ($rol == 'student'){
     
     $exercises = get_exercises_from_id_by_user($league->id, $USER->id);
     $notas = get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
-    $panel = new main_view($exercises, $cmid, $context->id, 'student', null, $notas);
+    $panel = new main_student_view($exercises, $cmid, $context->id, null, $notas,
+            $mod->userdownloadfiles($USER->id), $mod->useruploadfiles($USER->id));
     echo $output->render($panel);
     
 }else if($rol == 'teacher'){
@@ -156,13 +157,20 @@ if ($rol == 'student'){
         
     }
     
+    //echo " ---> Puede corregir: ".$mod->usermarkstudents($USER->id)." <----- <br>";
+    
     $exercises = get_exercises_from_id($league->id);
-    $panel = new main_view($exercises, $cmid, $context->id, 'teacher', $alert);
+    $panel = new main_teacher_view($exercises, $cmid, $context->id, 
+            $mod->usermarkstudents($USER->id), $alert);
     echo $output->render($panel);
     
     
 }else{
-    //notice(get_string('noviewdiscussionspermission', 'league'));
+    $panel = new fail_view(
+            get_string('notallowedpage','league'), 
+            get_string('nopermission','league'), 
+            $cmid);
+    echo $output->render($panel);
 }
 
 echo $output->footer();

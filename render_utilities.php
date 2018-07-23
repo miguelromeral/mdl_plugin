@@ -1,6 +1,6 @@
 <?php
 
-function print_exercises($rol, $cmid, $data){
+function print_exercises($rol, $cmid, $data, $canupload = false, $canmark = false){
     global $CFG;
     if ($rol == 'teacher'){
     
@@ -63,11 +63,15 @@ function print_exercises($rol, $cmid, $data){
             .'"/>
             </form>';
             
-            $data[] = '<form action="marking.php" method="get" >
-                <input type="hidden" name="id" value="'. $cmid .'" />
-                <input type="hidden" name="id_exer" value="'. $exer['id'] .'" />
-                <input type="submit" value="'. get_string('mark_exercise', 'league') .'"/>
-            </form>';
+            if($canmark){
+            
+                $data[] = '<form action="marking.php" method="get" >
+                    <input type="hidden" name="id" value="'. $cmid .'" />
+                    <input type="hidden" name="id_exer" value="'. $exer['id'] .'" />
+                    <input type="submit" value="'. get_string('mark_exercise', 'league') .'"/>
+                </form>';
+
+            }
             
             $data[] = '<form action="view.php" method="post" >
                 <input type="hidden" name="id" value="'. $cmid .'" />
@@ -99,8 +103,11 @@ function print_exercises($rol, $cmid, $data){
         array_push($align, 'center');
         array_push($headings, get_string('send_exercise', 'league'));
         array_push($align, 'center');
-        array_push($headings, get_string('remaining_attempts', 'league'));
-        array_push($align, 'center');
+            
+        if($canupload){
+            array_push($headings, get_string('remaining_attempts', 'league'));
+            array_push($align, 'center');
+        }
         $table->head = $headings;
         $table->align = $align;
         
@@ -112,36 +119,39 @@ function print_exercises($rol, $cmid, $data){
                 $data[] =  $exer['name'];
                 $data[] =  date("H:i:s, d (D) M Y", $exer['timemodified']);
      
-                if(!isset($exer['num'])){
-                    $exer['num'] = 0;
-                }
-                
-                if($CFG->league_max_num_attempts > $exer['num']){
-                    $data[] = '<form action="upload.php" method="post" >
-                        <input type="hidden" name="id" value="'. $cmid .'" />
-                        <input type="hidden" name="action" value="begin" />
-                        <input type="hidden" name="id_exer" value="'. $exer['id'] .'" />
-                        <input type="hidden" name="name" value="'. $exer['name'] .'" />
-                        <input type="hidden" name="statement" value="'. $exer['statement'] .'" />
-                        <input type="submit" value="'. get_string('upload_exercise', 'league') .'"/>
-                    </form>';
-                    
-                    $restantes = $CFG->league_max_num_attempts - $exer['num'];
-                
-                    if($restantes == 1){
-                        $data[] = get_string('last_attempt', 'league');
-                    }else if($restantes > 5){
-                        $data[] = get_string('more_than_5_att_remaining', 'league');
-                    }else{
-                        $data[] = $restantes;
-                        //$data[] = $restantes ." = ". $CFG->league_max_num_attempts . " - " . $exer['num'];
+                if($canupload){
+                    if(!isset($exer['num'])){
+                        $exer['num'] = 0;
                     }
-                    
+
+                    if($CFG->league_max_num_attempts > $exer['num']){
+                        $data[] = '<form action="upload.php" method="post" >
+                            <input type="hidden" name="id" value="'. $cmid .'" />
+                            <input type="hidden" name="action" value="begin" />
+                            <input type="hidden" name="id_exer" value="'. $exer['id'] .'" />
+                            <input type="hidden" name="name" value="'. $exer['name'] .'" />
+                            <input type="hidden" name="statement" value="'. $exer['statement'] .'" />
+                            <input type="submit" value="'. get_string('upload_exercise', 'league') .'"/>
+                        </form>';
+
+                        $restantes = $CFG->league_max_num_attempts - $exer['num'];
+
+                        if($restantes == 1){
+                            $data[] = get_string('last_attempt', 'league');
+                        }else if($restantes > 5){
+                            $data[] = get_string('more_than_5_att_remaining', 'league');
+                        }else{
+                            $data[] = $restantes;
+                            //$data[] = $restantes ." = ". $CFG->league_max_num_attempts . " - " . $exer['num'];
+                        }
+
+                    }else{
+                        $data[] = get_string('max_attempts_reached', 'league');
+                        $data[] = " ";
+                    }
                 }else{
-                    $data[] = get_string('max_attempts_reached', 'league');
-                    $data[] = " ";
+                    $data[] = get_string('usercantupload', 'league');
                 }
-                //$data[] = " REPARAR ";
                 
                 $table->data[] = $data;
             }
@@ -151,7 +161,7 @@ function print_exercises($rol, $cmid, $data){
     }
 }
 
-function print_notas_alumno($data, $contextid){
+function print_notas_alumno($data, $contextid, $candownload){
     
     $table = new html_table();
     $headings = array();
@@ -178,11 +188,15 @@ function print_notas_alumno($data, $contextid){
             $data[] = ($d['tma'] ? date("H:i:s, d (D) M Y", $d['tma']) : "");
             
             if($d['id_file']){
-                $file = restoreURLFile($contextid, $d['id_file']);
-                if($file){
-                    $data[] = '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
+                if($candownload){
+                    $file = restoreURLFile($contextid, $d['id_file']);
+                    if($file){
+                        $data[] = '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
+                    }else{
+                        $data[] = get_string('cant_create_url', 'league');
+                    }
                 }else{
-                    $data[] = get_string('cant_create_url', 'league');
+                    $data[] = get_string('usercantdownload', 'league');
                 }
             }
             
