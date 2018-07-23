@@ -139,7 +139,7 @@ if($valido == 0){
             $name = $mform->get_new_filename('userfile');
             
             if($name){
-                $itemid = time();
+                $itemid = generateRandomFileID();
                 $success = $mform->save_stored_file('userfile', $context->id, $component, $filearea, $itemid);
                 
                 $fs = get_file_storage();

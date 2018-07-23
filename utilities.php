@@ -222,7 +222,8 @@ function sort_qualy_array_best_marks($q){
             $r1 = $q[$j];
             $r2 = $q[$j+1];
             //echo "<br> Miro ".$j." y ".($j+1)." ( ${r1['totalmark']} / ${r2['totalmark']}) <br>";
-            if($r2['totalmark'] > $r1['totalmark'] || ($r2['totalmark'] === $r1['totalmark'] && mejoresNotasSegundo($q, $r1, $r2))){
+            if($r2['totalmark'] > $r1['totalmark'] || 
+                    ($r2['totalmark'] === $r1['totalmark'] && mejoresNotasSegundo($q, $r1, $r2))){
                // echo "<br>CAMBIO<br>";
                 $q = exchange($q, $j, $j+1);
             }
@@ -370,28 +371,33 @@ function comparaNotas($q, $i, $j, $primero){
 function mejoresNotasSegundo($q, $r1, $r2){
     $i = 0;
     $s = max($r1['exeruplo'],$r2['exeruplo']);
-    while (true) {
-        if($i != $s){
-            $n1 = ($r1['marks'][$i] ? $r1['marks'][$i] : null);
-            $n2 = ($r2['marks'][$i] ? $r2['marks'][$i] : null);
-            if($n1 && $n2){
-                if($n2 > $n1){
-                    return true;
-                }
-                if($n1 > $n2){
+    if($r1['exeruplo'] != $r2['exeruplo']){
+        if($r2['exeruplo'] > $r1['exeruplo']){
+            return true;
+        }
+    }else{
+        while (true) {
+            if($i != $s){
+                $n1 = ($r1['marks'][$i] ? $r1['marks'][$i] : null);
+                $n2 = ($r2['marks'][$i] ? $r2['marks'][$i] : null);
+                if($n1 && $n2){
+                    if($n2 > $n1){
+                        return true;
+                    }
+                    if($n1 > $n2){
+                        return false;
+                    }
+                    if($n1 == $n2){
+                        $i += 1;
+                    }
+                }else{
                     return false;
-                }
-                if($n1 == $n2){
-                    $i += 1;
                 }
             }else{
                 return false;
             }
-        }else{
-            return false;
         }
     }
-    
 }
 
 function getArrayMarkByStudent($idleague, $iduser, $toprint){
@@ -654,4 +660,26 @@ function array_sort($array, $on, $order=SORT_ASC)
     }
 
     return $new_array;
+}
+
+function generateRandomFileID(){
+    $min = 1;
+    $max = 10000000000;
+    $encontrado = false;
+    $r = -1;
+    while(! $encontrado){
+        $encontrado = true;
+        $r = rand($min, $max);
+        global $DB;
+        $var="select distinct id_file
+        from mdl_league_attempt";
+        $data = $DB->get_records_sql($var);
+        foreach ($data as $d){
+            $d = get_object_vars($d);
+            if($d['id_file'] == $r){
+                $encontrado = false;
+            }
+        } 
+    }
+    return $r;
 }

@@ -129,7 +129,7 @@ if ($rol == 'student'){
                 }
             }
             if(!$tienenota){
-                $data[] = "0 (". get_string('not_done','league'). ")";
+                $data[] = "(". get_string('not_done','league'). ")";
             }
         }
         array_push($filas, $data);

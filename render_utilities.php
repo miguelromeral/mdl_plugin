@@ -294,7 +294,9 @@ function print_qualy($q, $rol = 'student', $iduser = -1){
         }*/
         
         $table->data[] = $data;
-        $pos += 1;
+        if($r['notes'] !== get_string('total_draw','league')){
+            $pos += 1;
+        }
     }
     
     return html_writer::table($table);
@@ -324,7 +326,7 @@ function print_students_exercise($exercises, $cmid, $id_exer, $name, $contextid)
     array_push($align, 'center');
     array_push($headings, get_string('student', 'league'));
     array_push($align, 'center');
-    array_push($headings, get_string('upload_time', 'league'));
+    array_push($headings, get_string('timemofied', 'league'));
     array_push($align, 'center');
     array_push($headings, get_string('num_attempt', 'league'));
     array_push($align, 'center');
