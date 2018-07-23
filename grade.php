@@ -98,14 +98,6 @@ if ($rol == 'student'){
         array_push($ex_name, $e->id);
     }
     
-    $table = new flexible_table('mod-league-grade');
-    $table->define_baseurl($PAGE->url);
-    $table->define_columns($tablecolumns);
-    $table->define_headers($tableheaders);
-    $table->sortable(true);
-    $table->no_sorting('userpic');
-    $table->collapsible(false);
-    $table->setup();
     
     $filas = array();
     foreach ($marks as $d){
@@ -136,20 +128,10 @@ if ($rol == 'student'){
         
     }
     
-    if ($orderby = $table->get_sql_sort()) {
-        $filas = sort_grade_rows($filas, $orderby, $tableheaders, $ex_name);
-    }
     
-    //echo "---> $orderby <---";
+    $panel = new grade_view($filas, $tablecolumns, $tableheaders, $ex_name, $PAGE->url);
+    echo $output->render($panel);
     
-    $table->initialbars(true);
-    
-    foreach($filas as $r){
-        $table->add_data($r);
-    }
-    
-    $table->print_html();
-   
    /*
    $panel = new grade_view($exercises, $marks, $PAGE->url);
    echo $output->render($panel);*/

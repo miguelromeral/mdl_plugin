@@ -74,6 +74,7 @@ $string['my_marks'] = 'Mis notas';
  */
 
 $string['view_individual_marks'] = 'Ver notas individuales';
+$string['individual_marks'] = 'Calificaciones individuales';
 $string['qualy_title'] = 'Clasificación';
 $string['qts'] = '';
 $string['qts'] = 'Clasificación (Vista para estudiantes)';
