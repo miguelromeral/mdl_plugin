@@ -56,7 +56,18 @@ groups_print_activity_menu($cm, $CFG->wwwroot . '/mod/league/view.php?id=' . $cm
 $currentgroup = groups_get_activity_group($cm);
 $groupmode = groups_get_activity_groupmode($cm);
     
-$rol = get_role_user($USER->id);
+
+$modinfo = get_fast_modinfo($course);
+$cm_info = $modinfo->get_cm($cmid);
+$mod = new mod_league\league($cm_info,  context_module::instance($cm->id));
+
+$rol = null;
+
+if($mod->userseequaly($USER->id)){
+    $rol = 'teacher';
+}else if($mod->userseerestrictedqualy($USER->id)){
+    $rol = 'student';
+}
 
 if($rol == 'teacher'){
     $buttonqualy = '<form action="grade.php" method="get">
@@ -72,7 +83,7 @@ echo $output->header();
 
 $q = get_qualy_array($league->id, $course->id, $rol, $league->method);
 
-if ($rol == 'student' || ($rol == 'teacher' || (has_capability('mod/league:view', $context, $USER->id && $rol = 'teacher')))){
+if ($rol == 'student' || $rol == 'teacher'){
         
     
     $panel = null;
@@ -89,7 +100,11 @@ if ($rol == 'student' || ($rol == 'teacher' || (has_capability('mod/league:view'
     }
         
 }else{
-    notice(get_string('noviewdiscussionspermission', 'league'));
+    $panel = new fail_view(
+            get_string('notallowedpage','league'), 
+            get_string('nopermission','league'), 
+            $cmid);
+    echo $output->render($panel);
 }
 
 echo $output->footer();
