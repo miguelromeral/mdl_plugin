@@ -125,12 +125,10 @@ function print_exercises($rol, $cmid, $data, $canupload = false, $canmark = fals
                     }
 
                     if($CFG->league_max_num_attempts > $exer['num']){
-                        $data[] = '<form action="upload.php" method="post" >
+                        $data[] = '<form action="upload.php" method="get" >
                             <input type="hidden" name="id" value="'. $cmid .'" />
                             <input type="hidden" name="action" value="begin" />
                             <input type="hidden" name="id_exer" value="'. $exer['id'] .'" />
-                            <input type="hidden" name="name" value="'. $exer['name'] .'" />
-                            <input type="hidden" name="statement" value="'. $exer['statement'] .'" />
                             <input type="submit" value="'. get_string('upload_exercise', 'league') .'"/>
                         </form>';
 

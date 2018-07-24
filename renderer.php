@@ -85,6 +85,16 @@ class fail_view implements renderable {
     }
 }
 
+class go_back_view implements renderable {
+ 
+    public function __construct($title, $content, $cmid, $page) {
+        $this->title = $title;
+        $this->content = $content;
+        $this->cmid = $cmid;
+        $this->page = $page;
+    }
+}
+
 class mod_league_renderer extends plugin_renderer_base {
  
     protected function render_main_student_view(\main_student_view $view) {
@@ -179,6 +189,17 @@ class mod_league_renderer extends plugin_renderer_base {
         $out = $this->output->heading(format_string($view->title), 2);
         $out .= $this->output->container($view->content);
         $button = '<form action="view.php" method="get">
+                    <input type="hidden" name="id" value="'. $view->cmid .'" />
+                    <input type="submit" value="'. get_string('go_back', 'league') .'"/>
+                </form>';
+        $out  .= $this->output->container($button, 'button');
+        return $this->output->container($out, 'main');
+    }
+    
+    protected function render_go_back_view(\go_back_view $view) {
+        $out = $this->output->heading(format_string($view->title), 2);
+        $out .= $this->output->container($view->content);
+        $button = '<form action="'.$view->page.'" method="get">
                     <input type="hidden" name="id" value="'. $view->cmid .'" />
                     <input type="submit" value="'. get_string('go_back', 'league') .'"/>
                 </form>';

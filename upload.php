@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 
 require_once('../../config.php');
@@ -6,18 +5,16 @@ require_once('lib.php');
 require_once('utilities.php');
 require_once('./forms.php');
 
+defined('MOODLE_INTERNAL') || die();
+
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
-$id_exer = required_param('id_exer', PARAM_INT);    // ID Ejercicio (-1 si no hay)
+$id_exer = required_param('id_exer', PARAM_INT);  
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 $info = get_fast_modinfo($course);
 //print_object($info);
 $component='mod_league';
-/*
- * La variable $PAGE configura la página
- * La variable $OUTPUT muestra la página
- */
 
 require_login($course, true, $cm);
 /*
@@ -58,7 +55,9 @@ $PAGE->set_title(format_string(get_string('upload_title', 'league')));
 //$PAGE->add_body_class('forumtype-'.$league->type);
 $PAGE->set_heading(format_string($course->fullname));
 
-echo $OUTPUT->header();
+$output = $PAGE->get_renderer('mod_league');
+
+echo $output->header();
 
 /// Some capability checks.
 if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities', $context)) {
@@ -69,121 +68,80 @@ if (!has_capability('mod/league:view', $context)) {
     notice(get_string('noviewdiscussionspermission', 'league'));
 }
 
-/// find out current groups mode
-groups_print_activity_menu($cm, $CFG->wwwroot . '/mod/league/view.php?id=' . $cm->id);
-$currentgroup = groups_get_activity_group($cm);
-$groupmode = groups_get_activity_groupmode($cm);
+$modinfo = get_fast_modinfo($course);
+$cm_info = $modinfo->get_cm($cmid);
+$mod = new mod_league\league($cm_info,  context_module::instance($cm->id));
 
-$bc = new block_contents();
 
-$var="SELECT
-c.id AS courseid,
-c.fullname,
-u.id as userid,
-u.username,
-u.firstname,
-u.lastname,
-u.email
-                                
-FROM
-mdl_role_assignments ra
-JOIN mdl_user u ON u.id = ra.userid
-JOIN mdl_role r ON r.id = ra.roleid
-JOIN mdl_context cxt ON cxt.id = ra.contextid
-JOIN mdl_course c ON c.id = cxt.instanceid
+if($mod->useruploadfiles($USER->id) && isleagueexercise($id_exer, $league->id)){
 
-WHERE ra.userid = u.id
-                                
-AND ra.contextid = cxt.id
-AND cxt.contextlevel =50
-AND cxt.instanceid = c.id
-AND roleid = 5
-and c.id = $cm->course
-and userid = $USER->id
+    $name_ex = getNameExerByID($id_exer);
+    $stam_ex = getNameExerByID($id_exer, false);
 
-ORDER BY c.fullname";
+    $maxbytes = 10000000;
+    $mform = new upload_form(null,
+                array('id'=>$cmid,
+                    'id_exer'=>$id_exer,
+                    'name'=>$name_ex,
+                    'statement'=>$stam_ex,
+                    'max_bytes'=>$maxbytes));
 
-$valido = $DB->get_records_sql($var);
-
-if($valido == 0){
-    ?>
-        Por desgracia, no pertenece a este curso
-    <?php
-}else{
-    
-        $name_ex = required_param('name', PARAM_TEXT);
-        $stam_ex = required_param('statement', PARAM_TEXT);
-    
-        $maxbytes = 10000000;
-        $mform = new upload_form(null,
-                    array('id'=>$cmid,
-                        'id_exer'=>$id_exer,
-                        'name'=>$name_ex,
-                        'statement'=>$stam_ex,
-                        'max_bytes'=>$maxbytes));
-    
-        //Form processing and displaying is done here
-        if ($mform->is_cancelled()) {
-            ?>
-                <h1><?= get_string('ue_cancel','league') ?></h1>
-                <form action="view.php" method="get" >
-                    <input type="hidden" name="id" value="<?= $cmid ?>" />
-                    <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
-                </form>
+    //Form processing and displaying is done here
+    if ($mform->is_cancelled()) {
         
-            <?php
-        } else if ($data = $mform->get_data()) {
-            
-            $component = 'mod_league';
-            $filearea = $league->filearea;
-            $name = $mform->get_new_filename('userfile');
-            
-            if($name){
-                $itemid = generateRandomFileID();
-                $success = $mform->save_stored_file('userfile', $context->id, $component, $filearea, $itemid);
-                
-                $fs = get_file_storage();
-                
-                if ($files = $fs->get_area_files($contextid, $component, $filearea, $itemid, 'sortorder', false)) {               
-                    foreach ($files as $file) {
-                        //Ha cambiado el make_pluginfile desde la 2.2 hasta la 3.0
-                        //$mu = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());           
-                        $contenthash = $file->get_contenthash();
-                        $id_file = getIDFileFromContenthash($contenthash);
-                        
-                        
-                        $url = getURLFile($file->get_contextid(), $file->get_component(), 
-                                $file->get_filearea(), $file->get_itemid(), $name);
-                        
-                        $exito = league_attempt_add_instance($course->id, $USER->id, $id_exer, $file->get_itemid(), $url, $name, $league->id, $context);
+        $panel = new go_back_view(
+                get_string('ue_cancel','league'), null, $cmid, 'view.php');
+        echo $output->render($panel);
 
-                        if($exito){
-                            ?>
-                            <?= get_string('ue_success','league') ?><br>
-                                <form action="view.php" method="get">
-                                    <input type="hidden" name="id" value="<?= $cmid ?>" />
-                                    <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
-                                </form>
-                            <?php
-                        }
+    } else if ($data = $mform->get_data()) {
+
+        $component = 'mod_league';
+        $filearea = $league->filearea;
+        $name = $mform->get_new_filename('userfile');
+
+        if($name){
+            $itemid = generateRandomFileID();
+            $success = $mform->save_stored_file('userfile', $context->id, $component, $filearea, $itemid);
+
+            $fs = get_file_storage();
+
+            if ($files = $fs->get_area_files($contextid, $component, $filearea, $itemid, 'sortorder', false)) {               
+                foreach ($files as $file) {
+                    //Ha cambiado el make_pluginfile desde la 2.2 hasta la 3.0
+                    //$mu = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());           
+                    $contenthash = $file->get_contenthash();
+                    $id_file = getIDFileFromContenthash($contenthash);
+
+
+                    $url = getURLFile($file->get_contextid(), $file->get_component(), 
+                            $file->get_filearea(), $file->get_itemid(), $name);
+
+                    $exito = league_attempt_add_instance($course->id, $USER->id, $id_exer, $file->get_itemid(), $url, $name, $league->id, $context);
+
+                    if($exito){
+                        $panel = new go_back_view(
+                                get_string('ue_success','league'), null, $cmid, 'view.php');
+                        echo $output->render($panel);
                     }
                 }
-            }else{
-                echo "<br><br>Mal, debes subir un puto archivo.<br><br>";
             }
-        } else {
-        ?>
-
-            <h1><?= $name_ex ?></h1>
-            <div><?= $stam_ex ?></div>
-            <br>
-
-
-        <?php
-          //displays the form
-          $mform->display();
+        }else{
+            
+            $panel = new go_back_view(
+                    get_string('ue_no_file','league'), null, $cmid, 'view.php');
+            echo $output->render($panel);
         }
+    } else {
+        //displays the form
+        $mform->display();
     }
+}else{
+    $panel = new fail_view(
+            get_string('notallowedpage','league'), 
+            get_string('nopermission','league'), 
+            $cmid);
+    echo $output->render($panel);
+}
 
     
-echo $OUTPUT->footer();
+echo $output->footer();

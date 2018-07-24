@@ -603,15 +603,30 @@ function generateRandomFileID(){
     return $r;
 }
 
-function getNameExerByID($id){
+function getNameExerByID($id, $name = true){
     global $DB;
-    $var="select name
+    $var="select name, statement
     from mdl_league_exercise
     where id = $id";
     $data = $DB->get_records_sql($var);
     foreach ($data as $d){
         $d = get_object_vars($d);
-        return $d['name'];
+        return ($name ? $d['name'] : $d['statement']);
+    } 
+    return null;
+}
+
+function isleagueexercise($idexer, $idleague){
+    global $DB;
+    $var="select id, league
+    from mdl_league_exercise
+    where id = $idexer";
+    $data = $DB->get_records_sql($var);
+    foreach ($data as $d){
+        $d = get_object_vars($d);
+        if($d['id']){
+            return ($d['league'] == $idleague);
+        }
     } 
     return null;
 }

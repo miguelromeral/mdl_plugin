@@ -152,6 +152,7 @@ $string['upload_exercise_file'] = 'Subir fichero';
 $string['ue_error_type'] = 'El tipo del fichero subido no es válido (Debe ser PDF).';
 $string['ue_error_unknown'] = 'Hubo un problema al cargar el fichero.';
 $string['ue_success'] = 'Fichero subido con éxito';
+$string['ue_no_file'] = 'Debe proporcionar un fichero para poder enviar el ejercicio.';
 $string['ue_error_max_size'] = 'Compruebe que el fichero está por debajo del límite del tamaño de un fichero a ser subido: ';
 
 /**

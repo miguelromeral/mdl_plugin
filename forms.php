@@ -11,6 +11,9 @@ class upload_form extends moodleform {
         
         $mform = $this->_form; // Don't forget the underscore! 
         
+        $mform->addElement('header', 'h1', $this->_customdata['name']);
+        $mform->addElement('static', 'h2', $this->_customdata['statement']);
+        
         $mform->addElement('hidden', 'id_exer', $this->_customdata['id_exer']);
         $mform->setType('id_exer', PARAM_INT);
         $mform->addElement('hidden', 'id', $this->_customdata['id']);
