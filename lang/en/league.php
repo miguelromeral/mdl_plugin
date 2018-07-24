@@ -141,6 +141,7 @@ $string['ae_errors'] = 'Existen algunos errores en la creación del ejercicio:';
 $string['ae_error_name'] = 'El nombre del ejercicio debe tener entre 1 y 255 caractéres incluidos.';
 $string['ae_error_description'] = 'Debe proporcionar una descripción del ejercicio.';
 $string['ae_success'] = 'Creado con éxito el ejercicio. Actívelo en el panel de actividades.';
+$string['ae_warning'] = 'ADVERTENCIA: al guardar el ejercicio automáticamente pasará a estar deshabilitado para los alumnos y sin publicar las notas (este cambio deberá hacerse manualmente desde el panel de control del profesor.';
 
 /**
  *      SUBIR EJERCICIOS (Por parte del alumno)

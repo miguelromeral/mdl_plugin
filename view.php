@@ -174,5 +174,3 @@ if ($rol == 'student'){
 }
 
 echo $output->footer();
-
-?>

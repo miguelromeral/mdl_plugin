@@ -57,11 +57,17 @@ class exercise_form extends moodleform {
         $name = (empty($this->_customdata['name']) ? "" : $this->_customdata['name']);
         $mform->addElement('text', 'name', get_string('ae_name', 'league'), array('size'=>'50'));
         $mform->setType('name', PARAM_TEXT);
+        $mform->addRule('name', null, 'required', null, 'client');
+        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->setDefault('name', $name);
         //Descripción del ejercicio
         $statement = (empty($this->_customdata['statement']) ? "" : $this->_customdata['statement']);
         $mform->addElement('textarea', 'statement', get_string("ae_description", "league"), 'wrap="virtual" rows="20" cols="50"');
+        $mform->addRule('statement', null, 'required', null, 'client');
+        $mform->addRule('statement', get_string('maximumchars', '', 4096), 'maxlength', 4096, 'client');
         $mform->setDefault('statement', $statement);
+        
+        $mform->addElement('static', 'warning', get_string('ae_warning','league'));
         
         $this->add_action_buttons();
     }
