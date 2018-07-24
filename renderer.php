@@ -87,11 +87,12 @@ class fail_view implements renderable {
 
 class go_back_view implements renderable {
  
-    public function __construct($title, $content, $cmid, $page) {
+    public function __construct($title, $content, $cmid, $page, $hidden = null) {
         $this->title = $title;
         $this->content = $content;
         $this->cmid = $cmid;
         $this->page = $page;
+        $this->hidden = $hidden;
     }
 }
 
@@ -128,7 +129,7 @@ class mod_league_renderer extends plugin_renderer_base {
 
         $button = '<form action="add_exercise.php" method="get">
                     <input type="hidden" name="id" value="'. $view->cmid .'" />
-                    <input type="hidden" name="id_exer" value="-1" />
+                    <input type="hidden" name="exercise" value="-1" />
                     <input type="submit" value="'. get_string('add_exercise_button', 'league') .'"/>
                 </form>';
         $out  .= $this->output->container($button, 'button');
@@ -200,8 +201,14 @@ class mod_league_renderer extends plugin_renderer_base {
         $out = $this->output->heading(format_string($view->title), 2);
         $out .= $this->output->container($view->content);
         $button = '<form action="'.$view->page.'" method="get">
-                    <input type="hidden" name="id" value="'. $view->cmid .'" />
-                    <input type="submit" value="'. get_string('go_back', 'league') .'"/>
+                    <input type="hidden" name="id" value="'. $view->cmid .'" />';
+        
+        if($view->hidden){
+            foreach($view->hidden as $k => $v){
+                $button .= '<input type="hidden" name="'.$k.'" value="'.$v.'" />';
+            }
+        }
+        $button .= '<input type="submit" value="'. get_string('go_back', 'league') .'"/>
                 </form>';
         $out  .= $this->output->container($button, 'button');
         return $this->output->container($out, 'main');

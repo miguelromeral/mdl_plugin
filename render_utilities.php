@@ -44,7 +44,7 @@ function print_exercises($rol, $cmid, $data, $canupload = false, $canmark = fals
             
             $data[] = '<form action="add_exercise.php" method="get" >
                 <input type="hidden" name="id" value="'.$cmid.'" />
-                <input type="hidden" name="id_exer" value="'.$exer['id'].'" />
+                <input type="hidden" name="exercise" value="'.$exer['id'].'" />
                 <input type="submit" value="'.get_string('modify_exercise_button', 'league').'"/>
             </form>';
             
@@ -65,7 +65,7 @@ function print_exercises($rol, $cmid, $data, $canupload = false, $canmark = fals
             
                 $data[] = '<form action="marking.php" method="get" >
                     <input type="hidden" name="id" value="'. $cmid .'" />
-                    <input type="hidden" name="id_exer" value="'. $exer['id'] .'" />
+                    <input type="hidden" name="exercise" value="'. $exer['id'] .'" />
                     <input type="submit" value="'. get_string('mark_exercise', 'league') .'"/>
                 </form>';
 
@@ -125,8 +125,7 @@ function print_exercises($rol, $cmid, $data, $canupload = false, $canmark = fals
                     if($CFG->league_max_num_attempts > $exer['num']){
                         $data[] = '<form action="upload.php" method="get" >
                             <input type="hidden" name="id" value="'. $cmid .'" />
-                            <input type="hidden" name="action" value="begin" />
-                            <input type="hidden" name="id_exer" value="'. $exer['id'] .'" />
+                            <input type="hidden" name="exercise" value="'. $exer['id'] .'" />
                             <input type="submit" value="'. get_string('upload_exercise', 'league') .'"/>
                         </form>';
 
@@ -362,14 +361,9 @@ function print_students_exercise($exercises, $cmid, $id_exer, $name, $contextid)
             }
         }
         
-        $data[] = '<form action="mark_student.php" method="post" >
+        $data[] = '<form action="mark_student.php" method="get" >
                 <input type="hidden" name="id" value="'. $cmid .'" />
-                <input type="hidden" name="id_exer" value="'. $id_exer .'" />
-                <input type="hidden" name="name" value="'. $name .'" />
-                <input type="hidden" name="id_user" value="'. $d['id_user'] .'" />
-                <input type="hidden" name="idat" value="'. $d['id'] .'" />
-                <input type="hidden" name="mark" value="'. $d['mark'] .'" />
-                <input type="hidden" name="observations" value="'. $d['observations'] .'" />
+                <input type="hidden" name="attempt" value="'. $d['id'] .'" />
                 <input type="submit" value="'. get_string('mark_student_button', 'league') .'"/>
             </form>';
         

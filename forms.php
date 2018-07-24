@@ -14,8 +14,8 @@ class upload_form extends moodleform {
         $mform->addElement('header', 'h1', $this->_customdata['name']);
         $mform->addElement('static', 'h2', $this->_customdata['statement']);
         
-        $mform->addElement('hidden', 'id_exer', $this->_customdata['id_exer']);
-        $mform->setType('id_exer', PARAM_INT);
+        $mform->addElement('hidden', 'exercise', $this->_customdata['id_exer']);
+        $mform->setType('exercise', PARAM_INT);
         $mform->addElement('hidden', 'id', $this->_customdata['id']);
         $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'name', $this->_customdata['name']);
@@ -49,8 +49,8 @@ class exercise_form extends moodleform {
             $mform->addElement('header', 'header_form', get_string('modify_exercise_title','league'));
         }
         //ID ejercicio
-        $mform->addElement('hidden', 'id_exer', $id_exer);
-        $mform->setType('id_exer', PARAM_INT);
+        $mform->addElement('hidden', 'exercise', $id_exer);
+        $mform->setType('exercise', PARAM_INT);
         $mform->addElement('hidden', 'id', $this->_customdata['id']);
         $mform->setType('id', PARAM_RAW);
         //Nombre del ejercicio
@@ -89,37 +89,31 @@ class mark_form extends moodleform {
         $mark = ($this->_customdata['mark'] ? $this->_customdata['mark'] : -1);
         $obs = ($this->_customdata['observations'] ? $this->_customdata['observations'] : "");
         
-        $result = $DB->get_records_sql('SELECT * FROM {league_exercise} WHERE id = ?', array($id_exer)); //El 1 no, que es el moodle completo.
-        $name_exer = "";
-        foreach ($result as $rowclass)
-        {
-            $rowclass = json_decode(json_encode($rowclass), True);
-            $name_exer = $rowclass["name"];
-        }
-        
-        
-        $mform->addElement('header', 'header_form', $name_exer);
+        $mform->addElement('header', 'header_form', 
+                get_string('mark_title','league').": ".
+                $this->_customdata['student']." (".
+                $this->_customdata['name_exer'].")");
        
         //ID ejercicio
-        $mform->addElement('hidden', 'id_exer', $id_exer);
-        $mform->setType('id_exer', PARAM_INT);
+        $mform->addElement('hidden', 'exercise', $id_exer);
+        $mform->setType('exercise', PARAM_INT);
         $mform->addElement('hidden', 'id_user', $id_user);
         $mform->setType('id_user', PARAM_INT);
         $mform->addElement('hidden', 'id', $this->_customdata['id']);
         $mform->setType('id', PARAM_INT);
-        $mform->addElement('hidden', 'idat', $this->_customdata['idat']);
-        $mform->setType('idat', PARAM_INT);
+        $mform->addElement('hidden', 'attempt', $this->_customdata['idat']);
+        $mform->setType('attempt', PARAM_INT);
         $mform->addElement('hidden', 'name', $this->_customdata['name_exer']);
         $mform->setType('name', PARAM_TEXT);
         
-        $options[-1] = "Sin calificar";
+        $options[-1] = get_string('no_mark_yet','league');
         for ($i = 0; $i <= 100; $i++)
         {
             $options[$i] = "$i";
         }
         $mform->addElement('select', 'mark', get_string('set_mark', 'league'), $options);
         $mform->setType('mark', PARAM_INT);
-        $mform->addRule('mark', 'MENSAJE DE ERROR', 'required', null, 'client');
+        $mform->addRule('mark', get_string('no_mark_error', 'league'), 'required', null, 'client');
         $mform->setDefault('mark', $options[$mark]);
         
         $mform->addElement('textarea', 'observations', get_string("set_observation", "league"), 'wrap="virtual" rows="20" cols="50"');

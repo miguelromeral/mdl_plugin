@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 
 require_once('../../config.php');
@@ -8,7 +7,7 @@ require_once('./forms.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
-$id_exer = required_param('id_exer', PARAM_INT);    // ID Ejercicio (-1 si no hay)
+$id_exer = required_param('exercise', PARAM_INT);    // ID Ejercicio (-1 si no hay)
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
@@ -81,8 +80,10 @@ if($mod->usermanageexercises($USER->id) && ($id_exer == -1 || isleagueexercise($
     //Form processing and displaying is done here
     if ($mform->is_cancelled()) {
         
+        $msg = ($id_exer == -1 ? 'ae_cancel_new' : 'ae_cancel');
+        
         $panel = new go_back_view(
-                get_string('ae_cancel','league'), null, $cmid, 'view.php');
+                get_string($msg,'league'), null, $cmid, 'view.php');
         echo $output->render($panel);
         
     } else if ($formdata = $mform->get_data()) {

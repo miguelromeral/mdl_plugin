@@ -9,7 +9,7 @@ defined('MOODLE_INTERNAL') || die();
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
-$id_exer = required_param('id_exer', PARAM_INT);  
+$id_exer = required_param('exercise', PARAM_INT);  
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 $info = get_fast_modinfo($course);
@@ -128,7 +128,8 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($id_exer, $league->id)){
         }else{
             
             $panel = new go_back_view(
-                    get_string('ue_no_file','league'), null, $cmid, 'view.php');
+                    get_string('ue_no_file','league'), null, $cmid, 'upload.php',
+                    array('exercise' => $id_exer));
             echo $output->render($panel);
         }
     } else {

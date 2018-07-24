@@ -9,7 +9,7 @@ defined('MOODLE_INTERNAL') || die();
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
-$id_exer = required_param('id_exer', PARAM_INT);
+$id_exer = required_param('exercise', PARAM_INT);
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
@@ -45,6 +45,10 @@ $completion->set_module_viewed($cm);
 $PAGE->set_title(format_string(get_string('management_title', 'league')));
 $PAGE->set_heading(format_string($course->fullname));
 
+$modinfo = get_fast_modinfo($course);
+$cm_info = $modinfo->get_cm($cmid);
+$mod = new mod_league\league($cm_info,  context_module::instance($cm->id));
+
 /// Some capability checks.
 if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities', $context)) {
     notice(get_string("activityiscurrentlyhidden"));
@@ -64,15 +68,11 @@ $output = $PAGE->get_renderer('mod_league');
 echo $output->header();
 
 
-
-
-if(is_editing_user($USER->id)){
+if($mod->usermarkstudents($USER->id) && ($id_exer == -1 || isleagueexercise($id_exer, $league->id))){
     $attempts = get_students_exercise($id_exer);
     $panel = new attempts_view($cmid, $attempts, $id_exer, getNameExerByID($id_exer), $context->id);
     echo $output->render($panel);
-
 }else{
-    
     $panel = new fail_view(
             get_string('notallowedpage','league'), 
             get_string('nopermission','league'), 
@@ -80,5 +80,5 @@ if(is_editing_user($USER->id)){
     echo $output->render($panel);
     
 }
-echo $OUTPUT->footer();
+echo $output->footer();
 

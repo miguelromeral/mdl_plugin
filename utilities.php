@@ -630,3 +630,18 @@ function isleagueexercise($idexer, $idleague){
     } 
     return null;
 }
+
+function getDataFromAttempt($id, $field){
+    global $DB;
+    $var="select *
+    from mdl_league_attempt
+    where id = $id";
+    $data = $DB->get_records_sql($var);
+    foreach ($data as $d){
+        $d = get_object_vars($d);
+        if($d[$field]){
+            return $d[$field];
+        }
+    } 
+    return null;
+}

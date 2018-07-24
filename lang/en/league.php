@@ -131,6 +131,7 @@ $string['h_manag_exer'] = 'Administrar ejercicios de la Liga';
 
 $string['add_exercise_title'] = 'Añadir nuevo ejercicio';
 $string['ae_cancel'] = 'Cancelada la modificación del ejercicio';
+$string['ae_cancel_new'] = 'Cancelada la creación del ejercicio';
 $string['modify_exercise_title'] = 'Modificar ejercicio';
 $string['ae_name'] = 'Nombre del ejercicio';
 $string['ae_description'] = 'Descripción';
@@ -161,6 +162,7 @@ $string['ue_error_max_size'] = 'Compruebe que el fichero está por debajo del l�
  */
 
 $string['no_mark_yet'] = 'Sin corrección';
+$string['no_mark_error'] = 'Debe especificar una nota para el intento.';
 $string['not_done'] = 'Sin hacer';
 $string['mark_student_button'] = 'Calificar alumno';
 $string['download_file_button'] = 'Descargar fichero';
