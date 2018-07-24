@@ -111,6 +111,7 @@ $string['add_exercise_button'] = 'Añadir ejercicio';
 $string['modify_exercise_button'] = 'Modificar';
 $string['enable_exercise_button'] = 'Habilitar';
 $string['disable_exercise_button'] = 'Deshabilitar';
+$string['view_total_attempts_button'] = 'Ver todos los intentos para este ejercicio';
 $string['del'] = 'Eliminar';
 $string['exercise_enabled'] = 'El ejercicio está habilitado para todos los alumnos del curso. Ahora podrán subir la tarea.';
 $string['exercise_disabled'] = 'El ejercicio está deshabilitado. Los alumnos no pueden ver este ejercicio actualmente.';
@@ -124,6 +125,7 @@ $string['unpublish'] = 'Ocultar notas';
 $string['currently_published'] = 'Las notas han sido publicadas. A partir de ahora, los alumnos podrán ver sus notas para este ejercicio.';
 $string['currently_unpublished'] = 'Retirada la publicación de notas. Ningún alumno puede ver su nota para este ejercicio.';
 $string['h_manag_exer'] = 'Administrar ejercicios de la Liga';
+$string['final_attempt'] = 'Definitivo';
 
 /**
  *      AÑADIR EJERCICIOS

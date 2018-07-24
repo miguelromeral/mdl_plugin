@@ -11,9 +11,9 @@ $observers = array(
         // fully qualified event class name or "*" indicating all events
         'eventname'   => '\mod_league\event\league_created',
         // PHP callable type.
-        //'callback'    => 'league_created_handler',
+        'callback'    => 'league_created_handler',
         // optional. File to be included before calling the observer. Path relative to dirroot.
-        //'includefile' => '/mod/league/locallib.php',
+        'includefile' => '/mod/league/locallib.php',
         // optional. Defaults to true. Non-internal observers are not called 
         // during database transactions, but instead after a successful commit of the transaction.
         'internal'    => true,
@@ -23,43 +23,50 @@ $observers = array(
     
     array(
         'eventname'   => '\mod_league\event\league_updated',
-        //'callback'    => 'league_updated_handler',
+        'callback'    => 'league_updated_handler',
+        'includefile' => '/mod/league/locallib.php',
         'internal'    => true,
     ),
     
     array(
         'eventname'   => '\mod_league\event\exercise_created',
-        //'callback'    => 'exercise_created_handler',
+        'callback'    => 'exercise_created_handler',
+        'includefile' => '/mod/league/locallib.php',
         'internal'    => true,
     ),
     
     array(
         'eventname'   => '\mod_league\event\exercise_updated',
-        //'callback'    => 'exercise_updated_handler',
+        'callback'    => 'exercise_updated_handler',
+        'includefile' => '/mod/league/locallib.php',
         'internal'    => true,
     ),
     
     array(
         'eventname'   => '\mod_league\event\exercise_deleted',
-        //'callback'    => 'exercise_deleted_handler',
+        'callback'    => 'exercise_deleted_handler',
+        'includefile' => '/mod/league/locallib.php',
         'internal'    => true,
     ),
     
     array(
         'eventname'   => '\mod_league\event\attempt_submitted',
-        //'callback'    => 'attempt_submitted_handler',
+        'callback'    => 'attempt_submitted_handler',
+        'includefile' => '/mod/league/locallib.php',
         'internal'    => true,
     ),
     
     array(
         'eventname'   => '\mod_league\event\attempt_downloaded',
-        //'callback'    => 'attempt_downloaded_handler',
+        'callback'    => 'attempt_downloaded_handler',
+        'includefile' => '/mod/league/locallib.php',
         'internal'    => true,
     ),
     
     array(
         'eventname'   => '\mod_league\event\attempt_graded',
-        // 'callback'    => 'attempt_graded_handler',
+        'callback'    => '',
+        'includefile' => '/mod/league/locallib.php',
         'internal'    => true,
     )
     

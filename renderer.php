@@ -1,6 +1,7 @@
 <?php
 
 defined('MOODLE_INTERNAL') || die();
+
 require_once('render_utilities.php');
 
 class main_student_view implements renderable {
@@ -53,8 +54,8 @@ class qualy_view implements renderable {
         }
     }
 }
- 
-class attempts_view implements renderable {
+
+class total_attempts_view implements renderable {
  
     public function __construct($cmid, $attempts, $idexer, $name, $contextid) {
         $this->cmid = $cmid;
@@ -76,15 +77,6 @@ class grade_view implements renderable {
     }
 }
 
-class fail_view implements renderable {
- 
-    public function __construct($title, $content, $cmid) {
-        $this->title = $title;
-        $this->cmid = $cmid;
-        $this->content = $content;
-    }
-}
-
 class go_back_view implements renderable {
  
     public function __construct($title, $content, $cmid, $page, $hidden = null) {
@@ -100,7 +92,7 @@ class mod_league_renderer extends plugin_renderer_base {
  
     protected function render_main_student_view(\main_student_view $view) {
         $out = '';
-        $image = '<img src="images/animated.gif" width="40" height="40"/>';
+        $image = '<img src="pix/animated.gif" width="40" height="40"/>';
         $out  = $this->output->heading($image . format_string($view->title), 2);
         if($view->alert != 'grades'){
             $out  .= $this->output->heading(format_string($view->exercises_title), 3);
@@ -114,7 +106,7 @@ class mod_league_renderer extends plugin_renderer_base {
     
     protected function render_main_teacher_view(\main_teacher_view $view) {
         $out = '';
-        $image = '<img src="images/animated.gif" width="40" height="40"/>';
+        $image = '<img src="pix/animated.gif" width="40" height="40"/>';
         $out  = $this->output->heading($image . format_string($view->title), 2);
         $out  .= $this->output->container(print_exercises('teacher', $view->cmid,
                 $view->exercises, false, $view->canmark));
@@ -138,7 +130,7 @@ class mod_league_renderer extends plugin_renderer_base {
     }
     
     protected function render_qualy_view(\qualy_view $view) {
-        $image = '<img src="images/animated.gif" width="40" height="40"/>';
+        $image = '<img src="pix/animated.gif" width="40" height="40"/>';
         $out = $this->output->heading($image . format_string($view->title), 2);
         $out  .= $this->output->container(print_qualy($view->qualy, $view->role, $view->userid));
         if($view->role == 'teacher'){
@@ -166,10 +158,10 @@ class mod_league_renderer extends plugin_renderer_base {
         return $this->output->container($out, 'main');
     }
     
-    protected function render_attempts_view(\attempts_view $view) {
+    protected function render_total_attempts_view(\total_attempts_view $view) {
         $out = $this->output->heading(format_string($view->name), 2);
         $out .= $this->output->container(
-                print_students_exercise($view->attempts, $view->cmid, $view->idexer, 
+                print_attempts_exercise($view->attempts, $view->cmid, $view->idexer, 
                         $view->name, $view->contextid));
         
         $button = '<form action="view.php" method="get">
@@ -183,17 +175,6 @@ class mod_league_renderer extends plugin_renderer_base {
     protected function render_grade_view(\grade_view $view) {
         //$out = $this->output->heading(format_string(get_string('individual_marks', 'league')), 2);
         $out = $this->output->container(print_table_grades($view->rows, $view->tablecolumns, $view->tableheaders, $view->ex_name, $view->url));
-        return $this->output->container($out, 'main');
-    }
-    
-    protected function render_fail_view(\fail_view $view) {
-        $out = $this->output->heading(format_string($view->title), 2);
-        $out .= $this->output->container($view->content);
-        $button = '<form action="view.php" method="get">
-                    <input type="hidden" name="id" value="'. $view->cmid .'" />
-                    <input type="submit" value="'. get_string('go_back', 'league') .'"/>
-                </form>';
-        $out  .= $this->output->container($button, 'button');
         return $this->output->container($out, 'main');
     }
     

@@ -102,6 +102,23 @@ function get_students_exercise($id_exer){
 }
 
 
+function get_total_students_exercises($id_exer){
+    global $DB;
+    //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
+    $var="select *
+    from mdl_league_attempt as a
+    join (
+            select id as us, firstname, lastname
+            from mdl_user
+    ) as b
+    on a.id_user = b.us
+    where a.exercise = $id_exer
+    order by a.timemodified desc";
+    $data = $DB->get_records_sql($var);
+    return $data;
+}
+
+
 function getIDFileFromContenthash($contenthash){
     global $DB;
     $var="SELECT max(id) as 'm'

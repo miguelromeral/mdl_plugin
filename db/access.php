@@ -29,7 +29,7 @@ $capabilities = array(
     ),
     
     'mod/league:manageexercises' => array(
-        'riskbitmask' => RISK_DATALOSS,
+        'riskbitmask' => RISK_DATALOSS | RISK_CONFIG,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array(
@@ -51,7 +51,6 @@ $capabilities = array(
     ),
     
     'mod/league:seerestrictedqualy' => array(
-        'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array(
@@ -72,7 +71,7 @@ $capabilities = array(
     ),
     
     'mod/league:uploadfiles' => array(
-        'riskbitmask' => RISK_XSS,
+        'riskbitmask' => RISK_XSS | RISK_SPAM,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array(
@@ -81,7 +80,7 @@ $capabilities = array(
     ),
     
     'mod/league:markstudents' => array(
-        'riskbitmask' => RISK_PERSONAL,
+        'riskbitmask' => RISK_PERSONAL | RISK_CONFIG,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array(

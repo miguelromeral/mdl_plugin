@@ -166,10 +166,11 @@ if ($rol == 'student'){
     
     
 }else{
-    $panel = new fail_view(
+    $panel = new go_back_view(
             get_string('notallowedpage','league'), 
             get_string('nopermission','league'), 
-            $cmid);
+            $cmid,
+            'view.php');
     echo $output->render($panel);
 }
 

@@ -69,14 +69,15 @@ echo $output->header();
 
 
 if($mod->usermarkstudents($USER->id) && ($id_exer == -1 || isleagueexercise($id_exer, $league->id))){
-    $attempts = get_students_exercise($id_exer);
-    $panel = new attempts_view($cmid, $attempts, $id_exer, getNameExerByID($id_exer), $context->id);
+    $attempts = get_total_students_exercises($id_exer);
+    $panel = new total_attempts_view($cmid, $attempts, $id_exer, getNameExerByID($id_exer), $context->id);
     echo $output->render($panel);
 }else{
-    $panel = new fail_view(
+    $panel = new go_back_view(
             get_string('notallowedpage','league'), 
             get_string('nopermission','league'), 
-            $cmid);
+            $cmid,
+            'view.php');
     echo $output->render($panel);
     
 }
