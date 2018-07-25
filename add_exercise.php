@@ -47,8 +47,8 @@ $PAGE->set_title(format_string(get_string('add_exercise_title', 'league')));
 $PAGE->set_heading(format_string($course->fullname));
 
 $modinfo = get_fast_modinfo($course);
-$cm_info = $modinfo->get_cm($cmid);
-$mod = new mod_league\league($cm_info,  context_module::instance($cm->id));
+$cminfo = $modinfo->get_cm($cmid);
+$mod = new mod_league\league($cminfo,  context_module::instance($cm->id));
 
 $output = $PAGE->get_renderer('mod_league');
 

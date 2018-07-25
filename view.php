@@ -25,8 +25,8 @@
 
 // Get all files that we'll use.
 require_once('../../config.php');
-require_once('lib.php');
-require_once('utilities.php');
+require_once($CFG->dirroot.'/mod/league/lib.php');
+require_once($CFG->dirroot.'/mod/league/utilities.php');
 
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
@@ -82,8 +82,8 @@ $PAGE->set_button($qualybutton);
 
 // Create an instance of league. Usefull to check capabilities.
 $modinfo = get_fast_modinfo($course);
-$cm_info = $modinfo->get_cm($cmid);
-$mod = new mod_league\league($cm_info,  context_module::instance($cm->id));
+$cminfo = $modinfo->get_cm($cmid);
+$mod = new mod_league\league($cminfo,  $context);
 
 // There are two types of role, one is for students (They can see exercises
 // availables, their marks, etc.) and the other one is for non-students (like

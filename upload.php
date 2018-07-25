@@ -78,8 +78,8 @@ $PAGE->set_heading(format_string($course->fullname));
 
 // Create an instance of league. Usefull to check capabilities.
 $modinfo = get_fast_modinfo($course);
-$cm_info = $modinfo->get_cm($cmid);
-$mod = new mod_league\league($cm_info,  context_module::instance($cm->id));
+$cminfo = $modinfo->get_cm($cmid);
+$mod = new mod_league\league($cminfo,  context_module::instance($cm->id));
 
 // Get and render the appropiate class to this page.
 $output = $PAGE->get_renderer('mod_league');
