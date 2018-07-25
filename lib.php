@@ -180,7 +180,7 @@ function league_attempt_add_instance($course, $id_user, $exercise, $id_file, $ur
     $record->exercise = $exercise;
     $record->mark = -1;
     $record->id_file = $id_file;
-    $record->url = $url;
+    //$record->url = $url;
     $record->league = $league;
   
     $id = $DB->insert_record('league_attempt', $record);
