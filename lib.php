@@ -212,11 +212,8 @@ function league_attempt_update_instance($league, $idat, $mark, $observations, $i
     if(publishedMarks($idexer)){
         league_update_grades($league);
     }
-    if($id){
-        return true;
-    }else{
-        return false;
-    }
+    
+    return $id;
 }
 
 function league_attempt_delete_instance($id) {

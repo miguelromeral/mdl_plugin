@@ -144,7 +144,7 @@ switch($role){
         // If teacher made an action, we handle it here.
         if($action != 'no-act'){
             // Get the exercise ID from POST.
-            $exerciseid = required_param('id_exer', PARAM_INT);
+            $attemptexercise = required_param('id_exer', PARAM_INT);
             // Get the exercise name from POST.
             $exercisename = required_param('exer_name', PARAM_TEXT);
             // Get the exercise description from POST.
@@ -165,7 +165,7 @@ switch($role){
                     // If the exercises is enabled, we can't delete it
                     if ($exerciseenabled == 0){
                         // Delete instance of the exercise given the ID.
-                        $attemptid = league_exercise_delete_instance($exerciseid, $context);
+                        $attemptid = league_exercise_delete_instance($attemptexercise, $context);
                     }
 
                     // If the deleting of exercises was successfull, we alert 
@@ -185,7 +185,7 @@ switch($role){
                     $changedflag = ($exerciseenabled == 0 ? 1 : 0);
 
                     // Update the exercise with de data given.
-                    league_exercise_update_instance($league, null, $exercisename, $exercisedescription, $leagueid, $exerciseid, $changedflag, $exercisepublished, $context);
+                    league_exercise_update_instance($league, null, $exercisename, $exercisedescription, $leagueid, $attemptexercise, $changedflag, $exercisepublished, $context);
 
                     // Depending on the operation we made, we print one alert.
                     if ($changedflag == 0){
@@ -203,7 +203,7 @@ switch($role){
                     $changedflag = ($exercisepublished == 0 ? 1 : 0);
 
                     // Update the exercise with de data given.
-                    league_exercise_update_instance($league, null, $exercisename, $exercisedescription, $leagueid, $exerciseid, $exerciseenabled, $changedflag, $context);
+                    league_exercise_update_instance($league, null, $exercisename, $exercisedescription, $leagueid, $attemptexercise, $exerciseenabled, $changedflag, $context);
 
                     // Depending on the operation we made, we print one alert.
                     if ($changedflag == 0){

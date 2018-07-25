@@ -37,7 +37,7 @@ defined('MOODLE_INTERNAL') || die();
 // Identifies the Course Module ID.
 $cmid = optional_param('id', 0, PARAM_INT);
 // Identifies the exercise the user's task upload belongs
-$exerciseid = required_param('exercise', PARAM_INT);  
+$attemptexercise = required_param('exercise', PARAM_INT);  
 
 // Check if a course module exists.
 if ($cmid) {
@@ -89,16 +89,16 @@ echo $output->header();
 // If the user can upload files and the exercise ID belongs to the current league,
 // user can upload the file (it's recommended only students are available to
 // upload files).
-if($mod->useruploadfiles($USER->id) && isleagueexercise($exerciseid, $league->id)){
+if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $league->id)){
 
     // Get the name and statement from exercise ID:
-    $exercisename = getNameExerByID($exerciseid);
-    $exercisestatement = getNameExerByID($exerciseid, false);
+    $exercisename = getNameExerByID($attemptexercise);
+    $exercisestatement = getNameExerByID($attemptexercise, false);
 
     // Create the upload form with aproppiate data.
     $params = array(
         'id'        => $cmid,
-        'id_exer'   => $exerciseid,
+        'id_exer'   => $attemptexercise,
         'name'      => $exercisename,
         'statement' => $exercisestatement
     );
@@ -140,14 +140,14 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($exerciseid, $league->id
                             $file->get_filearea(), $file->get_itemid(), $filename);
 
                     // Create the attempt in the database.
-                    $attemptid = league_attempt_add_instance($course->id, $USER->id, $exerciseid, $file->get_itemid(), $url, $filename, $league->id, $context);
+                    $attemptid = league_attempt_add_instance($course->id, $USER->id, $attemptexercise, $file->get_itemid(), $url, $filename, $league->id, $context);
 
                     // If everything is OK in the database, we trigger the event
                     // and warn the user that's OK.
                     if($attemptid){
                         
                         // Trigger the attempt submitted event.
-                        league_attempt_submitted($exerciseid, $attemptid, $context);
+                        league_attempt_submitted($attemptexercise, $attemptid, $context);
                         
                         // Render a page to go back to main menu.
                         $panel = new go_back_view(
@@ -162,7 +162,7 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($exerciseid, $league->id
             // a valid file.
             $panel = new go_back_view(
                     get_string('ue_no_file','league'), null, $cmid, 'upload.php',
-                    array('exercise' => $exerciseid));
+                    array('exercise' => $attemptexercise));
             echo $output->render($panel);
         }
     } else {

@@ -75,3 +75,17 @@ function league_attempt_submitted($exercise, $id, $context) {
     $event = \mod_league\event\attempt_submitted::create($params);
     $event->trigger();
 }
+
+function league_attempt_graded($attemptid, $user, $exercise, $mark, $context) {
+    
+    $params = array(
+        'objectid' => $attemptid,
+        'relateduserid' => $user,
+        'other' => array('exercise' => $exercise,
+                        'mark' => $mark),
+        'context' => $context
+    );
+    
+    $event = \mod_league\event\attempt_graded::create($params);
+    $event->trigger();
+}

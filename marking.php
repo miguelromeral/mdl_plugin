@@ -34,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
 // Identifies the Course Module ID.
 $cmid = optional_param('id', 0, PARAM_INT);
 // Get exercise ID.
-$exerciseid = required_param('exercise', PARAM_INT);
+$attemptexercise = required_param('exercise', PARAM_INT);
 
 // Check if a course module exists.
 if ($cmid) {
@@ -84,12 +84,12 @@ echo $output->header();
 
 // Check if the user can mark studentds and the exercise ID belongs to this league.
 $canmark = $mod->usermarkstudents($USER->id);
-$validexercise = ($exerciseid == -1 || isleagueexercise($exerciseid, $league->id));
+$validexercise = ($attemptexercise == -1 || isleagueexercise($attemptexercise, $league->id));
 
 if($canmark and $validexercise){
     // Retrieve all the students attempts to this exercises and render it.
-    $attempts = get_total_students_exercises($exerciseid);
-    $panel = new total_attempts_view($cmid, $attempts, $exerciseid, getNameExerByID($exerciseid), $context->id);
+    $attempts = get_total_students_exercises($attemptexercise);
+    $panel = new total_attempts_view($cmid, $attempts, $attemptexercise, getNameExerByID($attemptexercise), $context->id);
     echo $output->render($panel);
 }else{
     // If the usar cant have capabilities to mark, render an error page.

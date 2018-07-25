@@ -11,6 +11,19 @@ function get_students(){
     return $rs;
 }
 
+function league_get_student_name($userid){
+    global $DB;
+    $result = $DB->get_records_sql('SELECT * FROM {user} WHERE id = ?', array($userid));
+    $alumno = "";
+    foreach ($result as $rowclass)
+    {
+        $rowclass = json_decode(json_encode($rowclass), True);
+        $alumno = $rowclass['firstname'] ." ".$rowclass['lastname'];
+        return $alumno;
+    }
+    return null;
+}
+
 function is_student($userid){
     $everyone = get_students();
     foreach( $everyone as $r ) {
