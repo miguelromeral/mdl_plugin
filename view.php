@@ -28,6 +28,9 @@ require_once('../../config.php');
 require_once('lib.php');
 require_once('utilities.php');
 
+// Prevents direct execution via browser.
+defined('MOODLE_INTERNAL') || die();
+
 // Identifies the Course Module ID.
 $cmid = optional_param('id', 0, PARAM_INT);
 
@@ -157,17 +160,17 @@ switch($role){
                 case 'delete': // Delete an exercise if it's posible.
                     
                     //Indicates if the deleting was successfull.
-                    $success = false;
+                    $attemptid = false;
                     
                     // If the exercises is enabled, we can't delete it
                     if ($exerciseenabled == 0){
                         // Delete instance of the exercise given the ID.
-                        $success = league_exercise_delete_instance($exerciseid, $context);
+                        $attemptid = league_exercise_delete_instance($exerciseid, $context);
                     }
 
                     // If the deleting of exercises was successfull, we alert 
                     // the teacher.
-                    if ($success){
+                    if ($attemptid){
                         $alert = get_string('exercise_deleted', 'league');
                     } else {
                         $alert = get_string('exercise_not_deleted', 'league');

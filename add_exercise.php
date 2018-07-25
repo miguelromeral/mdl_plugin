@@ -8,7 +8,7 @@ require_once($CFG->dirroot.'/mod/league/forms.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
-$id_exer = required_param('exercise', PARAM_INT);    // ID Ejercicio (-1 si no hay)
+$exerciseid = required_param('exercise', PARAM_INT);    // ID Ejercicio (-1 si no hay)
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
@@ -65,23 +65,23 @@ if (!has_capability('mod/league:view', $context, $USER->id)) {
 
 
 
-if($mod->usermanageexercises($USER->id) && ($id_exer == -1 || isleagueexercise($id_exer, $league->id))){
+if($mod->usermanageexercises($USER->id) && ($exerciseid == -1 || isleagueexercise($exerciseid, $league->id))){
   
-    $name = ($id_exer == -1 ? '' : getNameExerByID($id_exer));
-    $description = ($id_exer == -1 ? '' : getNameExerByID($id_exer, false));
+    $filename = ($exerciseid == -1 ? '' : getNameExerByID($exerciseid));
+    $description = ($exerciseid == -1 ? '' : getNameExerByID($exerciseid, false));
 
 
     $mform = new exercise_form(null,
             array('id'=>$cmid,
-                'id_exer'=>$id_exer,
-                'name'=>$name,
+                'id_exer'=>$exerciseid,
+                'name'=>$filename,
                 'statement'=>$description));
 
 
     //Form processing and displaying is done here
     if ($mform->is_cancelled()) {
         
-        $msg = ($id_exer == -1 ? 'ae_cancel_new' : 'ae_cancel');
+        $msg = ($exerciseid == -1 ? 'ae_cancel_new' : 'ae_cancel');
         
         $panel = new go_back_view(
                 get_string($msg,'league'), null, $cmid, 'view.php');
@@ -89,7 +89,7 @@ if($mod->usermanageexercises($USER->id) && ($id_exer == -1 || isleagueexercise($
         
     } else if ($formdata = $mform->get_data()) {
         //$errores = "";
-        $name = $formdata->name;
+        $filename = $formdata->name;
         /*if(strlen($name) > 255 || empty($name)){
             $errores .= (get_string('ae_error_name','league') . "<br>");
         }*/
@@ -100,9 +100,9 @@ if($mod->usermanageexercises($USER->id) && ($id_exer == -1 || isleagueexercise($
 */
   //      if(empty($errores)){
             $course = $cm->course;
-            if($id_exer == -1){
+            if($exerciseid == -1){
                 
-                $idexernuevo = league_exercise_add_instance($course, $name, $statement, $league->id, $USER->id, $context);
+                $idexernuevo = league_exercise_add_instance($course, $filename, $statement, $league->id, $USER->id, $context);
                 if($idexernuevo){
                     // Trigger the event.
                     league_exercise_created($league->id, $idexernuevo, $context);
@@ -112,7 +112,7 @@ if($mod->usermanageexercises($USER->id) && ($id_exer == -1 || isleagueexercise($
                 }
                 
             }else{
-                $correcto = league_exercise_update_instance($league, $course, $name, $statement, $league->id, $id_exer, 0, 0, $context);
+                $correcto = league_exercise_update_instance($league, $course, $filename, $statement, $league->id, $exerciseid, 0, 0, $context);
             }
 
             if($correcto){

@@ -9,7 +9,7 @@ defined('MOODLE_INTERNAL') || die();
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
-$id_exer = required_param('exercise', PARAM_INT);
+$exerciseid = required_param('exercise', PARAM_INT);
 $cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
@@ -68,9 +68,9 @@ $output = $PAGE->get_renderer('mod_league');
 echo $output->header();
 
 
-if($mod->usermarkstudents($USER->id) && ($id_exer == -1 || isleagueexercise($id_exer, $league->id))){
-    $attempts = get_total_students_exercises($id_exer);
-    $panel = new total_attempts_view($cmid, $attempts, $id_exer, getNameExerByID($id_exer), $context->id);
+if($mod->usermarkstudents($USER->id) && ($exerciseid == -1 || isleagueexercise($exerciseid, $league->id))){
+    $attempts = get_total_students_exercises($exerciseid);
+    $panel = new total_attempts_view($cmid, $attempts, $exerciseid, getNameExerByID($exerciseid), $context->id);
     echo $output->render($panel);
 }else{
     $panel = new go_back_view(

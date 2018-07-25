@@ -63,3 +63,15 @@ function league_exercise_created($league, $id, $context) {
     $event = \mod_league\event\exercise_created::create($params);
     $event->trigger();
 }
+
+function league_attempt_submitted($exercise, $id, $context) {
+    
+    $params = array(
+        'objectid' => $id,
+        'other' => array('exercise' => $exercise),
+        'context' => $context
+    );
+    
+    $event = \mod_league\event\attempt_submitted::create($params);
+    $event->trigger();
+}

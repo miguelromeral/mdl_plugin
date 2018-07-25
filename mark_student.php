@@ -64,7 +64,7 @@ if (!has_capability('mod/league:view', $context)) {
 
 $attleague = getDataFromAttempt($idat, 'league');
 $id_user = getDataFromAttempt($idat, 'id_user');
-$id_exer = getDataFromAttempt($idat, 'exercise');
+$exerciseid = getDataFromAttempt($idat, 'exercise');
 
 //Comprobaciones de lógica:
 $sameleague = ($league->id == $attleague);
@@ -78,13 +78,13 @@ if($mod->usermarkstudents($USER->id) && $sameleague){
         $rowclass = json_decode(json_encode($rowclass), True);
         $alumno = $rowclass['firstname'] ." ".$rowclass['lastname'];
     }
-    $name_exer = getNameExerByID($id_exer);
+    $name_exer = getNameExerByID($exerciseid);
     $mark = getDataFromAttempt($idat, 'mark');
     $observations = getDataFromAttempt($idat, 'observations');
             
         $mform = new mark_form(null,
                     array('id'=>$cmid,
-                        'id_exer'=>$id_exer,
+                        'id_exer'=>$exerciseid,
                         'mark'=>$mark,
                         'name_exer'=>$name_exer,
                         'student' => $alumno,
@@ -97,19 +97,19 @@ if($mod->usermarkstudents($USER->id) && $sameleague){
             
             $panel = new go_back_view(
                     get_string('mark_cancel','league'), null, $cmid, 'marking.php',
-                    array('exercise' => $id_exer));
+                    array('exercise' => $exerciseid));
             echo $output->render($panel);
             
         } else if ($data = $mform->get_data()) {
             $new_mark = $data->mark;
             $new_observaciones = $data->observations;
             
-            league_attempt_update_instance($league, $idat, $new_mark, $new_observaciones, $id_exer);
+            league_attempt_update_instance($league, $idat, $new_mark, $new_observaciones, $exerciseid);
             
             $event = \mod_league\event\attempt_graded::create(array(
                 'objectid' => $idat,
                 'relateduserid' => $id_user,
-                'other' => array('exercise' => $id_exer,
+                'other' => array('exercise' => $exerciseid,
                                 'mark' => $new_mark),
                 'context' => $context
             ));
@@ -117,7 +117,7 @@ if($mod->usermarkstudents($USER->id) && $sameleague){
             
             $panel = new go_back_view(
                     get_string('mark_sent_success','league'), null, $cmid, 'marking.php',
-                    array('exercise' => $id_exer));
+                    array('exercise' => $exerciseid));
             echo $output->render($panel);
             
         } else {

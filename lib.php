@@ -185,19 +185,7 @@ function league_attempt_add_instance($course, $id_user, $exercise, $id_file, $ur
   
     $id = $DB->insert_record('league_attempt', $record);
    
-    $event = \mod_league\event\attempt_submitted::create(array(
-        'objectid' => $id,
-        'other' => array('exercise' => $exercise),
-        'context' => $context
-    ));
-    
-    $event->trigger();
-    
-    if($id){
-        return true;
-    }else{
-        return false;
-    }
+    return $id;
 }
 
 function league_attempt_update_instance($league, $idat, $mark, $observations, $idexer) {

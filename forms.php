@@ -24,7 +24,7 @@ class upload_form extends moodleform {
         $mform->setType('statement', PARAM_TEXT);
         
         $mform->addElement('filepicker', 'userfile', get_string('upload_exercise_file', 'league'), null,
-                   array('maxbytes' => $this->_customdata['max_bytes'], 'accepted_types' => '*'));
+                   array('maxbytes' => 10000000, 'accepted_types' => '*'));
         
         $this->add_action_buttons();
     }
