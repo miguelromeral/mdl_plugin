@@ -60,14 +60,14 @@ groups_print_activity_menu($cm, $CFG->wwwroot . '/mod/league/grade.php?id=' . $c
 $currentgroup = groups_get_activity_group($cm);
 $groupmode = groups_get_activity_groupmode($cm);
 
-$rol = get_role_user($USER->id);
+$role = get_role_user($USER->id);
 
-if($rol == 'teacher'){
-    $buttonqualy = '<form action="qualy.php" method="get">
+if($role == 'teacher'){
+    $qualybutton = '<form action="qualy.php" method="get">
                     <input type="hidden" name="id" value="'. $cmid .'" />
                     <input type="submit" value="'. get_string('view_qualy_button', 'league') .'"/>
                 </form>';
-    $PAGE->set_button($buttonqualy);
+    $PAGE->set_button($qualybutton);
 }
 
 
@@ -75,13 +75,13 @@ $output = $PAGE->get_renderer('mod_league');
 
 echo $output->header();
 
-if ($rol == 'student'){
+if ($role == 'student'){
     
-    $notas = get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
-    $panel = new main_teacher_view(null, $cmid, $context->id, 'student', 'grades', $notas);
+    $marks = get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
+    $panel = new main_teacher_view(null, $cmid, $context->id, 'student', 'grades', $marks);
     echo $output->render($panel);
     
-}else if($rol == 'teacher'){
+}else if($role == 'teacher'){
    $exercises = get_exercises_from_id($league->id);
    get_notas_alumno_para_profesor(3, $league->id);
    $marks = get_tabla_notas($league->id, get_students());

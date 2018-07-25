@@ -61,39 +61,39 @@ $modinfo = get_fast_modinfo($course);
 $cm_info = $modinfo->get_cm($cmid);
 $mod = new mod_league\league($cm_info,  context_module::instance($cm->id));
 
-$rol = null;
+$role = null;
 
 if($mod->userseequaly($USER->id)){
-    $rol = 'teacher';
+    $role = 'teacher';
 }else if($mod->userseerestrictedqualy($USER->id)){
-    $rol = 'student';
+    $role = 'student';
 }
 
-if($rol == 'teacher'){
-    $buttonqualy = '<form action="grade.php" method="get">
+if($role == 'teacher'){
+    $qualybutton = '<form action="grade.php" method="get">
                     <input type="hidden" name="id" value="'. $cmid .'" />
                     <input type="submit" value="'. get_string('view_individual_marks', 'league') .'"/>
                 </form>';
-    $PAGE->set_button($buttonqualy);
+    $PAGE->set_button($qualybutton);
 }
 
 $output = $PAGE->get_renderer('mod_league');
 
 echo $output->header();
 
-$q = get_qualy_array($league->id, $course->id, $rol, $league->method);
+$q = get_qualy_array($league->id, $course->id, $role, $league->method);
 
-if ($rol == 'student' || $rol == 'teacher'){
+if ($role == 'student' || $role == 'teacher'){
         
     
     $panel = null;
-    if($rol == 'student'){
-        $panel = new qualy_view($cmid, $q, $USER->id, $rol);
-    }else if($rol == 'teacher'){
+    if($role == 'student'){
+        $panel = new qualy_view($cmid, $q, $USER->id, $role);
+    }else if($role == 'teacher'){
         
         
         $qs = get_qualy_array($league->id, $course->id, 'student', $league->method);
-        $panel = new qualy_view($cmid, $q, $USER->id, $rol, $qs);
+        $panel = new qualy_view($cmid, $q, $USER->id, $role, $qs);
     }
     if($panel) { 
         echo $output->render($panel);

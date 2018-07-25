@@ -59,6 +59,10 @@ $string['select_method_help'] = 'Si selecciona "'.$string['select_best_marks'].
  */
 
 $string['noviewdiscussionspermission'] = 'No tiene los suficientes permisos para ver esta liga.';
+$string['coursemoduleiidincorrect'] = 'Course Module ID was incorrect.';
+$string['coursemodulemisconfigured'] = 'Course is misconfigured.';
+$string['coursemoduleincorrect'] = 'Course module was incorrect.';
+
 
 /**
  *      PÁGINA PRINCIPAL

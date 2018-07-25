@@ -30,7 +30,7 @@ function print_exercises($rol, $cmid, $data, $canupload = false, $canmark = fals
             $data[] =  ($exer['published'] == 0 ? 
                 '<img src="pix/no.png" width="30" height="30"/>' : 
                 '<img src="pix/yes.png" width="30" height="30"/>');
-            
+                
             $data[] = '<form action="view.php" method="post" >
                 <input type="hidden" name="id" value="'.$cmid.'" />
                 <input type="hidden" name="action" value="delete" />

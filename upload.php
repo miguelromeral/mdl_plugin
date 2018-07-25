@@ -116,9 +116,9 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($id_exer, $league->id)){
                     $url = getURLFile($file->get_contextid(), $file->get_component(), 
                             $file->get_filearea(), $file->get_itemid(), $name);
 
-                    $exito = league_attempt_add_instance($course->id, $USER->id, $id_exer, $file->get_itemid(), $url, $name, $league->id, $context);
+                    $success = league_attempt_add_instance($course->id, $USER->id, $id_exer, $file->get_itemid(), $url, $name, $league->id, $context);
 
-                    if($exito){
+                    if($success){
                         $panel = new go_back_view(
                                 get_string('ue_success','league'), null, $cmid, 'view.php');
                         echo $output->render($panel);
