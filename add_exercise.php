@@ -1,9 +1,10 @@
 <?php
 
 require_once('../../config.php');
-require_once('lib.php');
-require_once('utilities.php');
-require_once('./forms.php');
+require_once($CFG->dirroot.'/mod/league/lib.php');
+require_once($CFG->dirroot.'/mod/league/locallib.php');
+require_once($CFG->dirroot.'/mod/league/utilities.php');
+require_once($CFG->dirroot.'/mod/league/forms.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
@@ -100,7 +101,16 @@ if($mod->usermanageexercises($USER->id) && ($id_exer == -1 || isleagueexercise($
   //      if(empty($errores)){
             $course = $cm->course;
             if($id_exer == -1){
-                $correcto = league_exercise_add_instance($course, $name, $statement, $league->id, $USER->id, $context);
+                
+                $idexernuevo = league_exercise_add_instance($course, $name, $statement, $league->id, $USER->id, $context);
+                if($idexernuevo){
+                    // Trigger the event.
+                    league_exercise_created($league->id, $idexernuevo, $context);
+                    $correcto = true;
+                }else{
+                    $correcto = false;
+                }
+                
             }else{
                 $correcto = league_exercise_update_instance($league, $course, $name, $statement, $league->id, $id_exer, 0, 0, $context);
             }

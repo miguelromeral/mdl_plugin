@@ -31,6 +31,7 @@ class exercise_created extends \core\event\base {
     public function get_description() {
         return "The user with id '$this->userid' created an exercise "
                 . "with id '$this->objectid' for league with id "
-                . "'".$this->other['league']."' with course module id '$this->contextinstanceid'.";
+                . "'".$this->other['league']."' with course module id "
+                . "'$this->contextinstanceid'.";
     }
 }

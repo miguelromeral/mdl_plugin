@@ -207,6 +207,7 @@ function print_notas_alumno($data, $contextid, $candownload){
                 }
             }else{
                 $data[] = "<b><i>".get_string('not_sent_yet', 'league')."</i></b>";
+                $data[] = "";
             }
             
             if($d['mark'] == -1 || $d['published'] == 0){

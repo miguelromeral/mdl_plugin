@@ -51,3 +51,15 @@ function attempt_downloaded_handler($event) {
 function attempt_graded_handler($event) {
     return true;      
 }
+
+function league_exercise_created($league, $id, $context) {
+    
+    $params = array(
+        'objectid' => $id,
+        'other' => array('league' => $league),
+        'context' => $context
+    );
+    
+    $event = \mod_league\event\exercise_created::create($params);
+    $event->trigger();
+}
