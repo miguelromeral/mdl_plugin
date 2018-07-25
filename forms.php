@@ -2,37 +2,6 @@
 
 //moodleform is defined in formslib.php
 require_once("$CFG->libdir/formslib.php");
- 
-//Formulario de Subida de archivos
-class upload_form extends moodleform {
-    //Add elements to form
-    public function definition() {
-        global $CFG, $DB;
-        
-        $mform = $this->_form; // Don't forget the underscore! 
-        
-        $mform->addElement('header', 'h1', $this->_customdata['name']);
-        $mform->addElement('static', 'h2', $this->_customdata['statement']);
-        
-        $mform->addElement('hidden', 'exercise', $this->_customdata['id_exer']);
-        $mform->setType('exercise', PARAM_INT);
-        $mform->addElement('hidden', 'id', $this->_customdata['id']);
-        $mform->setType('id', PARAM_INT);
-        $mform->addElement('hidden', 'name', $this->_customdata['name']);
-        $mform->setType('name', PARAM_TEXT);
-        $mform->addElement('hidden', 'statement', $this->_customdata['statement']);
-        $mform->setType('statement', PARAM_TEXT);
-        
-        $mform->addElement('filepicker', 'userfile', get_string('upload_exercise_file', 'league'), null,
-                   array('maxbytes' => 10000000, 'accepted_types' => '*'));
-        
-        $this->add_action_buttons();
-    }
-    //Custom validation should be added here
-    function validation($data, $files) {
-        return array();
-    }
-}
 
 //Formulario de creación de ficheros
 class exercise_form extends moodleform {

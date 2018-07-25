@@ -27,6 +27,7 @@
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/locallib.php');
+require_once($CFG->dirroot.'/mod/league/classes/form/uploadform.php'); // ESTO NO DEBERÍA ESTAR
 require_once($CFG->dirroot.'/mod/league/utilities.php');
 require_once($CFG->dirroot.'/mod/league/forms.php');
 
@@ -101,7 +102,7 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($exerciseid, $league->id
         'name'      => $exercisename,
         'statement' => $exercisestatement
     );
-    $mform = new upload_form(null,$params);
+    $mform = new mod_league\form\upload_form(null, $params);
 
     if ($mform->is_cancelled()) {
         // If form is cancelled render a page to back to main view.
