@@ -1,78 +1,98 @@
-<!DOCTYPE html>
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Page where teachers can select a student to be evaluated (and also download
+ * their tasks done).
+ *
+ * @package   mod_league
+ * @copyright 2018 Miguel Romeral
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+// Get all files that we'll use.
 require_once('../../config.php');
-require_once('lib.php');
-require_once('utilities.php');
+require_once($CFG->dirroot.'/mod/league/lib.php');
+require_once($CFG->dirroot.'/mod/league/utilities.php');
 
+// Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
 
-//Identifica la actividad específica (o recurso)
-$cmid = required_param('id', PARAM_INT);    // Course Module ID
+// Identifies the Course Module ID.
+$cmid = optional_param('id', 0, PARAM_INT);
+// Get exercise ID.
 $exerciseid = required_param('exercise', PARAM_INT);
-$cm = get_coursemodule_from_id('league', $cmid, 0, false, MUST_EXIST);
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
-require_login($course, true, $cm);
-
-$PAGE->set_url('/mod/league/marking.php', array('id' => $cm->id));
-
+// Check if a course module exists.
 if ($cmid) {
+    
+    // Get all the course module info belongs to league module.
     if (!$cm = get_coursemodule_from_id('league', $cmid)) {
-        print_error('Course Module ID was incorrect'); // NOTE this is invalid use of print_error, must be a lang string id
+        print_error(get_string('coursemoduleiidincorrect','league'));
     }
+    
+    // Get all course info given the course module.
     if (!$course = $DB->get_record('course', array('id'=> $cm->course))) {
-        print_error('course is misconfigured');  // NOTE As above
+        print_error(get_string('coursemodulemisconfigured','league'));
     }
+    
+    // Get all league info given the instance ID.
     if (!$league = $DB->get_record('league', array('id'=> $cm->instance))) {
-        print_error('course module is incorrect'); // NOTE As above
+        print_error(get_string('coursemoduleincorrect','league'));
     }
-    require_course_login($course, true, $cm);
+    
 } else {
+    // If not, a warning is showed.
     print_error('missingparameter');
 }
 
+// Check login and get context.
+require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
-$PAGE->set_context($context);
+require_capability('mod/league:view', $context);
 
+// Initialize $PAGE and set parameters.
+$PAGE->set_url('/mod/league/marking.php', array('id' => $cm->id));
+$PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');
 
-// Mark viewed if required
-$completion = new completion_info($course);
-$completion->set_module_viewed($cm);
-
-// Print header.
+// Print title and header.
 $PAGE->set_title(format_string(get_string('management_title', 'league')));
 $PAGE->set_heading(format_string($course->fullname));
 
+// Create an instance of league. Usefull to check capabilities.
 $modinfo = get_fast_modinfo($course);
 $cminfo = $modinfo->get_cm($cmid);
-$mod = new mod_league\league($cminfo,  context_module::instance($cm->id));
+$mod = new mod_league\league($cminfo,  $context);
 
-/// Some capability checks.
-if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities', $context)) {
-    notice(get_string("activityiscurrentlyhidden"));
-}
-
-if (!has_capability('mod/league:view', $context)) {
-    notice(get_string('noviewdiscussionspermission', 'league'));
-}
-
-/// find out current groups mode
-//groups_print_activity_menu($cm, $CFG->wwwroot . '/mod/league/marking.php?id=' . $cm->id);
-//$currentgroup = groups_get_activity_group($cm);
-//$groupmode = groups_get_activity_groupmode($cm);
-
+// Get and render the appropiate class to this page.
 $output = $PAGE->get_renderer('mod_league');
-
 echo $output->header();
 
+// Check if the user can mark studentds and the exercise ID belongs to this league.
+$canmark = $mod->usermarkstudents($USER->id);
+$validexercise = ($exerciseid == -1 || isleagueexercise($exerciseid, $league->id));
 
-if($mod->usermarkstudents($USER->id) && ($exerciseid == -1 || isleagueexercise($exerciseid, $league->id))){
+if($canmark and $validexercise){
+    // Retrieve all the students attempts to this exercises and render it.
     $attempts = get_total_students_exercises($exerciseid);
     $panel = new total_attempts_view($cmid, $attempts, $exerciseid, getNameExerByID($exerciseid), $context->id);
     echo $output->render($panel);
 }else{
+    // If the usar cant have capabilities to mark, render an error page.
     $panel = new go_back_view(
             get_string('notallowedpage','league'), 
             get_string('nopermission','league'), 
@@ -81,5 +101,6 @@ if($mod->usermarkstudents($USER->id) && ($exerciseid == -1 || isleagueexercise($
     echo $output->render($panel);
     
 }
-echo $output->footer();
 
+// Print the footer page.
+echo $output->footer();
