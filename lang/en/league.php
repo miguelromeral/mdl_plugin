@@ -50,6 +50,7 @@ $string['mod_form_select_method'] = 'Seleccione el criterio de ordenación';
 $string['select_best_marks'] = 'Mejores notas';
 $string['select_more_exercises'] = 'Más ejercicios subidos';
 $string['select_method'] = 'Seleccionar criterios de ordenación';
+$string['mod_form_presentation'] = 'Mensaje de presentación de la liga';
 $string['select_method_help'] = 'Si selecciona "'.$string['select_best_marks'].
         '" se ordenará la clasificación en función de cuales son las mejores notas obtenidas. Sin embargo, '
         . 'si selecciona "'.$string['select_more_exercises'].'" se premiará a los alumnos que hayan subido más ejercicios.';
@@ -157,6 +158,7 @@ $string['ae_warning'] = 'ADVERTENCIA: al guardar el ejercicio automáticamente p
 $string['upload_title'] = 'Subir Ejercicio';
 $string['ue_cancel'] = 'Cancelada la subida de ficheros.';
 $string['upload_exercise_file'] = 'Subir fichero';
+$string['upload_attempt'] = 'Enviar intento';
 $string['ue_error_type'] = 'El tipo del fichero subido no es válido (Debe ser PDF).';
 $string['ue_error_unknown'] = 'Hubo un problema al cargar el fichero.';
 $string['ue_success'] = 'Fichero subido con éxito';

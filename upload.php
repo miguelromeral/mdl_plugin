@@ -97,9 +97,7 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $leagu
     // Create the upload form with aproppiate data.
     $params = array(
         'id'        => $cmid,
-        'id_exer'   => $attemptexercise,
-        'name'      => $exercisename,
-        'statement' => $exercisestatement
+        'id_exer'   => $attemptexercise
     );
     $mform = new mod_league\form\upload_form(null, $params);
 
@@ -165,6 +163,10 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $leagu
             echo $output->render($panel);
         }
     } else {
+        // Print the exercises name and statement.
+        $panel = new single_content_view($exercisestatement, $exercisename);
+        echo $output->render($panel);
+        
         // Displays the upload form.
         $mform->display();
     }

@@ -122,7 +122,7 @@ switch($role){
         $marks = get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
 
         // Once we have all necessary data, we render it.
-        $panel = new main_student_view($exercises, $cmid, $context->id, null, $marks,
+        $panel = new main_student_view($league->presentation, $exercises, $cmid, $context->id, null, $marks,
                 $mod->userdownloadfiles($USER->id), $mod->useruploadfiles($USER->id));
         echo $output->render($panel);
         

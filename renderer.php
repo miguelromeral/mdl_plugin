@@ -2,13 +2,19 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->libdir . '/tablelib.php');
 require_once('render_utilities.php');
 
 class main_student_view implements renderable {
  
-    public function __construct($exercises, $cmid, $contextid, $alert = null, $notas = null,
+    public function __construct($presentation, $exercises, $cmid, $contextid, $alert = null, $notas = null,
             $candownload = false, $canupload = false) {
-        $this->exercises = $exercises;
+        if($presentation) {
+            $this->presentation = $presentation;
+        }
+        if($exercises) {
+            $this->exercises = $exercises;
+        }
         $this->cmid = $cmid;
         $this->contextid = $contextid;
         $this->alert = $alert;
@@ -88,16 +94,26 @@ class go_back_view implements renderable {
     }
 }
 
+class single_content_view implements renderable {
+ 
+    public function __construct($content, $title = null) {
+        $this->title = $title;
+        $this->content = $content;
+    }
+}
+
 class mod_league_renderer extends plugin_renderer_base {
  
     protected function render_main_student_view(\main_student_view $view) {
-        $out = '';
         $image = '<img src="pix/animated.gif" width="40" height="40"/>';
-        $out  = $this->output->heading($image . format_string($view->title), 2);
+        $out = $this->output->heading($image . format_string($view->title), 2);
         if($view->alert != 'grades'){
+            $out  .= $this->output->container($view->presentation);
             $out  .= $this->output->heading(format_string($view->exercises_title), 3);
-            $out  .= $this->output->container(print_exercises('student', $view->cmid,
+            if(isset($view->exercises)){
+                $out  .= $this->output->container(print_exercises('student', $view->cmid,
                     $view->exercises, $view->canupload));
+            }
             $out  .= $this->output->heading(format_string($view->marks_title), 3);
         }
         $out  .= $this->output->container(print_notas_alumno($view->notas, $view->contextid, $view->candownload));
@@ -175,6 +191,15 @@ class mod_league_renderer extends plugin_renderer_base {
     protected function render_grade_view(\grade_view $view) {
         //$out = $this->output->heading(format_string(get_string('individual_marks', 'league')), 2);
         $out = $this->output->container(print_table_grades($view->rows, $view->tablecolumns, $view->tableheaders, $view->ex_name, $view->url));
+        return $this->output->container($out, 'main');
+    }
+    
+    protected function render_single_content_view(\single_content_view $view) {
+        $out = '';
+        if($view->title){
+            $out .= $this->output->heading($view->title, 2);
+        }
+        $out .= $this->output->container($view->content);
         return $this->output->container($out, 'main');
     }
     

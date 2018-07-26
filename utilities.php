@@ -159,7 +159,7 @@ function get_notas_alumno($idleague, $cmid, $userid, $contextid){
     (
         select a.id as idat, a.timemodified as tma,
 		a.observations, a.name as fname,
-		a.exercise, b.id_user, a.mark, a.id_file, a.url
+		a.exercise, b.id_user, a.mark, a.id_file
 		from mdl_league_attempt as a
 		inner join (
 			select max(id) as m, id_user

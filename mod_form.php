@@ -29,6 +29,11 @@ class mod_league_mod_form extends moodleform_mod {
         $mform->addRule('method', 'MENSAJE DE ERROR', 'required', null, 'client');
         $mform->addHelpButton('method', 'select_method', 'league');
         
+        $mform->addElement('textarea', 'presentation', get_string("mod_form_presentation", "league"), 'wrap="virtual" rows="20" cols="50"');
+        $mform->setType('presentation', PARAM_TEXT);
+        $mform->setDefault('presentation', '');
+        $mform->addRule('presentation', null, 'required', null, 'client');
+        
         $features = new stdClass();
         $features->groups           = false;
         $features->groupings        = false;

@@ -1,5 +1,6 @@
 <?php
 
+
 function print_exercises($rol, $cmid, $data, $canupload = false, $canmark = false){
     global $CFG;
     if ($rol == 'teacher'){
@@ -320,7 +321,8 @@ function get_user_image($iduser, $size){
     $rs = $DB->get_recordset_sql( $query );
     foreach( $rs as $r ) {
         if($r->id == $iduser){
-            return $OUTPUT->user_picture($r, array('size' => $size, 'courseid'=>$COURSE->id));
+            return $OUTPUT->user_picture($r, array('courseid'=>$COURSE->id));
+            //return $OUTPUT->user_picture($r, array('size' => $size, 'courseid'=>$COURSE->id));
         }
     }
     return null;

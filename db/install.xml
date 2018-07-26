@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/league/db" VERSION="20180709" COMMENT="XMLDB file for Moodle mod/league"
+<XMLDB PATH="mod/league/db" VERSION="20180726" COMMENT="XMLDB file for Moodle mod/league"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -15,6 +15,7 @@
         <FIELD NAME="gradeweighting" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="100" SEQUENCE="false" COMMENT="Peso de las notas"/>
         <FIELD NAME="method" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Metodo de clasificación: 1: por notas, 2: por ejercicios subidos"/>
         <FIELD NAME="filearea" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Filearea para los archivos"/>
+        <FIELD NAME="presentation" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Presentacion de la liga"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -46,7 +47,6 @@
         <FIELD NAME="mark" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Nota del alumno"/>
         <FIELD NAME="observations" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Observaciones sobre el trabajo hecho"/>
         <FIELD NAME="id_file" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID del fichero que se sube"/>
-        <FIELD NAME="url" TYPE="char" LENGTH="1333" NOTNULL="true" SEQUENCE="false" COMMENT="URL para bajar el fichero"/>
         <FIELD NAME="league" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID de la liga"/>
       </FIELDS>
       <KEYS>
