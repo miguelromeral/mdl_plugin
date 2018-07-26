@@ -5,34 +5,6 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/tablelib.php');
 require_once('render_utilities.php');
 
-class main_student_view implements renderable {
- 
-    public function __construct($presentation, $exercises, $cmid, $contextid, $alert = null, $notas = null,
-            $candownload = false, $canupload = false) {
-        if($presentation) {
-            $this->presentation = $presentation;
-        }
-        if($exercises) {
-            $this->exercises = $exercises;
-        }
-        $this->cmid = $cmid;
-        $this->contextid = $contextid;
-        $this->alert = $alert;
-        $this->notas = $notas;
-        $this->canupload = $canupload;
-        $this->candownload = $candownload;
-        if($alert == 'grades'){
-            $this->title = get_string('my_marks','league');
-            $this->exercises_title = null;
-            $this->marks_title = null;
-        }else{
-            $this->title = get_string('main_panel_student','league');
-            $this->exercises_title = get_string('availables_exercises','league');
-            $this->marks_title = get_string('my_marks','league');
-        }
-    }
-}
-
 class total_attempts_view implements renderable {
  
     public function __construct($cmid, $attempts, $idexer, $name, $contextid) {
@@ -87,20 +59,16 @@ class mod_league_renderer extends plugin_renderer_base {
         
         return $this->output->container($out, 'main');
     }
-    
-    protected function render_main_student_view(\main_student_view $view) {
-        $image = '<img src="pix/animated.gif" width="40" height="40"/>';
-        $out = $this->output->heading($image . format_string($view->title), 2);
-        if($view->alert != 'grades'){
-            $out  .= $this->output->container($view->presentation);
-            $out  .= $this->output->heading(format_string($view->exercises_title), 3);
-            if(isset($view->exercises)){
-                $out  .= $this->output->container(print_exercises('student', $view->cmid,
-                    $view->exercises, $view->canupload));
-            }
-            $out  .= $this->output->heading(format_string($view->marks_title), 3);
+ 
+    protected function render_student_grade_view(\mod_league\output\student_grade_view $view) {
+        $out = $this->output->heading(format_string(get_string('my_marks','league')), 3);
+        
+        if(isset($view->marks)){
+            $out  .= $this->output->container($view->print_grades());
+        }else{
+            $out  .= $this->output->container(get_string('no_grades_availables', 'league'));
         }
-        $out  .= $this->output->container(print_notas_alumno($view->notas, $view->contextid, $view->candownload));
+        
         return $this->output->container($out, 'main');
     }
     

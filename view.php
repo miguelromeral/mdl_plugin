@@ -28,6 +28,7 @@ require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/main_teacher_view.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/student_grade_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/available_exercises_view.php');
 
 // Prevents direct execution via browser.
@@ -126,17 +127,10 @@ switch($role){
         $panel = new mod_league\output\available_exercises_view($cmid, $exercises, $mod->useruploadfiles($USER->id));
         echo $output->render($panel);
         
-        
         // Get all marks for every exercise in this league.
         $marks = get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
 
-        
-        
-        
-        
-        // Once we have all necessary data, we render it.
-        $panel = new main_student_view($league->presentation, $exercises, $cmid, $context->id, null, $marks,
-                $mod->userdownloadfiles($USER->id), $mod->useruploadfiles($USER->id));
+        $panel = new mod_league\output\student_grade_view($cmid, $context->id, $marks, $mod->userdownloadfiles($USER->id));
         echo $output->render($panel);
         
         break;

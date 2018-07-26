@@ -26,6 +26,7 @@
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/student_grade_view.php');
 
 
 // Prevents direct execution via browser.
@@ -117,8 +118,9 @@ switch($role){
         
         // Retrieve all marks for the current user and print all of them.
         $marks = get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
-        $panel = new main_student_view(null, null, $cmid, $context->id, 'grades', $marks);
+        $panel = new mod_league\output\student_grade_view($cmid, $context->id, $marks, $mod->userdownloadfiles($USER->id));
         echo $output->render($panel);
+        
         break;
     
     case 'teacher':
