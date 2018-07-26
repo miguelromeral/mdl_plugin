@@ -26,8 +26,8 @@
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/locallib.php');
+require_once($CFG->dirroot.'/mod/league/classes/form/mark_form.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
-require_once($CFG->dirroot.'/mod/league/forms.php');
 
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
@@ -111,7 +111,7 @@ if($canmark and $sameleague){
         'observations'  => $observations,
         'id_user'       => $attemptuser
     );
-    $mform = new mark_form(null, $params);
+    $mform = new mod_league\form\mark_form(null, $params);
 
     if ($mform->is_cancelled()) {
         // If the form is cancelled, a render page to go back.

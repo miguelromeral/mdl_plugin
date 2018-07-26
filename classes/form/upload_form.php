@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/formslib.php");
 
 /**
- * Class upload_form
+ * Class upload_form.
  *
  * @package   mod_league
  * @copyright 2018 Miguel Romeral

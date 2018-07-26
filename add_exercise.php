@@ -3,8 +3,8 @@
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/locallib.php');
+require_once($CFG->dirroot.'/mod/league/classes/form/exercise_form.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
-require_once($CFG->dirroot.'/mod/league/forms.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
@@ -71,7 +71,7 @@ if($mod->usermanageexercises($USER->id) && ($attemptexercise == -1 || isleagueex
     $description = ($attemptexercise == -1 ? '' : getNameExerByID($attemptexercise, false));
 
 
-    $mform = new exercise_form(null,
+    $mform = new mod_league\form\exercise_form(null,
             array('id'=>$cmid,
                 'id_exer'=>$attemptexercise,
                 'name'=>$filename,

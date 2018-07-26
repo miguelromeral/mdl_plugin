@@ -27,9 +27,8 @@
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/locallib.php');
-require_once($CFG->dirroot.'/mod/league/classes/form/uploadform.php'); // ESTO NO DEBERÍA ESTAR
+require_once($CFG->dirroot.'/mod/league/classes/form/upload_form.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
-require_once($CFG->dirroot.'/mod/league/forms.php');
 
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
