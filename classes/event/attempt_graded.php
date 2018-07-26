@@ -18,6 +18,7 @@
  * The mod_league attempt graded event.
  *
  * @package    mod_league
+ * @category   event
  * @copyright  2018 Miguel Romeral
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

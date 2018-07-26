@@ -1,24 +1,38 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-//  If you add or change observers you need to purge the caches or they will not be recognised.
-//  Plugin developers need to bump up the version number to guarantee that the list
-//  of observers is reloaded during upgrade.
+/**
+ * League event handler definition.
+ *
+ * @package     mod_league
+ * @category    event
+ * @copyright   2018 Miguel Romeral
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
+// Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
 
+// List of observers.
 $observers = array(
     array(
-        // fully qualified event class name or "*" indicating all events
         'eventname'   => '\mod_league\event\league_created',
-        // PHP callable type.
         'callback'    => 'league_created_handler',
-        // optional. File to be included before calling the observer. Path relative to dirroot.
         'includefile' => '/mod/league/locallib.php',
-        // optional. Defaults to true. Non-internal observers are not called 
-        // during database transactions, but instead after a successful commit of the transaction.
         'internal'    => true,
-        // optional. Defaults to 0. Observers with higher priority are notified first.
-        //'priority'    => 9999,
     ),
     
     array(
@@ -65,7 +79,7 @@ $observers = array(
     
     array(
         'eventname'   => '\mod_league\event\attempt_graded',
-        'callback'    => '',
+        'callback'    => 'attempt_graded_handler',
         'includefile' => '/mod/league/locallib.php',
         'internal'    => true,
     )
