@@ -27,6 +27,7 @@
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/main_teacher_view.php');
 
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
@@ -221,7 +222,7 @@ switch($role){
         // Finally, once we have the updated exercises, we recover them.
         $exercises = get_exercises_from_id($league->id);
         // Once we have all necessary data, we render it.
-        $panel = new main_teacher_view($exercises, $cmid, $context->id, 
+        $panel = new mod_league\output\main_teacher_view($cmid, $exercises,
                 $mod->usermarkstudents($USER->id), $alert);
         echo $output->render($panel);
     

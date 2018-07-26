@@ -6,7 +6,6 @@ namespace mod_league\output;
 defined('MOODLE_INTERNAL') || die();
 
 require_once('../../config.php');
-require_once('render_utilities.php');
 
 class qualy_view implements \renderable {
  
@@ -97,5 +96,25 @@ class qualy_view implements \renderable {
         }
 
         return \html_writer::table($table);
+    }
+    
+    public function print_qualy_explanation($output){
+        $out = '';
+        
+        // Explanation about the heading columns.
+        $out  .= $output->container(get_string('q_pos','league').': '.
+                get_string('q_pos_des','league'));
+        $out  .= $output->container(get_string('q_total_exercises','league').': '.
+                get_string('q_total_exercises_des','league'));
+        $out  .= $output->container(get_string('q_exercises_uploaded','league').': '.
+                get_string('q_exercises_uploaded_des','league'));
+        $out  .= $output->container(get_string('q_total_mark','league').': '.
+                get_string('q_total_mark_des','league'));
+        $out  .= $output->container(get_string('q_percentage','league').': '.
+                get_string('q_percentage_des','league'));
+        $out  .= $output->container(get_string('q_notes','league').': '.
+                get_string('q_notes_des','league'));
+        
+        return $out;
     }
 }
