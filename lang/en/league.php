@@ -75,6 +75,7 @@ $string['teacher_panel'] = 'Panel del profesor';
 $string['main_panel_student'] = 'Panel de control del alumno';
 $string['availables_exercises'] = 'Ejercicios disponibles';
 $string['my_marks'] = 'Mis notas';
+$string['no_exercises_availables'] = 'En este momento no hay ningún ejercicio disponible.';
 
 /**
  *      CLASIFICACIÓN

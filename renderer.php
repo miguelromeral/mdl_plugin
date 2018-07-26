@@ -76,6 +76,18 @@ class single_content_view implements renderable {
 
 class mod_league_renderer extends plugin_renderer_base {
  
+    protected function render_available_exercises_view(\mod_league\output\available_exercises_view $view) {
+        $out = $this->output->heading(format_string(get_string('availables_exercises','league')), 3);
+        
+        if(isset($view->exercises)){
+            $out  .= $this->output->container($view->print_exercises());
+        }else{
+            $out  .= $this->output->container(get_string('no_exercises_availables', 'league'));
+        }
+        
+        return $this->output->container($out, 'main');
+    }
+    
     protected function render_main_student_view(\main_student_view $view) {
         $image = '<img src="pix/animated.gif" width="40" height="40"/>';
         $out = $this->output->heading($image . format_string($view->title), 2);
