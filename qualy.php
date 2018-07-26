@@ -27,8 +27,9 @@
  */
 
 require_once('../../config.php');
-require_once('lib.php');
-require_once('utilities.php');
+require_once($CFG->dirroot.'/mod/league/lib.php');
+require_once($CFG->dirroot.'/mod/league/utilities.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/qualy_view.php');
 
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
@@ -111,21 +112,17 @@ $q = get_qualy_array($league->id, $course->id, $role, $league->method);
 
 // If the user role is defined, print the table.
 if ($role == 'student' || $role == 'teacher'){
-    $panel = null;
     
     // Get panel in function of role type.
-    if($role == 'student'){
-        $panel = new qualy_view($cmid, $q, $USER->id, $role);
-    }else if($role == 'teacher'){
+    $panel = new mod_league\output\qualy_view(get_string('qualy_title', 'league'), $cmid, $q, $USER->id, $role);
+    echo $output->render($panel);
+    
+    if($role == 'teacher'){
         // If the user is a teacher, He also can see the qualy like the studentds.
         // The main difference is that teacher is allowed to see data like studentds
         // name while students only can see his names.
         $qs = get_qualy_array($league->id, $course->id, 'student', $league->method);
-        $panel = new qualy_view($cmid, $q, $USER->id, $role, $qs);
-    }
-    
-    // If a panel exists, render it.
-    if($panel) { 
+        $panel = new mod_league\output\qualy_view(get_string('qts', 'league'), $cmid, $qs, $USER->id, $role);
         echo $output->render($panel);
     }
         

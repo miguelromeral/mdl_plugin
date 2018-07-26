@@ -47,19 +47,6 @@ class main_teacher_view implements renderable {
     }
 }
 
-class qualy_view implements renderable {
- 
-    public function __construct($cmid, $qualy, $userid, $rol = 'student', $qualy_aux = null) {
-        $this->role = $rol;
-        $this->cmid = $cmid;
-        $this->userid = $userid;
-        $this->qualy = $qualy;
-        $this->title = get_string('qualy_title', 'league');
-        if($rol == 'teacher'){
-            $this->qualy_aux = $qualy_aux;
-        }
-    }
-}
 
 class total_attempts_view implements renderable {
  
@@ -145,14 +132,13 @@ class mod_league_renderer extends plugin_renderer_base {
         return $this->output->container($out, 'main');
     }
     
-    protected function render_qualy_view(\qualy_view $view) {
-        $image = '<img src="pix/animated.gif" width="40" height="40"/>';
-        $out = $this->output->heading($image . format_string($view->title), 2);
-        $out  .= $this->output->container(print_qualy($view->qualy, $view->role, $view->userid));
-        if($view->role == 'teacher'){
-            $out .= $this->output->heading(format_string(get_string('qts', 'league')), 3);
-            $out  .= $this->output->container(print_qualy($view->qualy_aux, $view->role));
-        }
+    protected function render_qualy_view(\mod_league\output\qualy_view $view) {
+        //$image = '<img src="pix/animated.gif" width="40" height="40"/>';
+        //$out = $this->output->heading($image . format_string($view->title), 2);
+        $out = $this->output->heading(format_string($view->title), 2);
+        $out  .= $this->output->container($view->print_qualy());
+        
+        // Explanation about the heading columns.
         $out  .= $this->output->container(
                 get_string('q_pos','league').': '.get_string('q_pos_des','league'));
         $out  .= $this->output->container(
@@ -166,11 +152,6 @@ class mod_league_renderer extends plugin_renderer_base {
         $out  .= $this->output->container(
                 get_string('q_notes','league').': '.get_string('q_notes_des','league'));
         
-        $button = '<form action="view.php" method="get">
-                    <input type="hidden" name="id" value="'. $view->cmid .'" />
-                    <input type="submit" value="'. get_string('go_back', 'league') .'"/>
-                </form>';
-            $out  .= $this->output->container($button, 'button');
         return $this->output->container($out, 'main');
     }
     
