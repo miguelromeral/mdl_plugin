@@ -1,9 +1,5 @@
 <?php
 
-
-
-
-
 function get_user_image($iduser, $size){
     global $COURSE, $DB, $OUTPUT;
     $cContext = context_course::instance($COURSE->id);
@@ -19,80 +15,6 @@ function get_user_image($iduser, $size){
     }
     return null;
 }
-
-
-function print_attempts_exercise($exercises, $cmid, $id_exer, $name, $contextid){
-    
-    $table = new html_table();
-    $headings = array();
-    $align = array();
-    array_push($headings, get_string('image', 'league'));
-    array_push($align, 'center');
-    array_push($headings, get_string('student', 'league'));
-    array_push($align, 'center');
-    array_push($headings, get_string('timemofied', 'league'));
-    array_push($align, 'center');
-    array_push($headings, get_string('num_attempt', 'league'));
-    array_push($align, 'center');
-    array_push($headings, get_string('mark', 'league'));
-    array_push($align, 'center');
-    $table->head = $headings;
-    $table->align = $align;
-
-    $na = array();
-    
-    foreach ($exercises as $d){
-        $d = get_object_vars($d);
-        $user = $d['firstname'] . " " . $d['lastname'];
-        if(!isset($na[$user])){
-            array_push($na, $user);
-            $na[$user] = 0;
-        }
-            
-        $na[$user] += 1;
-        $na[$user ."_max"] = $na[$user];
-    }
-    
-    foreach ($exercises as $d){
-        $d = get_object_vars($d);
-        $data = array();
-        $data[] = get_user_image($d['id_user'], 40);
-        $user = $d['firstname'] . " " . $d['lastname'];
-        $data[] = $user;
-        $data[] = date("H:i:s, d (D) M Y", $d['timemodified']);
-        
-        
-        $data[] = $na[$user];
-        
-        $data[] = (($d['mark'] == -1) ?get_string('no_mark_yet', 'league') : $d['mark']."%");
-        
-        if($d['id_file']){
-            $file = restoreURLFile($contextid, $d['id_file']);
-            if($file){
-                $data[] = '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
-            }else{
-                $data[] = get_string('cant_create_url', 'league');
-            }
-        }
-        
-        if($na[$user] == $na[$user ."_max"]){
-            $data[] = '<form action="mark_student.php" method="get" >
-                <input type="hidden" name="id" value="'. $cmid .'" />
-                <input type="hidden" name="attempt" value="'. $d['id'] .'" />
-                <input type="submit" value="'. get_string('mark_student_button', 'league') .'"/>
-            </form>';
-        }else{
-            $data[] = "";
-        }
-        
-        $na[$user] -= 1;
-        
-        $table->data[] = $data;
-    }
-    
-    return html_writer::table($table);
-}
-
 
 function print_table_grades($filas, $tablecolumns, $tableheaders, $ex_name, $url){
     

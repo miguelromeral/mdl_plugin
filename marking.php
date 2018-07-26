@@ -27,6 +27,7 @@
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/total_attempts_view.php');
 
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
@@ -89,7 +90,10 @@ $validexercise = ($attemptexercise == -1 || isleagueexercise($attemptexercise, $
 if($canmark and $validexercise){
     // Retrieve all the students attempts to this exercises and render it.
     $attempts = get_total_students_exercises($attemptexercise);
-    $panel = new total_attempts_view($cmid, $attempts, $attemptexercise, getNameExerByID($attemptexercise), $context->id);
+    $panel = new mod_league\output\total_attempts_view($cmid, $attempts, $attemptexercise, getNameExerByID($attemptexercise), $context->id);
+    echo $output->render($panel);
+    
+    $panel = new go_back_view(null, null, $cmid, 'view.php');
     echo $output->render($panel);
 }else{
     // If the usar cant have capabilities to mark, render an error page.

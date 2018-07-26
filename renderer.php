@@ -5,17 +5,6 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/tablelib.php');
 require_once('render_utilities.php');
 
-class total_attempts_view implements renderable {
- 
-    public function __construct($cmid, $attempts, $idexer, $name, $contextid) {
-        $this->cmid = $cmid;
-        $this->idexer = $idexer;
-        $this->attempts = $attempts;
-        $this->name = $name;
-        $this->contextid = $contextid;
-    }
-}
-
 class grade_view implements renderable {
  
     public function __construct($rows, $tablecolumns, $tableheaders, $ex_name, $url) {
@@ -90,17 +79,16 @@ class mod_league_renderer extends plugin_renderer_base {
         return $this->output->container($out, 'main');
     }
     
-    protected function render_total_attempts_view(\total_attempts_view $view) {
+    protected function render_total_attempts_view(\mod_league\output\total_attempts_view $view) {
         $out = $this->output->heading(format_string($view->name), 2);
-        $out .= $this->output->container(
-                print_attempts_exercise($view->attempts, $view->cmid, $view->idexer, 
-                        $view->name, $view->contextid));
         
-        $button = '<form action="view.php" method="get">
-                    <input type="hidden" name="id" value="'. $view->cmid .'" />
-                    <input type="submit" value="'. get_string('go_back', 'league') .'"/>
-                </form>';
-            $out  .= $this->output->container($button, 'button');
+        if($view->attempts_exist()){
+            $out .= $this->output->container($view->print_attempts());
+        }else{
+            $out .= $this->output->container(get_string('no_attempts_yet','league'));
+        }
+        
+        
         return $this->output->container($out, 'main');
     }
     

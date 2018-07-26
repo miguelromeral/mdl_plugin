@@ -176,6 +176,7 @@ $string['no_mark_error'] = 'Debe especificar una nota para el intento.';
 $string['not_done'] = 'Sin hacer';
 $string['mark_student_button'] = 'Calificar alumno';
 $string['download_file_button'] = 'Descargar fichero';
+$string['no_attempts_yet'] = 'No existen intentos para este ejercicio. Habilítelo y espere a que los estudiantes envíen sus intentos.';
 
 /**
  *      DESCARGA DE FICHEROS
