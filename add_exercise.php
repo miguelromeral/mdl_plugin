@@ -4,6 +4,7 @@ require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/locallib.php');
 require_once($CFG->dirroot.'/mod/league/classes/form/exercise_form.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
 
 //Identifica la actividad específica (o recurso)
@@ -83,8 +84,7 @@ if($mod->usermanageexercises($USER->id) && ($attemptexercise == -1 || isleagueex
         
         $msg = ($attemptexercise == -1 ? 'ae_cancel_new' : 'ae_cancel');
         
-        $panel = new go_back_view(
-                get_string($msg,'league'), null, $cmid, 'view.php');
+        $panel = new mod_league\output\go_back_view($cmid, get_string($msg,'league'));
         echo $output->render($panel);
         
     } else if ($formdata = $mform->get_data()) {
@@ -117,8 +117,7 @@ if($mod->usermanageexercises($USER->id) && ($attemptexercise == -1 || isleagueex
 
             if($correcto){
                 
-                $panel = new go_back_view(
-                        get_string('ae_success','league'), null, $cmid, 'view.php');
+                $panel = new mod_league\output\go_back_view($cmid, get_string('ae_success','league'));
                 echo $output->render($panel);
                 
             }
@@ -141,11 +140,7 @@ if($mod->usermanageexercises($USER->id) && ($attemptexercise == -1 || isleagueex
     }
 
 }else{
-    $panel = new go_back_view(
-            get_string('notallowedpage','league'), 
-            get_string('nopermission','league'), 
-            $cmid,
-            'view.php');
+    $panel = new mod_league\output\go_back_view($cmid, get_string('notallowedpage','league'), get_string('nopermission','league'));
     echo $output->render($panel);
 }
 

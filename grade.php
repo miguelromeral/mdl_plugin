@@ -27,6 +27,7 @@ require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/student_grade_view.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
 
 
 // Prevents direct execution via browser.
@@ -200,11 +201,7 @@ switch($role){
     default:    // The user has no role allowed to see this page.
         
         // We render an error page to warn the user.
-        $panel = new go_back_view(
-                get_string('notallowedpage','league'), 
-                get_string('nopermission','league'), 
-                $cmid,
-                'view.php');
+        $panel = new mod_league\output\go_back_view($cmid, get_string('notallowedpage','league'), get_string('nopermission','league'));
         echo $output->render($panel);
 }
 

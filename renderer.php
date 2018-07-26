@@ -16,24 +16,12 @@ class grade_view implements renderable {
     }
 }
 
-class go_back_view implements renderable {
- 
-    public function __construct($title, $content, $cmid, $page, $hidden = null) {
-        $this->title = $title;
-        $this->content = $content;
-        $this->cmid = $cmid;
-        $this->page = $page;
-        $this->hidden = $hidden;
-    }
-}
 
-class single_content_view implements renderable {
- 
-    public function __construct($content, $title = null) {
-        $this->title = $title;
-        $this->content = $content;
-    }
-}
+
+
+
+
+
 
 class mod_league_renderer extends plugin_renderer_base {
  
@@ -98,7 +86,7 @@ class mod_league_renderer extends plugin_renderer_base {
         return $this->output->container($out, 'main');
     }
     
-    protected function render_single_content_view(\single_content_view $view) {
+    protected function render_single_content_view(\mod_league\output\single_content_view $view) {
         $out = '';
         if($view->title){
             $out .= $this->output->heading($view->title, 2);
@@ -107,9 +95,17 @@ class mod_league_renderer extends plugin_renderer_base {
         return $this->output->container($out, 'main');
     }
     
-    protected function render_go_back_view(\go_back_view $view) {
-        $out = $this->output->heading(format_string($view->title), 2);
-        $out .= $this->output->container($view->content);
+    protected function render_go_back_view(\mod_league\output\go_back_view $view) {
+        $out = '';
+        
+        if($view->title){
+            $out = $this->output->heading(format_string($view->title), 2);
+        }
+        
+        if($view->content){
+            $out .= $this->output->container($view->content);
+        }
+        
         $button = '<form action="'.$view->page.'" method="get">
                     <input type="hidden" name="id" value="'. $view->cmid .'" />';
         
@@ -118,8 +114,10 @@ class mod_league_renderer extends plugin_renderer_base {
                 $button .= '<input type="hidden" name="'.$k.'" value="'.$v.'" />';
             }
         }
+        
         $button .= '<input type="submit" value="'. get_string('go_back', 'league') .'"/>
                 </form>';
+        
         $out  .= $this->output->container($button, 'button');
         return $this->output->container($out, 'main');
     }

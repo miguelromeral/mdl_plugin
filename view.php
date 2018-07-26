@@ -29,6 +29,7 @@ require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/main_teacher_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/student_grade_view.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/single_content_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/available_exercises_view.php');
 
 // Prevents direct execution via browser.
@@ -118,7 +119,7 @@ switch($role){
         //                                                                  //
         //////////////////////////////////////////////////////////////////////
 
-        $panel = new single_content_view($league->presentation, get_string('main_panel_student','league'));
+        $panel = new mod_league\output\single_content_view($league->presentation, get_string('main_panel_student','league'));
         echo $output->render($panel);
         
         // Get all exercises enabled in this league.
@@ -237,11 +238,7 @@ switch($role){
     default:    // The user has no role allowed to see this page.
         
         // We render an error page to warn the user.
-        $panel = new go_back_view(
-                get_string('notallowedpage','league'), 
-                get_string('nopermission','league'), 
-                $cmid,
-                'view.php');
+        $panel = new mod_league\output\go_back_view($cmid, get_string('notallowedpage','league'), get_string('nopermission','league'));
         echo $output->render($panel);
 }
 

@@ -27,6 +27,7 @@ require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/locallib.php');
 require_once($CFG->dirroot.'/mod/league/classes/form/mark_form.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
 
 // Prevents direct execution via browser.
@@ -115,9 +116,7 @@ if($canmark and $sameleague){
 
     if ($mform->is_cancelled()) {
         // If the form is cancelled, a render page to go back.
-        $panel = new go_back_view(
-                get_string('mark_cancel','league'), null, $cmid, 'marking.php',
-                array('exercise' => $attemptexercise));
+        $panel = new mod_league\output\go_back_view($cmid, get_string('mark_cancel','league'), null, 'marking.php', array('exercise' => $attemptexercise));
         echo $output->render($panel);
 
     } else if ($data = $mform->get_data()) {
@@ -134,9 +133,7 @@ if($canmark and $sameleague){
         }
 
         // Render a page to go back.
-        $panel = new go_back_view(
-                get_string('mark_sent_success','league'), null, $cmid, 'marking.php',
-                array('exercise' => $attemptexercise));
+        $panel = new mod_league\output\go_back_view($cmid, get_string('mark_sent_success','league'), null, 'marking.php', array('exercise' => $attemptexercise));
         echo $output->render($panel);
 
     } else {
@@ -147,11 +144,7 @@ if($canmark and $sameleague){
 }else{
     // If the user cant mark students or the attempt ID doesn't belongs to this
     // league, render an error page.
-    $panel = new go_back_view(
-            get_string('notallowedpage','league'), 
-            get_string('nopermission','league'), 
-            $cmid,
-            'view.php');
+    $panel = new mod_league\output\go_back_view($cmid, get_string('notallowedpage','league'), get_string('nopermission','league'));
     echo $output->render($panel);
 }
 

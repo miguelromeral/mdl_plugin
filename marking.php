@@ -28,6 +28,7 @@ require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/total_attempts_view.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
 
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
@@ -93,15 +94,11 @@ if($canmark and $validexercise){
     $panel = new mod_league\output\total_attempts_view($cmid, $attempts, $attemptexercise, getNameExerByID($attemptexercise), $context->id);
     echo $output->render($panel);
     
-    $panel = new go_back_view(null, null, $cmid, 'view.php');
+    $panel = new mod_league\output\go_back_view($cmid);
     echo $output->render($panel);
 }else{
     // If the usar cant have capabilities to mark, render an error page.
-    $panel = new go_back_view(
-            get_string('notallowedpage','league'), 
-            get_string('nopermission','league'), 
-            $cmid,
-            'view.php');
+    $panel = new mod_league\output\go_back_view($cmid, get_string('notallowedpage','league'), get_string('nopermission','league'));
     echo $output->render($panel);
     
 }

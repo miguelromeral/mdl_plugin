@@ -28,6 +28,8 @@ require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/locallib.php');
 require_once($CFG->dirroot.'/mod/league/classes/form/upload_form.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/single_content_view.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
 
 // Prevents direct execution via browser.
@@ -103,8 +105,7 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $leagu
 
     if ($mform->is_cancelled()) {
         // If form is cancelled render a page to back to main view.
-        $panel = new go_back_view(
-                get_string('ue_cancel','league'), null, $cmid, 'view.php');
+        $panel = new mod_league\output\go_back_view($cmid, get_string('ue_cancel','league'));
         echo $output->render($panel);
 
     } else if ($data = $mform->get_data()) {
@@ -147,8 +148,7 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $leagu
                         league_attempt_submitted($attemptexercise, $attemptid, $context);
                         
                         // Render a page to go back to main menu.
-                        $panel = new go_back_view(
-                                get_string('ue_success','league'), null, $cmid, 'view.php');
+                        $panel = new mod_league\output\go_back_view($cmid, get_string('ue_success','league'));
                         echo $output->render($panel);
                     }
                 }
@@ -157,14 +157,13 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $leagu
         }else{
             // If there is no file uploaded, we warn the user to upload
             // a valid file.
-            $panel = new go_back_view(
-                    get_string('ue_no_file','league'), null, $cmid, 'upload.php',
-                    array('exercise' => $attemptexercise));
+            $panel = new mod_league\output\go_back_view($cmid, get_string('ue_no_file','league'), null, 
+                    'upload.php', array('exercise' => $attemptexercise));
             echo $output->render($panel);
         }
     } else {
         // Print the exercises name and statement.
-        $panel = new single_content_view($exercisestatement, $exercisename);
+        $panel = new mod_league\output\single_content_view($exercisestatement, $exercisename);
         echo $output->render($panel);
         
         // Displays the upload form.
@@ -172,11 +171,7 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $leagu
     }
 }else{
     // If the user has no upload capabilities, render an error page.
-    $panel = new go_back_view(
-            get_string('notallowedpage','league'), 
-            get_string('nopermission','league'), 
-            $cmid,
-            'view.php');
+    $panel = new mod_league\output\go_back_view($cmid, get_string('notallowedpage','league'), get_string('nopermission','league'));
     echo $output->render($panel);
 }
 
