@@ -85,8 +85,7 @@ $mod = new mod_league\league($cminfo,  context_module::instance($cm->id));
 
 // Get and render the appropiate class to this page.
 $output = $PAGE->get_renderer('mod_league');
-echo $output->header();
-
+        
 // If the user can upload files and the exercise ID belongs to the current league,
 // user can upload the file (it's recommended only students are available to
 // upload files).
@@ -105,10 +104,19 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $leagu
 
     if ($mform->is_cancelled()) {
         // If form is cancelled render a page to back to main view.
-        $panel = new mod_league\output\go_back_view($cmid, get_string('ue_cancel','league'));
-        echo $output->render($panel);
+        //$panel = new mod_league\output\go_back_view($cmid, get_string('ue_cancel','league'));
+        //echo $output->render($panel);
 
+        
+
+        $url= new moodle_url('/mod/league/view.php', array('id' => $cmid));
+
+        redirect($url);
+        
     } else if ($data = $mform->get_data()) {
+        
+        echo $output->header();
+        
         // If the data is correct, we handle it.
         
         // Get all components to store a file.
@@ -155,6 +163,7 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $leagu
             }
             
         }else{
+            
             // If there is no file uploaded, we warn the user to upload
             // a valid file.
             $panel = new mod_league\output\go_back_view($cmid, get_string('ue_no_file','league'), null, 
@@ -162,6 +171,9 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $leagu
             echo $output->render($panel);
         }
     } else {
+        
+        echo $output->header();
+        
         // Print the exercises name and statement.
         $panel = new mod_league\output\single_content_view($exercisestatement, $exercisename);
         echo $output->render($panel);
