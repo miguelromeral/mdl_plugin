@@ -34,6 +34,16 @@ class league_model {
         return $data;
     }
     
+    public static function get_league_from_course($courseid){
+        global $DB;
+        $var="SELECT * 
+        FROM mdl_league
+        WHERE course = $courseid";
+        $data = $DB->get_records_sql($var);
+
+        return $data;
+    }
+    
     public static function get_exercises_from_id_by_user($idliga, $iduser){
         global $DB;
         $var="SELECT e.*, a.num 
@@ -196,6 +206,28 @@ class league_model {
             }
         }
         return $mark;
+    }
+    
+    public static function get_context_module_id_from_league($leagueid){
+        global $DB;
+        //Lista de estudiantes de un curso
+        $var="SELECT l.id, m.id as cm
+            from mdl_league as l
+            inner join (
+                select cm.id, cm.module, cm.instance
+                from mdl_course_modules as cm
+                inner join mdl_modules as m
+                on m.id = cm.module
+                where m.name = 'league'
+            ) as m
+            on l.id = m.instance
+            where l.id = $leagueid";
+        $data = $DB->get_records_sql($var);
+        foreach ($data as $d){
+            $d = get_object_vars($d);
+            return $d['cm'];
+        }
+        return null;
     }
     
     public static function publishedMarks($exercise){

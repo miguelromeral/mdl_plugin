@@ -15,6 +15,10 @@ $string['no'] = 'No';
 $string['yes'] = 'Sí';
 $string['exercise'] = 'Ejercicio';
 $string['image'] = 'Foto';
+$string['league'] = 'Liga';
+$string['presentation'] = 'Presentación';
+$string['exercises'] = 'Ejercicios';
+$string['leagues_in_course'] = 'Ligas creadas en el curso';
 $string['num_attempt'] = '# Intento';
 $string['last_attempt'] = 'Último íntento';
 $string['more_than_5_att_remaining'] = 'Más de 5';
@@ -63,6 +67,7 @@ $string['noviewdiscussionspermission'] = 'No tiene los suficientes permisos para
 $string['coursemoduleiidincorrect'] = 'Course Module ID was incorrect.';
 $string['coursemodulemisconfigured'] = 'Course is misconfigured.';
 $string['coursemoduleincorrect'] = 'Course module was incorrect.';
+$string['courseidincorrect'] = 'Course ID is incorrect.';
 
 
 /**
