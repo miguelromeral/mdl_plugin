@@ -6,6 +6,7 @@ namespace mod_league\output;
 defined('MOODLE_INTERNAL') || die();
 
 require_once('../../config.php');
+require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
 class total_attempts_view implements \renderable {
  
@@ -62,7 +63,7 @@ class total_attempts_view implements \renderable {
         foreach ($this->attempts as $d){
             $d = get_object_vars($d);
             $data = array();
-            $data[] = get_user_image($d['id_user'], 40);
+            $data[] = \league_model::get_user_image($d['id_user'], 40);
             $user = $d['firstname'] . " " . $d['lastname'];
             $data[] = $user;
             $data[] = date("H:i:s, d (D) M Y", $d['timemodified']);

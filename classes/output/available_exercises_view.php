@@ -57,11 +57,21 @@ class available_exercises_view implements \renderable {
                     }
 
                     if($CFG->league_max_num_attempts > $exer['num']){
-                        $data[] = '<form action="upload.php" method="get" >
+                        
+                        
+                        $url= new \moodle_url('/mod/league/upload.php', array(
+                            'id' => $this->cmid,
+                            'exercise' => $exer['id'],
+                            ));
+
+                        
+                        $data[] = '<a href="'.$url.'">'.get_string('upload_exercise', 'league')."</a>";
+                        
+                     /*   $data[] = '<form action="upload.php" method="get" >
                             <input type="hidden" name="id" value="'. $this->cmid .'" />
                             <input type="hidden" name="exercise" value="'. $exer['id'] .'" />
                             <input type="submit" value="'. get_string('upload_exercise', 'league') .'"/>
-                        </form>';
+                        </form>'; */
 
                         $restantes = $CFG->league_max_num_attempts - $exer['num'];
 

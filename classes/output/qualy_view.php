@@ -6,6 +6,7 @@ namespace mod_league\output;
 defined('MOODLE_INTERNAL') || die();
 
 require_once('../../config.php');
+require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
 class qualy_view implements \renderable {
  
@@ -68,7 +69,7 @@ class qualy_view implements \renderable {
             $data[] = $pos;
 
             if($this->role == 'teacher'){ 
-                $data[] = get_user_image($r['uid'], 50);
+                $data[] = \league_model::get_user_image($r['uid'], 50);
                 $data[] = $r['name'];
                 $data[] = $r['uname'];
             } else if($this->role == 'student'){ 

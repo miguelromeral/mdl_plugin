@@ -27,7 +27,10 @@ require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/student_grade_view.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/single_content_view.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/grade_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
+require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
 
 // Prevents direct execution via browser.
@@ -131,6 +134,9 @@ switch($role){
         //                                                                  //
         //////////////////////////////////////////////////////////////////////
         
+        $panel = new mod_league\output\single_content_view(null, get_string('individual_marks','league'));
+        echo $output->render($panel);
+        
         // Retrieve exercises and marks for that exercise.
         $exercises = get_exercises_from_id($league->id);
         $marks = get_tabla_notas($league->id, get_students());
@@ -158,7 +164,9 @@ switch($role){
             // Data to this row.
             $data = array();
             // User picture profile and name.
-            $data[] = get_user_image($mark['id'], 40);
+            $data[] = league_model::get_user_image($mark['id'], 40);
+            
+            
             $data[] = $mark['firstname'] . " " . $mark['lastname'];
 
             // For each exercise we set the appropiate mark.
@@ -193,7 +201,7 @@ switch($role){
         }
 
         // Once we have all data, print everything with renderer.
-        $panel = new grade_view($rows, $tablecolumns, $tableheaders, $exercisesnames, $PAGE->url);
+        $panel = new mod_league\output\grade_view($rows, $tablecolumns, $tableheaders, $exercisesnames, $PAGE->url);
         echo $output->render($panel);
 
         break;

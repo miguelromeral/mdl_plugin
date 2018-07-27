@@ -2,27 +2,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir . '/tablelib.php');
-require_once('render_utilities.php');
-
-class grade_view implements renderable {
- 
-    public function __construct($rows, $tablecolumns, $tableheaders, $ex_name, $url) {
-        $this->rows = $rows;
-        $this->tablecolumns = $tablecolumns;
-        $this->tableheaders = $tableheaders;
-        $this->ex_name = $ex_name;
-        $this->url = $url;
-    }
-}
-
-
-
-
-
-
-
-
 class mod_league_renderer extends plugin_renderer_base {
  
     protected function render_available_exercises_view(\mod_league\output\available_exercises_view $view) {
@@ -80,9 +59,8 @@ class mod_league_renderer extends plugin_renderer_base {
         return $this->output->container($out, 'main');
     }
     
-    protected function render_grade_view(\grade_view $view) {
-        //$out = $this->output->heading(format_string(get_string('individual_marks', 'league')), 2);
-        $out = $this->output->container(print_table_grades($view->rows, $view->tablecolumns, $view->tableheaders, $view->ex_name, $view->url));
+    protected function render_grade_view(\mod_league\output\grade_view $view) {
+        $out = $this->output->container($view->print_table_grades());
         return $this->output->container($out, 'main');
     }
     
