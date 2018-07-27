@@ -31,6 +31,7 @@ require_once($CFG->dirroot.'/mod/league/classes/output/main_teacher_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/student_grade_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/single_content_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/available_exercises_view.php');
+require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
@@ -123,7 +124,7 @@ switch($role){
         echo $output->render($panel);
         
         // Get all exercises enabled in this league.
-        $exercises = get_exercises_from_id_by_user($league->id, $USER->id);
+        $exercises = \league_model::get_exercises_from_id_by_user($league->id, $USER->id);
 
         $panel = new mod_league\output\available_exercises_view($cmid, $exercises, $mod->useruploadfiles($USER->id));
         echo $output->render($panel);
@@ -227,7 +228,7 @@ switch($role){
         }
 
         // Finally, once we have the updated exercises, we recover them.
-        $exercises = get_exercises_from_id($league->id);
+        $exercises = \league_model::get_exercises_from_id($league->id);
         // Once we have all necessary data, we render it.
         $panel = new mod_league\output\main_teacher_view($cmid, $exercises,
                 $mod->usermarkstudents($USER->id), $alert);

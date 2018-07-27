@@ -25,4 +25,32 @@ class league_model {
         return null;
     }
     
+    public static function get_exercises_from_id($idliga){
+        global $DB;
+        $var="SELECT * 
+        FROM mdl_league_exercise
+        WHERE league = $idliga
+        ORDER BY id";
+        $data = $DB->get_records_sql($var);
+
+        return $data;
+    }
+    
+    public static function get_exercises_from_id_by_user($idliga, $iduser){
+        global $DB;
+        $var="SELECT e.*, a.num 
+            FROM mdl_league_exercise e
+            LEFT JOIN (
+                    select count(id) as num, exercise
+                    from mdl_league_attempt
+                    where id_user = $iduser
+                    group by exercise
+            ) a 
+            ON e.id = a.exercise
+            WHERE league = $idliga
+            ORDER BY id";
+        $data = $DB->get_records_sql($var);
+
+        return $data;
+    }
 }

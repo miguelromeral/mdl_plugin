@@ -138,7 +138,7 @@ switch($role){
         echo $output->render($panel);
         
         // Retrieve exercises and marks for that exercise.
-        $exercises = get_exercises_from_id($league->id);
+        $exercises = \league_model::get_exercises_from_id($league->id);
         $marks = get_tabla_notas($league->id, get_students());
 
         // Array to store exercises names.
