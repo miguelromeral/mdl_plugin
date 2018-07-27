@@ -105,14 +105,7 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $leagu
 
     if ($mform->is_cancelled()) {
         // If form is cancelled render a page to back to main view.
-        //$panel = new mod_league\output\go_back_view($cmid, get_string('ue_cancel','league'));
-        //echo $output->render($panel);
-
-        
-
-        $url= new moodle_url('/mod/league/view.php', array('id' => $cmid));
-
-        redirect($url);
+        redirect(new moodle_url('/mod/league/view.php', array('id' => $cmid)));
         
     } else if ($data = $mform->get_data()) {
         
@@ -128,7 +121,7 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $leagu
         // If the user has uploaded a file:
         if($filename){
             // Create a unique ID to this file (the item ID).
-            $itemid = generateRandomFileID();
+            $itemid = \league_model::generateRandomFileID();
             
             // Store the file with the all the necessary data.
             $attemptid = $mform->save_stored_file('userfile', $context->id, $component, $filearea, $itemid);
@@ -142,12 +135,8 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $leagu
                     $contenthash = $file->get_contenthash();
                     $fileid = \league_model::getIDFileFromContenthash($contenthash);
 
-                    // Create an valid URL for this file.
-                    $url = getURLFile($file->get_contextid(), $file->get_component(), 
-                            $file->get_filearea(), $file->get_itemid(), $filename);
-
                     // Create the attempt in the database.
-                    $attemptid = league_attempt_add_instance($course->id, $USER->id, $attemptexercise, $file->get_itemid(), $url, $filename, $league->id, $context);
+                    $attemptid = league_attempt_add_instance($course->id, $USER->id, $attemptexercise, $file->get_itemid(), null, $filename, $league->id, $context);
 
                     // If everything is OK in the database, we trigger the event
                     // and warn the user that's OK.

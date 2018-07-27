@@ -6,6 +6,7 @@ namespace mod_league\output;
 defined('MOODLE_INTERNAL') || die();
 
 require_once('../../config.php');
+require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
 class student_grade_view implements \renderable {
  
@@ -49,7 +50,7 @@ class student_grade_view implements \renderable {
 
                 if($d['id_file']){
                     if($this->candownload){
-                        $file = restoreURLFile($this->contextid, $d['id_file']);
+                        $file = \league_model::restoreURLFile($this->contextid, $d['id_file']);
                         if($file){
                             $this->marks[] = '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
                         }else{

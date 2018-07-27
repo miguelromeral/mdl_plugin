@@ -74,7 +74,7 @@ class total_attempts_view implements \renderable {
             $data[] = (($d['mark'] == -1) ?get_string('no_mark_yet', 'league') : $d['mark']."%");
 
             if($d['id_file']){
-                $file = restoreURLFile($this->contextid, $d['id_file']);
+                $file = \league_model::restoreURLFile($this->contextid, $d['id_file']);
                 if($file){
                     $data[] = '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
                 }else{

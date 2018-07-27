@@ -5,8 +5,6 @@
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
 
-require_once('../../config.php');
-
 class league_model {
     
     public static function get_user_image($iduser, $size){
@@ -267,4 +265,85 @@ class league_model {
         return $marks;
     }
 
+    
+    public static function generateRandomFileID(){
+        $min = 1;
+        $max = 10000000000;
+        $encontrado = false;
+        $r = -1;
+        while(! $encontrado){
+            $encontrado = true;
+            $r = rand($min, $max);
+            global $DB;
+            $var="select distinct id_file
+            from mdl_league_attempt";
+            $data = $DB->get_records_sql($var);
+            foreach ($data as $d){
+                $d = get_object_vars($d);
+                if($d['id_file'] == $r){
+                    $encontrado = false;
+                }
+            } 
+        }
+        return $r;
+    }
+    
+    
+    public static function getURLFile($contextid, $component, $filearea, $itemid, $name){
+        global $CFG;
+
+        $url = $CFG->wwwroot;
+        $url .= "/pluginfile.php/";
+        $url .= ($contextid)."/";
+        $url .= ($component)."/";
+        $url .= ($filearea)."/";
+        $url .= ($itemid)."/";
+        $url .= $name;
+        return $url;
+    }
+
+
+    public static function restoreURLFile($contextid, $itemid){
+        $component = 'mod_league';
+        $filearea = 'exuplod';
+        $fs = get_file_storage();
+        if ($files = $fs->get_area_files($contextid, $component, $filearea, $itemid, 'sortorder', false)) {               
+            foreach ($files as $file) {
+                $contenthash = $file->get_contenthash();
+                $id_file = \league_model::getIDFileFromContenthash($contenthash);
+
+
+                $url = \league_model::getURLFile($file->get_contextid(), $file->get_component(), 
+                        $file->get_filearea(), $file->get_itemid(), $file->get_filename());
+
+                $resultado = new stdClass();
+                $resultado->id = $id_file;
+                $resultado->url = $url;
+                return $resultado;
+            }
+        }
+        return null;
+    }
+    
+    
+    public static function is_last_attempt($iduser, $idexer, $idattempt){
+        global $DB;
+        //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
+        $var="select id
+            from mdl_league_attempt
+            where id_user = $iduser and exercise = $idexer
+            order by id desc
+            limit 1;";
+        $data = $DB->get_records_sql($var);
+
+        if($data){
+            foreach ($data as $d){
+                $d = get_object_vars($d);
+                
+                return $d['id'] == $idattempt;
+            }
+        }
+        
+        return false;
+    }
 }

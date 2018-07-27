@@ -94,7 +94,11 @@ $attemptexercise = getDataFromAttempt($attemptid, 'exercise');
 $sameleague = ($league->id == $attemptleague);
 $canmark = $mod->usermarkstudents($USER->id);
 
-if($canmark and $sameleague){
+$userid = getDataFromAttempt($attemptid, 'id_user');
+$exerciseid = getDataFromAttempt($attemptid, 'exercise');
+$lastattempt = \league_model::is_last_attempt($userid, $exerciseid, $attemptid);
+
+if($canmark and $sameleague and $lastattempt){
     
     // Retrieve data to be printed in the form.
     $studentname = \league_model::league_get_student_name($attemptuser);
