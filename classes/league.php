@@ -28,11 +28,11 @@ namespace mod_league;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * League class.
+ * A full controller on League.
  *
- * This class is usefull to check capabilities from users. This
- * is an idea viewed on 
- * {@link https://docs.moodle.org/dev/NEWMODULE_Documentation#Check_the_capability_of_a_user}.
+ * Class that is used as a Controller (Like an MVC pattern). This class can check
+ * capabilities from an user and can handle determinate functions that are userfull
+ * to make the plugin running.
  *
  * @copyright 2018 Miguel Romeral
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -44,11 +44,21 @@ class league {
     
     /** @var object The context of the module. */
     private $context;
+    
+    /** @var object The league instance. */
+    private $league = null;
  
-    function __construct(\cm_info $cm, $context_module) {
+    function __construct(\cm_info $cm, $context_module, $league) {
         $this->cm = $cm;
         $this->context = $context_module;
+        $this->league = $league;
     }
+    
+    
+    
+    // Begin to check capabilities from users.
+    // This is an idea viewed on 
+    // {@link https://docs.moodle.org/dev/NEWMODULE_Documentation#Check_the_capability_of_a_user}.
     
     /**
      * Check if an user can view the module.

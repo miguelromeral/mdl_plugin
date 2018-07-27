@@ -79,7 +79,7 @@ $PAGE->set_heading(format_string($course->fullname));
 // Create an instance of league. Usefull to check capabilities.
 $modinfo = get_fast_modinfo($course);
 $cminfo = $modinfo->get_cm($cmid);
-$mod = new mod_league\league($cminfo,  $context);
+$mod = new mod_league\league($cminfo, $context, $league);
 
 // There are two types of role, one is for students (They can see exercises
 // availables, their marks, etc.) and the other one is for non-students (like
@@ -139,7 +139,7 @@ switch($role){
         
         // Retrieve exercises and marks for that exercise.
         $exercises = \league_model::get_exercises_from_id($league->id);
-        $marks = get_tabla_notas($league->id, \league_model::get_students());
+        $marks = \league_model::get_tabla_notas($league->id);
 
         // Array to store exercises names.
         $exercisesnames = array();

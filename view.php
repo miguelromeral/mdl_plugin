@@ -88,7 +88,7 @@ $PAGE->set_button($qualybutton);
 // Create an instance of league. Usefull to check capabilities.
 $modinfo = get_fast_modinfo($course);
 $cminfo = $modinfo->get_cm($cmid);
-$mod = new mod_league\league($cminfo,  $context);
+$mod = new mod_league\league($cminfo, $context, $league);
 
 // There are two types of role, one is for students (They can see exercises
 // availables, their marks, etc.) and the other one is for non-students (like
