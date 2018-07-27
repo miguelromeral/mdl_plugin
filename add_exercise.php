@@ -4,6 +4,7 @@ require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/locallib.php');
 require_once($CFG->dirroot.'/mod/league/classes/form/exercise_form.php');
+require_once($CFG->dirroot.'/mod/league/classes/output/single_content_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
 
@@ -121,20 +122,11 @@ if($mod->usermanageexercises($USER->id) && ($attemptexercise == -1 || isleagueex
                 echo $output->render($panel);
                 
             }
-     /*   }else{
-             ?>
-        <div>
-            <?= get_string('ae_errors','league') ?><br>
-            <strong><?php echo $errores ?></strong><br>
-            <form action="add_exercise.php" method="get">
-                <input type="hidden" name="id" value="<?= $cmid ?>" />
-                <input type="hidden" name="id_exer" value="<?= $id_exer ?>" />
-                <input type="submit" value="<?= get_string('go_back', 'league') ?>"/>
-            </form>
-        </div>
-            <?php
-        }*/
     } else {
+        
+        $panel = new mod_league\output\single_content_view(get_string('ae_warning','league'));
+        echo $output->render($panel);
+        
       //displays the form
       $mform->display();
     }

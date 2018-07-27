@@ -11,7 +11,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2018072619;       // The current module version (Date: YYYYMMDDHH)
+$plugin->version   = 2018072715;       // The current module version (Date: YYYYMMDDHH)
 $plugin->requires  = 2016051900;       // Requires this Moodle version
 $plugin->component = 'mod_league';     //Full name of the plugin (used for diagnostics)
 $plugin->cron      = 60;

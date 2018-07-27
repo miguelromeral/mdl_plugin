@@ -31,6 +31,7 @@ require_once($CFG->dirroot.'/mod/league/classes/form/upload_form.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/single_content_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
+require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
@@ -139,7 +140,7 @@ if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $leagu
                 foreach ($files as $file) {
                     // Obtain the content file ID (different from item ID)
                     $contenthash = $file->get_contenthash();
-                    $fileid = getIDFileFromContenthash($contenthash);
+                    $fileid = \league_model::getIDFileFromContenthash($contenthash);
 
                     // Create an valid URL for this file.
                     $url = getURLFile($file->get_contextid(), $file->get_component(), 

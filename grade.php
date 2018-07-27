@@ -121,7 +121,7 @@ switch($role){
         //////////////////////////////////////////////////////////////////////
         
         // Retrieve all marks for the current user and print all of them.
-        $marks = get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
+        $marks = \league_model::get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
         $panel = new mod_league\output\student_grade_view($cmid, $context->id, $marks, $mod->userdownloadfiles($USER->id));
         echo $output->render($panel);
         
@@ -139,7 +139,7 @@ switch($role){
         
         // Retrieve exercises and marks for that exercise.
         $exercises = \league_model::get_exercises_from_id($league->id);
-        $marks = get_tabla_notas($league->id, get_students());
+        $marks = get_tabla_notas($league->id, \league_model::get_students());
 
         // Array to store exercises names.
         $exercisesnames = array();

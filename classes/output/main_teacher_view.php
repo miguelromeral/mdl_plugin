@@ -116,7 +116,7 @@ class main_teacher_view implements \renderable {
         $out = '';
         
         if($this->alert){
-            $out = '<p><center><strong>'.$view->alert.'</strong></center></p>';
+            $out = '<p><center><strong>'.$this->alert.'</strong></center></p>';
         }
         
         return $out;

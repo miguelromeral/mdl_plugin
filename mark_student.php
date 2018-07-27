@@ -29,6 +29,7 @@ require_once($CFG->dirroot.'/mod/league/locallib.php');
 require_once($CFG->dirroot.'/mod/league/classes/form/mark_form.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
+require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
@@ -96,7 +97,7 @@ $canmark = $mod->usermarkstudents($USER->id);
 if($canmark and $sameleague){
     
     // Retrieve data to be printed in the form.
-    $studentname = league_get_student_name($attemptuser);
+    $studentname = \league_model::league_get_student_name($attemptuser);
     $exercisename = getNameExerByID($attemptexercise);
     $mark = getDataFromAttempt($attemptid, 'mark');
     $observations = getDataFromAttempt($attemptid, 'observations');

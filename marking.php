@@ -29,6 +29,7 @@ require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/total_attempts_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
+require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
@@ -90,7 +91,7 @@ $validexercise = ($attemptexercise == -1 || isleagueexercise($attemptexercise, $
 
 if($canmark and $validexercise){
     // Retrieve all the students attempts to this exercises and render it.
-    $attempts = get_total_students_exercises($attemptexercise);
+    $attempts = \league_model::get_total_students_exercises($attemptexercise);
     $panel = new mod_league\output\total_attempts_view($cmid, $attempts, $attemptexercise, getNameExerByID($attemptexercise), $context->id);
     echo $output->render($panel);
     

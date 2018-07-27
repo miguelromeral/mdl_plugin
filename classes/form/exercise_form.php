@@ -40,8 +40,6 @@ class exercise_form extends \moodleform {
         $mform->addRule('statement', get_string('maximumchars', '', 4096), 'maxlength', 4096, 'client');
         $mform->setDefault('statement', $statement);
         
-        $mform->addElement('static', 'warning', get_string('ae_warning','league'));
-        
         $this->add_action_buttons();
     }
     //Custom validation should be added here

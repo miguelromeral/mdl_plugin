@@ -130,7 +130,7 @@ switch($role){
         echo $output->render($panel);
         
         // Get all marks for every exercise in this league.
-        $marks = get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
+        $marks = \league_model::get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
 
         $panel = new mod_league\output\student_grade_view($cmid, $context->id, $marks, $mod->userdownloadfiles($USER->id));
         echo $output->render($panel);

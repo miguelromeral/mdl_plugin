@@ -46,7 +46,7 @@ class backup_league_activity_structure_step extends backup_activity_structure_st
  
         // Define each element separated.
         $league = new backup_nested_element('league', array('id'), array(
-            'name', 'filearea', 'timemodified',
+            'name', 'presentation', 'filearea', 'timemodified',
             'gradeweighting', 'method'));
  
         $exercises = new backup_nested_element('exercises');
