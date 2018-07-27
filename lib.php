@@ -3,6 +3,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/eventslib.php');
+require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
 function league_supports($feature) {
     switch($feature) {
@@ -322,7 +323,7 @@ function league_get_user_grades($league, $userid = 0){
     require_once('utilities.php');
     $grades = array();
     if($userid != 0){
-        $notas = getArrayMarkByStudent($league->id, $userid, false);
+        $notas = \league_model::getArrayMarkByStudent($league->id, $userid, false);
         $n = sizeof($notas);
         $t = array_sum($notas);
             $media = ($n ? (int) $t / $n : 0);
@@ -342,7 +343,7 @@ function league_get_user_grades($league, $userid = 0){
         foreach($data as $user){
             $d = get_object_vars($user);
             $uid = $d['userid'];
-            $notas = getArrayMarkByStudent($league->id, $uid, false);
+            $notas = \league_model::getArrayMarkByStudent($league->id, $uid, false);
             $n = sizeof($notas);
             $t = array_sum($notas);
             $media = ($n ? (int) $t / $n : 0);

@@ -31,6 +31,7 @@ require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/utilities.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/qualy_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
+require_once($CFG->dirroot.'/mod/league/classes/qualy.php');
 
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
@@ -109,7 +110,8 @@ $output = $PAGE->get_renderer('mod_league');
 echo $output->header();
 
 // Retrieve ordered qualy from this league.
-$q = get_qualy_array($league->id, $course->id, $role, $league->method);
+$qc = new \league_qualy($league->id, $course->id, $role, $league->method);
+$q = $qc->get_qualy();
 
 // If the user role is defined, print the table.
 if ($role == 'student' || $role == 'teacher'){
@@ -122,7 +124,9 @@ if ($role == 'student' || $role == 'teacher'){
         // If the user is a teacher, He also can see the qualy like the studentds.
         // The main difference is that teacher is allowed to see data like studentds
         // name while students only can see his names.
-        $qs = get_qualy_array($league->id, $course->id, 'student', $league->method);
+        $qsc = new \league_qualy($league->id, $course->id, 'student', $league->method);
+        $qs = $qsc->get_qualy();
+        
         $panel = new mod_league\output\qualy_view(get_string('qts', 'league'), $cmid, $qs, $USER->id, $role);
         echo $output->render($panel);
     }

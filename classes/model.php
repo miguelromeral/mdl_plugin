@@ -160,4 +160,44 @@ class league_model {
 
         return $data;
     }
+    
+    public static function getArrayMarkByStudent($idleague, $iduser, $toprint){
+        global $DB;
+        //Lista de estudiantes de un curso
+        $var="select a.id, b.mark, a.published
+                from mdl_league_exercise as a
+                left outer join
+                (
+                    select a.id as idat, a.timemodified as tma,
+                            a.observations, a.name as fname,
+                            a.exercise, b.id_user, a.mark, a.id_file
+                            from mdl_league_attempt as a
+                            inner join (
+                                    select max(id) as m, id_user
+                                    from mdl_league_attempt
+                                    where id_user = $iduser
+                                    group by exercise
+                            ) as b
+                            on a.id = b.m
+                ) as b
+                on a.id = b.exercise
+                where a.league = $idleague
+        order by mark desc";
+        $data = $DB->get_records_sql($var);
+        $mark = Array();
+        foreach ($data as $d){
+            $d = get_object_vars($d);
+            if ($d['mark'] != -1){
+                if($toprint || $d['published'] == 1){
+                    array_push($mark, $d['mark']);
+                }
+            }else{
+                if($toprint){
+                    array_push($mark, get_string('q_tba','league'));
+                }
+            }
+        }
+        return $mark;
+    }
+
 }
