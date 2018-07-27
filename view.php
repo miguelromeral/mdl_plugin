@@ -26,7 +26,6 @@
 // Get all files that we'll use.
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
-require_once($CFG->dirroot.'/mod/league/utilities.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/main_teacher_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/student_grade_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/single_content_view.php');

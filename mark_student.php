@@ -28,7 +28,6 @@ require_once($CFG->dirroot.'/mod/league/lib.php');
 require_once($CFG->dirroot.'/mod/league/locallib.php');
 require_once($CFG->dirroot.'/mod/league/classes/form/mark_form.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
-require_once($CFG->dirroot.'/mod/league/utilities.php');
 require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
 // Prevents direct execution via browser.
@@ -85,9 +84,9 @@ $mod = new mod_league\league($cminfo, $context, $league);
 $output = $PAGE->get_renderer('mod_league');
 
 // Retrieve attempt data from the database.
-$attemptleague = getDataFromAttempt($attemptid, 'league');
-$attemptuser = getDataFromAttempt($attemptid, 'id_user');
-$attemptexercise = getDataFromAttempt($attemptid, 'exercise');
+$attemptleague = \league_model::getDataFromAttempt($attemptid, 'league');
+$attemptuser = \league_model::getDataFromAttempt($attemptid, 'id_user');
+$attemptexercise = \league_model::getDataFromAttempt($attemptid, 'exercise');
 
 // Check if the attempt belongs to this league and user can mark students.
 $sameleague = ($league->id == $attemptleague);
@@ -99,9 +98,9 @@ if($canmark and $sameleague and $lastattempt){
     
     // Retrieve data to be printed in the form.
     $studentname = \league_model::league_get_student_name($attemptuser);
-    $exercisename = getNameExerByID($attemptexercise);
-    $mark = getDataFromAttempt($attemptid, 'mark');
-    $observations = getDataFromAttempt($attemptid, 'observations');
+    $exercisename = \league_model::getNameExerByID($attemptexercise);
+    $mark = \league_model::getDataFromAttempt($attemptid, 'mark');
+    $observations = \league_model::getDataFromAttempt($attemptid, 'observations');
             
     // Create the mark form with the appropiate data.
     $params = array(

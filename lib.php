@@ -320,7 +320,6 @@ function league_grade_item_update($league, $grades=NULL){
 //Devuelve las notas delos usuarios. IMPLEMENTAR SI USERID = 0
 function league_get_user_grades($league, $userid = 0){
     global $DB;
-    require_once('utilities.php');
     $grades = array();
     if($userid != 0){
         $notas = \league_model::getArrayMarkByStudent($league->id, $userid, false);

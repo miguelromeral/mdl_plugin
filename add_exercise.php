@@ -6,7 +6,7 @@ require_once($CFG->dirroot.'/mod/league/locallib.php');
 require_once($CFG->dirroot.'/mod/league/classes/form/exercise_form.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/single_content_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
-require_once($CFG->dirroot.'/mod/league/utilities.php');
+require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
 //Identifica la actividad específica (o recurso)
 $cmid = required_param('id', PARAM_INT);    // Course Module ID
@@ -66,10 +66,10 @@ if (!has_capability('mod/league:view', $context, $USER->id)) {
 
 
 
-if($mod->usermanageexercises($USER->id) && ($attemptexercise == -1 || isleagueexercise($attemptexercise, $league->id))){
+if($mod->usermanageexercises($USER->id) && ($attemptexercise == -1 || \league_model::isleagueexercise($attemptexercise, $league->id))){
   
-    $filename = ($attemptexercise == -1 ? '' : getNameExerByID($attemptexercise));
-    $description = ($attemptexercise == -1 ? '' : getNameExerByID($attemptexercise, false));
+    $filename = ($attemptexercise == -1 ? '' : \league_model::getNameExerByID($attemptexercise));
+    $description = ($attemptexercise == -1 ? '' : \league_model::getNameExerByID($attemptexercise, false));
 
 
     $mform = new mod_league\form\exercise_form(null,

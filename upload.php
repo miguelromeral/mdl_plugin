@@ -30,7 +30,6 @@ require_once($CFG->dirroot.'/mod/league/locallib.php');
 require_once($CFG->dirroot.'/mod/league/classes/form/upload_form.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/single_content_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
-require_once($CFG->dirroot.'/mod/league/utilities.php');
 require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
 // Prevents direct execution via browser.
@@ -90,11 +89,11 @@ $output = $PAGE->get_renderer('mod_league');
 // If the user can upload files and the exercise ID belongs to the current league,
 // user can upload the file (it's recommended only students are available to
 // upload files).
-if($mod->useruploadfiles($USER->id) && isleagueexercise($attemptexercise, $league->id)){
+if($mod->useruploadfiles($USER->id) && \league_model::isleagueexercise($attemptexercise, $league->id)){
 
     // Get the name and statement from exercise ID:
-    $exercisename = getNameExerByID($attemptexercise);
-    $exercisestatement = getNameExerByID($attemptexercise, false);
+    $exercisename = \league_model::getNameExerByID($attemptexercise);
+    $exercisestatement = \league_model::getNameExerByID($attemptexercise, false);
 
     // Create the upload form with aproppiate data.
     $params = array(

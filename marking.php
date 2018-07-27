@@ -26,7 +26,6 @@
 // Get all files that we'll use.
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
-require_once($CFG->dirroot.'/mod/league/utilities.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/total_attempts_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/model.php');
@@ -87,12 +86,12 @@ echo $output->header();
 
 // Check if the user can mark studentds and the exercise ID belongs to this league.
 $canmark = $mod->usermarkstudents($USER->id);
-$validexercise = ($attemptexercise == -1 || isleagueexercise($attemptexercise, $league->id));
+$validexercise = ($attemptexercise == -1 || \league_model::isleagueexercise($attemptexercise, $league->id));
 
 if($canmark and $validexercise){
     // Retrieve all the students attempts to this exercises and render it.
     $attempts = \league_model::get_total_students_exercises($attemptexercise);
-    $panel = new mod_league\output\total_attempts_view($cmid, $attempts, $attemptexercise, getNameExerByID($attemptexercise), $context->id);
+    $panel = new mod_league\output\total_attempts_view($cmid, $attempts, $attemptexercise, \league_model::getNameExerByID($attemptexercise), $context->id);
     echo $output->render($panel);
     
     $panel = new mod_league\output\go_back_view($cmid);

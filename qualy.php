@@ -28,7 +28,6 @@
 
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
-require_once($CFG->dirroot.'/mod/league/utilities.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/qualy_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/qualy.php');
