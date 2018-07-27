@@ -54,7 +54,6 @@ $mod = new mod_league\league($cminfo, $context, $league);
 
 $output = $PAGE->get_renderer('mod_league');
 
-echo $output->header();
 
 /// Some capability checks.
 if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities', $context)) {
@@ -83,55 +82,65 @@ if($mod->usermanageexercises($USER->id) && ($attemptexercise == -1 || isleagueex
     //Form processing and displaying is done here
     if ($mform->is_cancelled()) {
         
-        $msg = ($attemptexercise == -1 ? 'ae_cancel_new' : 'ae_cancel');
+        /*$msg = ($attemptexercise == -1 ? 'ae_cancel_new' : 'ae_cancel');
         
         $panel = new mod_league\output\go_back_view($cmid, get_string($msg,'league'));
         echo $output->render($panel);
+        */
         
-    } else if ($formdata = $mform->get_data()) {
-        //$errores = "";
-        $filename = $formdata->name;
-        /*if(strlen($name) > 255 || empty($name)){
-            $errores .= (get_string('ae_error_name','league') . "<br>");
-        }*/
-        $statement = $formdata->statement;
-        /*if(empty($statement)){
-            $errores .= get_string('ae_error_description','league') . "<br>";
-        }
-*/
-  //      if(empty($errores)){
-            $course = $cm->course;
-            if($attemptexercise == -1){
-                
-                $idexernuevo = league_exercise_add_instance($course, $filename, $statement, $league->id, $USER->id, $context);
-                if($idexernuevo){
-                    // Trigger the event.
-                    league_exercise_created($league->id, $idexernuevo, $context);
-                    $correcto = true;
-                }else{
-                    $correcto = false;
-                }
-                
-            }else{
-                $correcto = league_exercise_update_instance($league, $course, $filename, $statement, $league->id, $attemptexercise, 0, 0, $context);
-            }
-
-            if($correcto){
-                
-                $panel = new mod_league\output\go_back_view($cmid, get_string('ae_success','league'));
-                echo $output->render($panel);
-                
-            }
+        redirect(new moodle_url('/mod/league/view.php', array('id' => $cmid)));
+        
+        
     } else {
         
-        $panel = new mod_league\output\single_content_view(get_string('ae_warning','league'));
-        echo $output->render($panel);
-        
-      //displays the form
-      $mform->display();
-    }
+        echo $output->header();
 
+        if ($formdata = $mform->get_data()) {
+            //$errores = "";
+            $filename = $formdata->name;
+            /*if(strlen($name) > 255 || empty($name)){
+                $errores .= (get_string('ae_error_name','league') . "<br>");
+            }*/
+            $statement = $formdata->statement;
+            /*if(empty($statement)){
+                $errores .= get_string('ae_error_description','league') . "<br>";
+            }
+    */
+      //      if(empty($errores)){
+                $course = $cm->course;
+                if($attemptexercise == -1){
+
+                    $idexernuevo = league_exercise_add_instance($course, $filename, $statement, $league->id, $USER->id, $context);
+                    if($idexernuevo){
+                        // Trigger the event.
+                        league_exercise_created($league->id, $idexernuevo, $context);
+                        $correcto = true;
+                    }else{
+                        $correcto = false;
+                    }
+
+                }else{
+                    $correcto = league_exercise_update_instance($league, $course, $filename, $statement, $league->id, $attemptexercise, 0, 0, $context);
+                }
+
+                if($correcto){
+
+                    $panel = new mod_league\output\go_back_view($cmid, get_string('ae_success','league'));
+                    echo $output->render($panel);
+
+                }
+        } else {
+
+            $panel = new mod_league\output\single_content_view(get_string('ae_warning','league'));
+            echo $output->render($panel);
+
+          //displays the form
+          $mform->display();
+        }
+    }
 }else{
+    echo $output->header();
+
     $panel = new mod_league\output\go_back_view($cmid, get_string('notallowedpage','league'), get_string('nopermission','league'));
     echo $output->render($panel);
 }

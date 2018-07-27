@@ -30,7 +30,12 @@ class mod_league_renderer extends plugin_renderer_base {
     
     protected function render_main_teacher_view(\mod_league\output\main_teacher_view $view) {
         $out = $this->output->heading(format_string(get_string('teacher_panel','league')), 2);
-        $out .= $this->output->container($view->print_exercises());
+        
+        if($view->exercises){
+            $out .= $this->output->container($view->print_exercises());
+        }else{
+            $out .= $this->output->container(get_string('no_exercises_created','league'));
+        }
         $out .= $this->output->container($view->print_alert());
         $out .= $this->output->container($view->print_add_exercise_button(), 'button');
         

@@ -83,7 +83,6 @@ $mod = new mod_league\league($cminfo, $context, $league);
 
 // Get and render the appropiate class to this page.
 $output = $PAGE->get_renderer('mod_league');
-echo $output->header();
 
 // Retrieve attempt data from the database.
 $attemptleague = getDataFromAttempt($attemptid, 'league');
@@ -94,9 +93,7 @@ $attemptexercise = getDataFromAttempt($attemptid, 'exercise');
 $sameleague = ($league->id == $attemptleague);
 $canmark = $mod->usermarkstudents($USER->id);
 
-$userid = getDataFromAttempt($attemptid, 'id_user');
-$exerciseid = getDataFromAttempt($attemptid, 'exercise');
-$lastattempt = \league_model::is_last_attempt($userid, $exerciseid, $attemptid);
+$lastattempt = \league_model::is_last_attempt($attemptuser, $attemptexercise, $attemptid);
 
 if($canmark and $sameleague and $lastattempt){
     
@@ -121,32 +118,41 @@ if($canmark and $sameleague and $lastattempt){
 
     if ($mform->is_cancelled()) {
         // If the form is cancelled, a render page to go back.
-        $panel = new mod_league\output\go_back_view($cmid, get_string('mark_cancel','league'), null, 'marking.php', array('exercise' => $attemptexercise));
-        echo $output->render($panel);
+        //$panel = new mod_league\output\go_back_view($cmid, get_string('mark_cancel','league'), null, 'marking.php', array('exercise' => $attemptexercise));
+        //echo $output->render($panel);
+        
+        redirect(new moodle_url('/mod/league/marking.php', array('id' => $cmid, 'exercise' => $attemptexercise)));
 
-    } else if ($data = $mform->get_data()) {
-        // If the data are correct, we handle it.
-        $newmark = $data->mark;
-        $newobservations = $data->observations;
+    } else{ 
+        
+        echo $output->header();
 
-        // Update the attempt with the mark updated.
-        $success = league_attempt_update_instance($league, $attemptid, $newmark, $newobservations, $attemptexercise);
+        if ($data = $mform->get_data()) {
+            // If the data are correct, we handle it.
+            $newmark = $data->mark;
+            $newobservations = $data->observations;
 
-        if ($success){
-            // If the update was OK, trigger an event.
-            league_attempt_graded($attemptid, $attemptuser, $attemptexercise, $newmark, $context);   
+            // Update the attempt with the mark updated.
+            $success = league_attempt_update_instance($league, $attemptid, $newmark, $newobservations, $attemptexercise);
+
+            if ($success){
+                // If the update was OK, trigger an event.
+                league_attempt_graded($attemptid, $attemptuser, $attemptexercise, $newmark, $context);   
+            }
+
+            // Render a page to go back.
+            $panel = new mod_league\output\go_back_view($cmid, get_string('mark_sent_success','league'), null, 'marking.php', array('exercise' => $attemptexercise));
+            echo $output->render($panel);
+
+        } else {
+            // Display the mark form.
+            $mform->display();
         }
-
-        // Render a page to go back.
-        $panel = new mod_league\output\go_back_view($cmid, get_string('mark_sent_success','league'), null, 'marking.php', array('exercise' => $attemptexercise));
-        echo $output->render($panel);
-
-    } else {
-        // Display the mark form.
-        $mform->display();
     }
-    
 }else{
+    
+    echo $output->header();
+
     // If the user cant mark students or the attempt ID doesn't belongs to this
     // league, render an error page.
     $panel = new mod_league\output\go_back_view($cmid, get_string('notallowedpage','league'), get_string('nopermission','league'));

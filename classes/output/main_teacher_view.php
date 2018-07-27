@@ -82,12 +82,22 @@ class main_teacher_view implements \renderable {
 
                 if($this->canmark){
 
+                    $url= new \moodle_url('/mod/league/marking.php', array(
+                            'id' => $this->cmid,
+                            'exercise' => $exer['id'],
+                            ));
+
+                        
+                    $data[] = '<a href="'.$url.'">'.get_string('mark_exercise', 'league')."</a>";
+                    
+                    /*
+
+                    
                     $data[] = '<form action="marking.php" method="get" >
                         <input type="hidden" name="id" value="'. $this->cmid .'" />
                         <input type="hidden" name="exercise" value="'. $exer['id'] .'" />
                         <input type="submit" value="'. get_string('mark_exercise', 'league') .'"/>
-                    </form>';
-
+                    </form>';                     */
                 }
 
                 $data[] = '<form action="view.php" method="post" >
@@ -123,10 +133,21 @@ class main_teacher_view implements \renderable {
     }
     
     public function print_add_exercise_button(){
+        
+        $url= new \moodle_url('/mod/league/add_exercise.php', array(
+                'id' => $this->cmid,
+                'exercise' => -1,
+                ));
+
+
+        return '<a href="'.$url.'">'.get_string('add_exercise_button', 'league')."</a>";
+
+        
+        /*
         return '<form action="add_exercise.php" method="get">
                     <input type="hidden" name="id" value="'. $this->cmid .'" />
                     <input type="hidden" name="exercise" value="-1" />
                     <input type="submit" value="'. get_string('add_exercise_button', 'league') .'"/>
-                </form>';
+                </form>';*/
     }
 }

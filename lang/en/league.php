@@ -71,10 +71,13 @@ $string['coursemoduleincorrect'] = 'Course module was incorrect.';
 
 $string['view_qualy_button'] = 'Ver clasificación';
 $string['manage_exercises_button'] = 'Administrar ejercicios';
+$string['add_exercise_button'] = 'Añadir ejercicio';
 $string['teacher_panel'] = 'Panel del profesor';
 $string['main_panel_student'] = 'Panel de control del alumno';
 $string['availables_exercises'] = 'Ejercicios disponibles';
 $string['my_marks'] = 'Mis notas';
+$string['no_exercises_created'] = 'Aún no ha creado ningún ejercicio. Pulse el enlace inferior que indica "'.
+        $string['add_exercise_button'].'" para crear el primer ejercicio de la liga.';
 $string['no_exercises_availables'] = 'En este momento no hay ningún ejercicio disponible.';
 $string['no_grades_availables'] = 'Aun no ha enviado ningún intento para ningún ejercicio.';
 
@@ -114,7 +117,6 @@ $string['q_name_hashed'] = 'Usuario hasheado';
  */
 
 $string['management_title'] = 'Administración';
-$string['add_exercise_button'] = 'Añadir ejercicio';
 $string['modify_exercise_button'] = 'Modificar';
 $string['enable_exercise_button'] = 'Habilitar';
 $string['disable_exercise_button'] = 'Deshabilitar';
@@ -123,7 +125,7 @@ $string['del'] = 'Eliminar';
 $string['exercise_enabled'] = 'El ejercicio está habilitado para todos los alumnos del curso. Ahora podrán subir la tarea.';
 $string['exercise_disabled'] = 'El ejercicio está deshabilitado. Los alumnos no pueden ver este ejercicio actualmente.';
 $string['exercise_deleted'] = 'El ejercicio ha sido eliminado con éxito.';
-$string['exercise_not_deleted'] = 'No se ha podido eliminar el ejercicio.';
+$string['exercise_not_deleted'] = 'No se ha podido eliminar el ejercicio. Deshabilítelo primero.';
 $string['upload_exercise'] = 'Subir ejercicio';
 $string['mark_exercise'] = 'Corregir';
 $string['published_marks'] = 'Notas publicadas';
