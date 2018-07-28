@@ -35,6 +35,7 @@ $string['cant_create_url'] = 'No se ha podido generar el URL';
 $string['file_uploaded'] = 'Fichero subido';
 $string['to_mark'] = 'Corregir';
 $string['modify'] = 'Modificar';
+$string['nan'] = 'NaN';
 $string['go_back'] = 'Volver';
 $string['notallowedpage'] = 'Página no encontrada';
 $string['nopermission'] = 'No tiene los permisos suficientes para poder ver esta página.';

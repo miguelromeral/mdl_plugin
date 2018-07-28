@@ -200,7 +200,7 @@ switch($role){
         }
 
         // Once we have all data, print everything with renderer.
-        $panel = new mod_league\output\grade_view($rows, $tablecolumns, $tableheaders, $exercisesnames, $PAGE->url);
+        $panel = new mod_league\output\teacher_grade_view($rows, $tablecolumns, $tableheaders, $exercisesnames, $PAGE->url);
         echo $output->render($panel);
 
         break;

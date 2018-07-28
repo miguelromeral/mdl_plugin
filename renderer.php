@@ -64,7 +64,7 @@ class mod_league_renderer extends plugin_renderer_base {
         return $this->output->container($out, 'main');
     }
     
-    protected function render_grade_view(\mod_league\output\grade_view $view) {
+    protected function render_teacher_grade_view(\mod_league\output\teacher_grade_view $view) {
         $out = $this->output->container($view->print_table_grades());
         return $this->output->container($out, 'main');
     }
