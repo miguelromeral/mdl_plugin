@@ -29,7 +29,7 @@ $PAGE->set_heading(format_string($course->fullname));
 
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading(get_string('leagues_in_course', 'league'), 2);
+echo $OUTPUT->heading(get_string('leagues_in_course', 'league') . ": " . $course->fullname, 2);
 
 // Start of the table for General Forums.
 $generaltable = new html_table();
