@@ -36,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
 // Identifies the Course Module ID.
 $cmid = optional_param('id', 0, PARAM_INT);
 // Get exercise ID.
-$attemptexercise = required_param('exercise', PARAM_INT);
+$exerciseid = required_param('exercise', PARAM_INT);
 
 // Check if a course module exists.
 if ($cmid) {
@@ -86,12 +86,12 @@ echo $output->header();
 
 // Check if the user can mark studentds and the exercise ID belongs to this league.
 $canmark = $mod->usermarkstudents($USER->id);
-$validexercise = ($attemptexercise == -1 || \league_model::isleagueexercise($attemptexercise, $league->id));
+$validexercise = ($exerciseid == -1 || \league_model::isleagueexercise($exerciseid, $league->id));
 
 if($canmark and $validexercise){
     // Retrieve all the students attempts to this exercises and render it.
-    $attempts = \league_model::get_total_students_exercises($attemptexercise);
-    $panel = new mod_league\output\total_attempts_view($cmid, $attempts, $attemptexercise, \league_model::getNameExerByID($attemptexercise), $context->id);
+    $attempts = \league_model::get_total_students_exercises($exerciseid);
+    $panel = new mod_league\output\total_attempts_view($cmid, $attempts, $exerciseid, \league_model::getNameExerByID($exerciseid), $context->id);
     echo $output->render($panel);
     
     $panel = new mod_league\output\go_back_view($cmid);

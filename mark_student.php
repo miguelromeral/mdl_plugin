@@ -86,28 +86,28 @@ $output = $PAGE->get_renderer('mod_league');
 // Retrieve attempt data from the database.
 $attemptleague = \league_model::getDataFromAttempt($attemptid, 'league');
 $attemptuser = \league_model::getDataFromAttempt($attemptid, 'id_user');
-$attemptexercise = \league_model::getDataFromAttempt($attemptid, 'exercise');
+$exerciseid = \league_model::getDataFromAttempt($attemptid, 'exercise');
 
 // Check if the attempt belongs to this league and user can mark students.
 $sameleague = ($league->id == $attemptleague);
 $canmark = $mod->usermarkstudents($USER->id);
 
-$lastattempt = \league_model::is_last_attempt($attemptuser, $attemptexercise, $attemptid);
+$lastattempt = \league_model::is_last_attempt($attemptuser, $exerciseid, $attemptid);
 
 if($canmark and $sameleague and $lastattempt){
     
     // Retrieve data to be printed in the form.
     $studentname = \league_model::league_get_student_name($attemptuser);
-    $exercisename = \league_model::getNameExerByID($attemptexercise);
+    $name = \league_model::getNameExerByID($exerciseid);
     $mark = \league_model::getDataFromAttempt($attemptid, 'mark');
     $observations = \league_model::getDataFromAttempt($attemptid, 'observations');
             
     // Create the mark form with the appropiate data.
     $params = array(
         'id'            => $cmid,
-        'id_exer'       => $attemptexercise,
+        'id_exer'       => $exerciseid,
         'mark'          => $mark,
-        'name_exer'     => $exercisename,
+        'name_exer'     => $name,
         'student'       => $studentname,
         'idat'          => $attemptid,
         'observations'  => $observations,
@@ -120,7 +120,7 @@ if($canmark and $sameleague and $lastattempt){
         //$panel = new mod_league\output\go_back_view($cmid, get_string('mark_cancel','league'), null, 'marking.php', array('exercise' => $attemptexercise));
         //echo $output->render($panel);
         
-        redirect(new moodle_url('/mod/league/marking.php', array('id' => $cmid, 'exercise' => $attemptexercise)));
+        redirect(new moodle_url('/mod/league/marking.php', array('id' => $cmid, 'exercise' => $exerciseid)));
 
     } else{ 
         
@@ -132,15 +132,15 @@ if($canmark and $sameleague and $lastattempt){
             $newobservations = $data->observations;
 
             // Update the attempt with the mark updated.
-            $success = league_attempt_update_instance($league, $attemptid, $newmark, $newobservations, $attemptexercise);
+            $success = league_attempt_update_instance($league, $attemptid, $newmark, $newobservations, $exerciseid);
 
             if ($success){
                 // If the update was OK, trigger an event.
-                league_attempt_graded($attemptid, $attemptuser, $attemptexercise, $newmark, $context);   
+                league_attempt_graded($attemptid, $attemptuser, $exerciseid, $newmark, $context);   
             }
 
             // Render a page to go back.
-            $panel = new mod_league\output\go_back_view($cmid, get_string('mark_sent_success','league'), null, 'marking.php', array('exercise' => $attemptexercise));
+            $panel = new mod_league\output\go_back_view($cmid, get_string('mark_sent_success','league'), null, 'marking.php', array('exercise' => $exerciseid));
             echo $output->render($panel);
 
         } else {

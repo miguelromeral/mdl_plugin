@@ -66,8 +66,6 @@ require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/league:view', $context);
 
-// TODO: Trigger course_module_viewed event.
-
 // Initialize $PAGE and set parameters.
 $PAGE->set_url('/mod/league/view.php', array('id' => $cm->id));
 $PAGE->set_context($context);
@@ -152,11 +150,11 @@ switch($role){
         // If teacher made an action, we handle it here.
         if($action != 'no-act'){
             // Get the exercise ID from POST.
-            $attemptexercise = required_param('id_exer', PARAM_INT);
+            $exerciseid = required_param('id_exer', PARAM_INT);
             // Get the exercise name from POST.
-            $exercisename = required_param('exer_name', PARAM_TEXT);
+            $name = required_param('exer_name', PARAM_TEXT);
             // Get the exercise description from POST.
-            $exercisedescription = required_param('exer_description', PARAM_TEXT);
+            $description = required_param('exer_description', PARAM_TEXT);
             // Get the exercise enabled flag from POST.
             $exerciseenabled = required_param('exer_enabled', PARAM_INT);
             // Get the exercise published marks flag from POST.
@@ -173,7 +171,7 @@ switch($role){
                     // If the exercises is enabled, we can't delete it
                     if ($exerciseenabled == 0){
                         // Delete instance of the exercise given the ID.
-                        $attemptid = league_exercise_delete_instance($attemptexercise, $context);
+                        $attemptid = league_exercise_delete_instance($exerciseid, $context);
                     }
 
                     // If the deleting of exercises was successfull, we alert 
@@ -193,7 +191,7 @@ switch($role){
                     $changedflag = ($exerciseenabled == 0 ? 1 : 0);
 
                     // Update the exercise with de data given.
-                    league_exercise_update_instance($league, null, $exercisename, $exercisedescription, $leagueid, $attemptexercise, $changedflag, $exercisepublished, $context);
+                    league_exercise_update_instance($league, null, $name, $description, $leagueid, $exerciseid, $changedflag, $exercisepublished, $context);
 
                     // Depending on the operation we made, we print one alert.
                     if ($changedflag == 0){
@@ -211,7 +209,7 @@ switch($role){
                     $changedflag = ($exercisepublished == 0 ? 1 : 0);
 
                     // Update the exercise with de data given.
-                    league_exercise_update_instance($league, null, $exercisename, $exercisedescription, $leagueid, $attemptexercise, $exerciseenabled, $changedflag, $context);
+                    league_exercise_update_instance($league, null, $name, $description, $leagueid, $exerciseid, $exerciseenabled, $changedflag, $context);
 
                     // Depending on the operation we made, we print one alert.
                     if ($changedflag == 0){
