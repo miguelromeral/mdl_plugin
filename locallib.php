@@ -63,6 +63,17 @@ function league_created($league) {
     $event->trigger();
 }
 
+function league_updated($league){
+    
+    $params = array(
+        'objectid' => $league->id,
+        'context' => context_module::instance($league->coursemodule)
+    );
+    
+    $event = \mod_league\event\league_updated::create($params);
+    $event->trigger();
+}
+
 function league_exercise_created($league, $id, $context) {
     
     $params = array(
@@ -72,6 +83,41 @@ function league_exercise_created($league, $id, $context) {
     );
     
     $event = \mod_league\event\exercise_created::create($params);
+    $event->trigger();
+}
+
+function league_exercise_deleted($idexer, $context){
+    $params = array(
+        'objectid' => $id,
+        'context' => $context
+    );
+    
+    $event = \mod_league\event\exercise_deleted::create($params);
+
+    $event->trigger();
+}
+
+function league_exercise_updated($idexer, $idleague, $context){
+    $params = array(
+        'objectid' => $idexer,
+        'other' => array('league' => $idleague),
+        'context' => $context
+    );
+    
+    $event = \mod_league\event\exercise_updated::create($params);
+    $event->trigger();
+}
+
+function league_attempt_downloaded($idat, $iduser, $idleague, $idexer, $context){
+    $params = array(
+        'objectid' => $idat,
+        'relateduserid' => $iduser,
+        'other' => array('league' => $idleague,
+                            'exercise' => $idexer),
+        'context' => $context
+    );
+    
+    $event = \mod_league\event\attempt_downloaded::create($params);
     $event->trigger();
 }
 

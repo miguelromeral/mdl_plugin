@@ -63,12 +63,7 @@ function league_update_instance(stdClass $league, mod_league_mod_form $mform = n
     
     //print_r($league);
     
-    $event = \mod_league\event\league_updated::create(array(
-        'objectid' => $league->id,
-        'context' => context_module::instance($league->coursemodule)
-    ));
-
-    $event->trigger();
+    league_updated($league);
     
     league_grade_item_update($league);
     return $result;
@@ -109,15 +104,6 @@ function league_exercise_add_instance($course, $name, $statement, $league, $user
     $record->published = 0;
   
     $id = $DB->insert_record('league_exercise', $record);
-   
-  /*  $event = \mod_league\event\exercise_created::create(array(
-        'objectid' => $id,
-        'other' => array('league' => $league),
-        'context' => $context
-    ));
-    
-    $event->trigger();
-  */  
     return $id;
 }
 
@@ -135,13 +121,8 @@ function league_exercise_update_instance($leagueinstance, $course, $name, $state
     league_update_grades($leagueinstance);
     
     if($id){
-        $event = \mod_league\event\exercise_updated::create(array(
-            'objectid' => $idexer,
-            'other' => array('league' => $league),
-            'context' => $context
-        ));
-
-        $event->trigger();
+        
+        league_exercise_updated($idexer, $league, $context);
 
         return true;
     }else{
@@ -156,12 +137,8 @@ function league_exercise_delete_instance($id, $context) {
     }
     $DB->delete_records('league_exercise', array('id' => $exercise->id));
     
-    $event = \mod_league\event\exercise_deleted::create(array(
-        'objectid' => $id,
-        'context' => $context
-    ));
-
-    $event->trigger();
+    
+    league_exercise_deleted($id, $context);
     
     return true;
 }
@@ -391,14 +368,9 @@ function league_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
     
     $ids = get_id_and_user_attempt_from_itemid($itemid);
     if($ids){
-        $event = \mod_league\event\attempt_downloaded::create(array(
-            'objectid' => $ids->id,
-            'relateduserid' => $ids->id_user,
-            'other' => array('league' => $ids->league,
-                                'exercise' => $ids->exercise),
-            'context' => $context
-        ));
-        $event->trigger();
+        
+        league_attempt_downloaded($ids->id, $ids->id_user, $ids->league, $ids->exercise, $context);
+        
     }
   
     // We can now send the file back to the browser - in this case with a cache lifetime of 1 day and no filtering. 
