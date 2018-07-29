@@ -26,7 +26,6 @@
 // Get all files that we'll use.
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
-require_once($CFG->dirroot.'/mod/league/locallib.php');
 require_once($CFG->dirroot.'/mod/league/classes/form/upload_form.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/single_content_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
@@ -142,7 +141,7 @@ if($mod->useruploadfiles($USER->id) && \league_model::isleagueexercise($exercise
                     if($attemptid){
                         
                         // Trigger the attempt submitted event.
-                        league_attempt_submitted($exerciseid, $attemptid, $context);
+                        $mod->trigger_attempt_submitted_event($exerciseid, $attemptid);
                         
                         // Render a page to go back to main menu.
                         $panel = new mod_league\output\go_back_view($cmid, get_string('ue_success','league'));

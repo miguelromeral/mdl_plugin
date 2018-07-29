@@ -177,6 +177,7 @@ switch($role){
                     // If the deleting of exercises was successfull, we alert 
                     // the teacher.
                     if ($attemptid){
+                        $mod->trigger_exercise_deleted_event($exerciseid);
                         $alert = get_string('exercise_deleted', 'league');
                     } else {
                         $alert = get_string('exercise_not_deleted', 'league');
@@ -192,7 +193,8 @@ switch($role){
 
                     // Update the exercise with de data given.
                     league_exercise_update_instance($league, null, $name, $description, $leagueid, $exerciseid, $changedflag, $exercisepublished, $context);
-
+                    $mod->trigger_exercise_updated_event($exerciseid);
+                    
                     // Depending on the operation we made, we print one alert.
                     if ($changedflag == 0){
                         $alert = get_string('exercise_disabled', 'league');
@@ -210,6 +212,7 @@ switch($role){
 
                     // Update the exercise with de data given.
                     league_exercise_update_instance($league, null, $name, $description, $leagueid, $exerciseid, $exerciseenabled, $changedflag, $context);
+                    $mod->trigger_exercise_updated_event($exerciseid);
 
                     // Depending on the operation we made, we print one alert.
                     if ($changedflag == 0){

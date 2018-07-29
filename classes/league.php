@@ -24,6 +24,8 @@
 
 namespace mod_league;
  
+require_once($CFG->dirroot . '/mod/league/lib.php');
+
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
 
@@ -121,5 +123,101 @@ class league {
      */
     public function usermarkstudents($userid = null){
         return (has_capability('mod/league:markstudents', $this->context, $userid));
+    }
+    
+    public static function trigger_league_created_event($league) {
+
+        $params = array(
+            'objectid' => $league->id,
+            'context' => \context_module::instance($league->coursemodule)
+        );
+
+        $event = \mod_league\event\league_created::create($params);
+        $event->trigger();
+    }
+
+    public static function trigger_league_updated_event($league){
+
+        $params = array(
+            'objectid' => $league->id,
+            'context' => \context_module::instance($league->coursemodule)
+        );
+
+        $event = \mod_league\event\league_updated::create($params);
+        $event->trigger();
+    }
+
+    public function trigger_exercise_created_event($id) {
+
+        $params = array(
+            'objectid' => $id,
+            'other' => array('league' => $this->league->id),
+            'context' => $this->context
+        );
+
+        $event = \mod_league\event\exercise_created::create($params);
+        $event->trigger();
+    }
+
+    public function trigger_exercise_deleted_event($idexer){
+        $params = array(
+            'objectid' => $idexer,
+            'context' => $this->context
+        );
+
+        $event = \mod_league\event\exercise_deleted::create($params);
+
+        $event->trigger();
+    }
+
+    public function trigger_exercise_updated_event($idexer){
+        $params = array(
+            'objectid' => $idexer,
+            'other' => array('league' => $this->league->id),
+            'context' => $this->context
+        );
+
+        $event = \mod_league\event\exercise_updated::create($params);
+        $event->trigger();
+    }
+
+    public static function trigger_attempt_downloaded_event($idat, $iduser, $idleague, $idexer, $context){
+        $params = array(
+            'objectid' => $idat,
+            'relateduserid' => $iduser,
+            'other' => array('league' => $idleague,
+                                'exercise' => $idexer),
+            'context' => $context
+        );
+
+        $event = \mod_league\event\attempt_downloaded::create($params);
+        $event->trigger();
+    }
+
+    public function trigger_attempt_submitted_event($exercise, $id) {
+
+        $params = array(
+            'objectid' => $id,
+            'other' => array('exercise' => $exercise),
+            'context' => $this->context
+        );
+
+        $event = \mod_league\event\attempt_submitted::create($params);
+        $event->trigger();
+    }
+
+    
+    public function trigger_attempt_graded_event($attemptid, $user, $exercise, $mark) {
+
+        $params = array(
+            'objectid' => $attemptid,
+            'relateduserid' => $user,
+            'other' => array('exercise' => $exercise,
+                            'mark' => $mark),
+            'context' => $this->context
+        );
+
+        $event = \mod_league\event\attempt_graded::create($params);
+        $event->trigger();
     }
 }

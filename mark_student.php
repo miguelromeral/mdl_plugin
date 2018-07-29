@@ -25,7 +25,6 @@
 // Get all files that we'll use.
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
-require_once($CFG->dirroot.'/mod/league/locallib.php');
 require_once($CFG->dirroot.'/mod/league/classes/form/mark_form.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/model.php');
@@ -134,9 +133,9 @@ if($canmark and $sameleague and $lastattempt){
             // Update the attempt with the mark updated.
             $success = league_attempt_update_instance($league, $attemptid, $newmark, $newobservations, $exerciseid);
 
-            if ($success){
+            if ($success != 0){
                 // If the update was OK, trigger an event.
-                league_attempt_graded($attemptid, $attemptuser, $exerciseid, $newmark, $context);   
+                $mod->trigger_attempt_graded_event($attemptid, $attemptuser, $exerciseid, $newmark);   
             }
 
             // Render a page to go back.

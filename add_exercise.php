@@ -24,7 +24,6 @@
 
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/lib.php');
-require_once($CFG->dirroot.'/mod/league/locallib.php');
 require_once($CFG->dirroot.'/mod/league/classes/form/exercise_form.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/single_content_view.php');
 require_once($CFG->dirroot.'/mod/league/classes/output/go_back_view.php');
@@ -122,19 +121,20 @@ if($canmanage && ($exerciseid == -1 || $exerciseinleague)){
                 $idexernuevo = league_exercise_add_instance($course, $name, $statement, $league->id, $USER->id, $context);
                 if($idexernuevo){
                     // Trigger the event.
-                    league_exercise_created($league->id, $idexernuevo, $context);
-                    $success = true;
+                    $mod->trigger_exercise_created_event($idexernuevo);
+                    $attemptid = true;
                 }else{
-                    $success = false;
+                    $attemptid = false;
                 }
 
             }else{
                 // If the exercise is old, update the instance.
-                $success = league_exercise_update_instance($league, $course, $name, $statement, $league->id, $exerciseid, 0, 0, $context);
+                $attemptid = league_exercise_update_instance($league, $course, $name, $statement, $league->id, $exerciseid, 0, 0, $context);
+                $mod->trigger_exercise_updated_event($exerciseid);
             }
 
             // Print a renderer if all went ok.
-            if($success){
+            if($attemptid != 0){
                 $panel = new mod_league\output\go_back_view($cmid, get_string('ae_success','league'));
                 echo $output->render($panel);
             }

@@ -4,7 +4,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/eventslib.php');
 require_once($CFG->dirroot.'/mod/league/classes/model.php');
-require_once($CFG->dirroot.'/mod/league/locallib.php');
+require_once($CFG->dirroot.'/mod/league/classes/league.php');
 
 function league_supports($feature) {
     switch($feature) {
@@ -37,8 +37,7 @@ function league_add_instance(stdClass $league, mod_league_mod_form $mform = null
     league_grade_item_update($league);
     
     
-    league_created($league);
-    
+    mod_league\league::trigger_league_created_event($league);
     
     return $league->id;
 }
@@ -61,9 +60,7 @@ function league_update_instance(stdClass $league, mod_league_mod_form $mform = n
     // You may have to add extra stuff in here.
     $result = $DB->update_record('league', $league);
     
-    //print_r($league);
-    
-    league_updated($league);
+    \mod_league\league::trigger_league_updated_event($league);
     
     league_grade_item_update($league);
     return $result;
@@ -118,16 +115,8 @@ function league_exercise_update_instance($leagueinstance, $course, $name, $state
     $record->enabled = $enabled;
     $record->published = $pub;
     $id = $DB->update_record('league_exercise', $record);
-    league_update_grades($leagueinstance);
     
-    if($id){
-        
-        league_exercise_updated($idexer, $league, $context);
-
-        return true;
-    }else{
-        return false;
-    }
+    return $id;
 }
 
 function league_exercise_delete_instance($id, $context) {
@@ -136,9 +125,6 @@ function league_exercise_delete_instance($id, $context) {
         return false;
     }
     $DB->delete_records('league_exercise', array('id' => $exercise->id));
-    
-    
-    league_exercise_deleted($id, $context);
     
     return true;
 }
@@ -369,7 +355,8 @@ function league_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
     $ids = get_id_and_user_attempt_from_itemid($itemid);
     if($ids){
         
-        league_attempt_downloaded($ids->id, $ids->id_user, $ids->league, $ids->exercise, $context);
+        
+        \mod_league\league::trigger_attempt_downloaded_event($ids->id, $ids->id_user, $ids->league, $ids->exercise, $context);
         
     }
   
