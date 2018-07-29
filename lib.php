@@ -4,6 +4,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/eventslib.php');
 require_once($CFG->dirroot.'/mod/league/classes/model.php');
+require_once($CFG->dirroot.'/mod/league/locallib.php');
 
 function league_supports($feature) {
     switch($feature) {
@@ -36,14 +37,8 @@ function league_add_instance(stdClass $league, mod_league_mod_form $mform = null
     league_grade_item_update($league);
     
     
+    league_created($league);
     
-    
-    $event = \mod_league\event\league_created::create(array(
-        'objectid' => $league->id,
-        'context' => context_module::instance($league->coursemodule)
-    ));
-    
-    $event->trigger();
     
     return $league->id;
 }

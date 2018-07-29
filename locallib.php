@@ -52,6 +52,17 @@ function attempt_graded_handler($event) {
     return true;      
 }
 
+function league_created($league) {
+    
+    $params = array(
+        'objectid' => $league->id,
+        'context' => context_module::instance($league->coursemodule)
+    );
+    
+    $event = \mod_league\event\league_created::create($params);
+    $event->trigger();
+}
+
 function league_exercise_created($league, $id, $context) {
     
     $params = array(

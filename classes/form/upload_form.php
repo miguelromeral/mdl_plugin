@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Form where studentds can upload files to exercises.
+ * Form where students can upload files to exercises.
  *
  * @package   mod_league
  * @copyright 2018 Miguel Romeral
@@ -30,33 +30,32 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/formslib.php");
 
 /**
- * Class upload_form.
+ * The form to upload an attempt.
  *
  * @package   mod_league
  * @copyright 2018 Miguel Romeral
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class upload_form extends \moodleform {
-    //Add elements to form
+    
+    /**
+     * Define all form elements.
+     */
     public function definition() {
-        global $CFG, $DB;
+        $mform = $this->_form;
         
-        $mform = $this->_form; // Don't forget the underscore! 
-        
-        $mform->addElement('header', 'h1', get_string('upload_attempt', 'league'));
-        
+        // Exercise ID and Course Module hiden.
         $mform->addElement('hidden', 'exercise', $this->_customdata['id_exer']);
         $mform->setType('exercise', PARAM_INT);
         $mform->addElement('hidden', 'id', $this->_customdata['id']);
         $mform->setType('id', PARAM_INT);
         
+        // Filepicker to get the user uploaded file.
+        // All types availables.
         $mform->addElement('filepicker', 'userfile', get_string('upload_exercise_file', 'league'), null,
-                   array('maxbytes' => 10000000, 'accepted_types' => '*'));
+                   array('maxbytes' => 10000000, 'accepted_types' => 'application/zip'));
         
+        // Add action buttons.
         $this->add_action_buttons();
-    }
-    //Custom validation should be added here
-    function validation($data, $files) {
-        return array();
     }
 }
