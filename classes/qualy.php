@@ -76,6 +76,7 @@ class league_qualy {
                 $fila += array('totalmark' => $d2['acum'] + $d2['sc']);
                 $fila += array('marks' => \league_model::getArrayMarkByStudent($this->leagueid, $d['userid'], true));
                 $fila += array('notes' => "");
+                $fila += array('picture' => new user_picture(\league_model::get_user_by_id($d['userid'])));
             }
             array_push($q, $fila);
         }

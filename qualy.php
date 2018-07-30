@@ -129,7 +129,7 @@ if ($role == 'student' || $role == 'teacher'){
         $panel = new mod_league\output\qualy_view(get_string('qts', 'league'), $cmid, $qs, $USER->id, $role);
         echo $output->render($panel);
     }
-        
+    
 }else{
     // If the user has no permission to see the qualy, render a error page.
     $panel = new mod_league\output\go_back_view($cmid, get_string('notallowedpage','league'), get_string('nopermission','league'));

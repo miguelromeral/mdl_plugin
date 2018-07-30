@@ -163,7 +163,7 @@ switch($role){
             // Data to this row.
             $data = array();
             // User picture profile and name.
-            $data[] = league_model::get_user_image($mark['id'], 40);
+            $data[] = $OUTPUT->render(new user_picture(league_model::get_user_by_id($mark['id'])));
             
             
             $data[] = $mark['firstname'] . " " . $mark['lastname'];

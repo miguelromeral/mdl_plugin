@@ -84,8 +84,8 @@ function league_delete_instance($id) {
     // Delete any dependent records here.
     $DB->delete_records('league', array('id' => $league->id));
     //league_exercise_delete_instance($league->id);
+    //league_grade_item_delete($league);
     //league_attempt_delete_instance($league->id);
-    //newmodule_grade_item_delete($league);
     return true;
 }
 

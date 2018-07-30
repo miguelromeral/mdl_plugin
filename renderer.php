@@ -17,8 +17,8 @@
 /**
  * Defines the renderer for the league module.
  *
- * @package   mod_quiz
- * @copyright 2011 The Open University
+ * @package   mod_league
+ * @copyright 2018 Miguel Romeral
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

@@ -7,6 +7,11 @@ defined('MOODLE_INTERNAL') || die();
 
 class league_model {
     
+    public static function get_user_by_id($id){
+        global $DB;
+        return $DB->get_record('user', array('id' => $id));
+    }
+    
     public static function get_user_image($iduser, $size){
         global $COURSE, $DB, $OUTPUT;
         $cContext = context_course::instance($COURSE->id);

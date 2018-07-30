@@ -1,26 +1,66 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
- *      BÁSICO:
+/**
+ * Strings for component 'league', language 'es'.
+ *
+ * @package    mod_league
+ * @category   string
+ * @copyright  2018 Miguel Romeral
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['modulename'] = 'Liga';
-$string['modulename_help'] = 'A CAMBIAR: Texto que sale al crear el recurso del modulo';
-$string['modulename_link'] = 'mod/league/view';
+$string['modulename_help'] = 'Una actividad de módulo Liga permite a los estudiantes competir por quién es más participativo.
+    
+Los profesores pueden crear ejercicios para que suban la tarea los alumnos. Los ejercicios constan de un breve título y una descripción en la que se indica cómo debe enviarse las respuestas. Los profesores pueden habilitar ejercicios para que los alumnos pueden subir su tarea. El profesor puede entonces descargar los trabajos que han subido sus alumnos para los ejercicios y corregirlos de la manera que considere oportuna. Con esas calificaciones, se completa una clasificación entre los alumnos, correspondiéndose con los trabajos de éstos.
+
+Entre las características del módulo relativa a los usuarios se encuentran:
+
+* Subir ficheros por cada ejercicio.
+* Ver en una clasificación las notas globales (en ningún caso mostrar información sensible de otros alumnos).
+* Descargar sus propios ficheros que hayan subido.
+* Ver las notas de ejercicios disponibles o realizados por el alumno.
+
+Los profesores por su parte, disfrutarán de funciones como:
+
+* Ver clasificación completa y restringida de los alumnos.
+* Crear, modificar y eliminar ejercicios.
+* Corregir tareas de los estudiantes para cada ejercicio.
+* Hacer las notas visibles u ocultas.
+* Ver notas individuales por cada ejercicio.
+';
 $string['modulenameplural'] = 'Ligas';
+$string['pluginname'] = 'Liga';
 $string['pluginadministration'] = 'Administrar Liga';
-$string['pluginname'] = 'Liga de Actividades';
-$string['fill_course'] = 'Introduce el ID del curso';
+
 $string['no'] = 'No';
 $string['yes'] = 'Sí';
 $string['exercise'] = 'Ejercicio';
+$string['exercises'] = 'Ejercicios';
 $string['image'] = 'Foto';
 $string['league'] = 'Liga';
 $string['presentation'] = 'Presentación';
-$string['exercises'] = 'Ejercicios';
-$string['leagues_in_course'] = 'Ligas creadas en el curso';
 $string['num_attempt'] = '# Intento';
 $string['last_attempt'] = 'Último íntento';
+
+
+
+$string['fill_course'] = 'Introduce el ID del curso';
+$string['leagues_in_course'] = 'Ligas creadas en el curso';
 $string['more_than_5_att_remaining'] = 'Más de 5';
 $string['timemofied'] = 'Fecha de modificación';
 $string['send_exercise'] = 'Enviar ejercicio';
@@ -40,10 +80,6 @@ $string['go_back'] = 'Volver';
 $string['notallowedpage'] = 'Página no encontrada';
 $string['nopermission'] = 'No tiene los permisos suficientes para poder ver esta página.';
 
-/*
- *      MOD_FORM:
- */
-
 $string['league_name'] = 'Nombre de la liga';
 $string['title_create_istance'] = 'Rellene los siguientes datos para crear la actividad';
 $string['mod_form_select_course'] = 'Escoja el nombre del curso al que añadir una liga.';
@@ -60,9 +96,6 @@ $string['select_method_help'] = 'Si selecciona "'.$string['select_best_marks'].
         '" se ordenará la clasificación en función de cuales son las mejores notas obtenidas. Sin embargo, '
         . 'si selecciona "'.$string['select_more_exercises'].'" se premiará a los alumnos que hayan subido más ejercicios.';
 
-/**
- *      ERRORES
- */
 
 $string['noviewdiscussionspermission'] = 'No tiene los suficientes permisos para ver esta liga.';
 $string['coursemoduleiidincorrect'] = 'Course Module ID was incorrect.';
@@ -70,10 +103,6 @@ $string['coursemodulemisconfigured'] = 'Course is misconfigured.';
 $string['coursemoduleincorrect'] = 'Course module was incorrect.';
 $string['courseidincorrect'] = 'Course ID is incorrect.';
 
-
-/**
- *      PÁGINA PRINCIPAL
- */
 
 $string['view_qualy_button'] = 'Ver clasificación';
 $string['manage_exercises_button'] = 'Administrar ejercicios';
@@ -87,15 +116,10 @@ $string['no_exercises_created'] = 'Aún no ha creado ningún ejercicio. Pulse el
 $string['no_exercises_availables'] = 'En este momento no hay ningún ejercicio disponible.';
 $string['no_grades_availables'] = 'Aun no ha enviado ningún intento para ningún ejercicio.';
 
-/**
- *      CLASIFICACIÓN
- */
-
 $string['view_individual_marks'] = 'Ver notas individuales';
 $string['individual_marks'] = 'Calificaciones individuales';
 $string['qualy_title'] = 'Clasificación';
-$string['qts'] = '';
-$string['qts'] = 'Clasificación (Vista para estudiantes)';
+$string['qts'] = 'Clasificación (Vista por estudiantes)';
 $string['q_pos'] = 'POS';
 $string['q_pos_des'] = 'Posición en la clasificación.';
 $string['q_name'] = 'Nombre';
@@ -118,10 +142,6 @@ $string['more_exercises_uploaded'] = 'Ha subido más ejercicios';
 $string['q_tba'] = 'TBA';
 $string['q_name_hashed'] = 'Usuario hasheado';
 
-/**
- *      ADMINISTRACIÓN DE EJERCICIOS
- */
-
 $string['management_title'] = 'Administración';
 $string['modify_exercise_button'] = 'Modificar';
 $string['enable_exercise_button'] = 'Habilitar';
@@ -142,10 +162,6 @@ $string['currently_unpublished'] = 'Retirada la publicación de notas. Ningún a
 $string['h_manag_exer'] = 'Administrar ejercicios de la Liga';
 $string['final_attempt'] = 'Definitivo';
 
-/**
- *      AÑADIR EJERCICIOS
- */
-
 $string['add_exercise_title'] = 'Añadir nuevo ejercicio';
 $string['ae_cancel'] = 'Cancelada la modificación del ejercicio';
 $string['ae_cancel_new'] = 'Cancelada la creación del ejercicio';
@@ -161,10 +177,6 @@ $string['ae_error_description'] = 'Debe proporcionar una descripción del ejerci
 $string['ae_success'] = 'Creado con éxito el ejercicio. Actívelo en el panel de actividades.';
 $string['ae_warning'] = 'ADVERTENCIA: al guardar el ejercicio automáticamente pasará a estar deshabilitado para los alumnos y sin publicar las notas (este cambio deberá hacerse manualmente desde el panel de control del profesor.';
 
-/**
- *      SUBIR EJERCICIOS (Por parte del alumno)
- */
-
 $string['upload_title'] = 'Subir Ejercicio';
 $string['ue_cancel'] = 'Cancelada la subida de ficheros.';
 $string['upload_exercise_file'] = 'Subir fichero';
@@ -175,10 +187,6 @@ $string['ue_success'] = 'Fichero subido con éxito';
 $string['ue_no_file'] = 'Debe proporcionar un fichero para poder enviar el ejercicio.';
 $string['ue_error_max_size'] = 'Compruebe que el fichero está por debajo del límite del tamaño de un fichero a ser subido: ';
 
-/**
- *      CORRECCIÓN EJERCICIOS
- */
-
 $string['no_mark_yet'] = 'Sin corrección';
 $string['no_mark_error'] = 'Debe especificar una nota para el intento.';
 $string['not_done'] = 'Sin hacer';
@@ -186,15 +194,7 @@ $string['mark_student_button'] = 'Calificar alumno';
 $string['download_file_button'] = 'Descargar fichero';
 $string['no_attempts_yet'] = 'No existen intentos para este ejercicio. Habilítelo y espere a que los estudiantes envíen sus intentos.';
 
-/**
- *      DESCARGA DE FICHEROS
- */
-
 $string['dw_title'] = 'Descargar tarea';
-
-/**
- *      CALIFICACIÓN ALUMNOS
- */
 
 $string['mark_title'] = 'Calificar alumno';
 $string['mark_cancel'] = 'Cancelada la modificación de la nota';
@@ -202,22 +202,9 @@ $string['set_mark'] = 'Calificación (0 a 100)';
 $string['set_observation'] = 'Observaciones';
 $string['mark_sent_success'] = 'Nota actualizada con éxito.';
 
-/**
- *      GRADEBOOK
- */
-
 $string['title_grade'] = 'Calificaciones';
 
-/**
- *      NOTAS PARA ALUMNOS
- */
-
 $string['not_sent_yet'] = 'SIN HACER EJERCICIO';
-
-
-/**
- *  EVENTS
- */
 
 $string['eventleaguecreated'] = 'League created';
 $string['eventleagueupdated'] = 'League updated';
@@ -228,9 +215,6 @@ $string['eventattemptsubmitted'] = 'Attempt submitted';
 $string['eventattemptdownloaded'] = 'Attempt downloaded';
 $string['eventattemptgraded'] = 'Attempt graded';
 
-/**
- *  PERMISOS
- */
 $string['league:addinstance'] = "Crear una nueva liga";
 $string['league:view'] = "Ver liga";
 $string['league:manageexercises'] = "Administrar ejercicios";
@@ -242,10 +226,6 @@ $string['league:markstudents'] = "Calificar a alumnos";
 
 $string['usercantupload'] = "No tiene permisos para subir ficheros.";
 $string['usercantdownload'] = "No tiene permisos para descargar ficheros.";
-
-/**
- * CONFIGURACIÓN
- */
 
 $string['max_attempts_reached'] = "Ha alcanzado el máximo número de intentos";
 $string['only_one_attempt'] = "Sólo un intento";

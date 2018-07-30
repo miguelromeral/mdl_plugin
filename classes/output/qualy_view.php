@@ -29,7 +29,7 @@ namespace mod_league\output;
 defined('MOODLE_INTERNAL') || die();
 
 require_once('../../config.php');
-require_once($CFG->dirroot.'/mod/league/classes/model.php');
+//require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
 /**
  * The renderer class to show the qualy.
@@ -78,9 +78,11 @@ class qualy_view implements \renderable {
      * user role, some data will be hiden to the students and
      * it will be more verbose to the teachers.
      * 
+     * @global type $OUTPUT Usefull to print user image.
      * @return string HTML output string.
      */
     public function print_qualy(){
+        global $OUTPUT;
         $position = 1;
 
         // Create the table with all parameters.
@@ -132,7 +134,7 @@ class qualy_view implements \renderable {
             // Image and name for teachers.
             // Hashed name for students, but their own user.
             if($this->role == 'teacher'){ 
-                $data[] = \league_model::get_user_image($row['uid'], 50);
+                $data[] = $OUTPUT->render($row['picture']);
                 $data[] = $row['name'];
                 $data[] = $row['uname'];
             } else if($this->role == 'student'){ 
