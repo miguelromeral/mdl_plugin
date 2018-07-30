@@ -120,7 +120,7 @@ switch($role){
         //////////////////////////////////////////////////////////////////////
         
         // Retrieve all marks for the current user and print all of them.
-        $marks = \league_model::get_notas_alumno($league->id, $cmid, $USER->id, $context->id);
+        $marks = \league_model::get_student_marks($league->id, $USER->id);
         $panel = new mod_league\output\student_grade_view($cmid, $context->id, $marks, $mod->userdownloadfiles($USER->id));
         echo $output->render($panel);
         

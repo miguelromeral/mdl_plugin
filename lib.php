@@ -280,7 +280,7 @@ function league_get_user_grades($league, $userid = 0){
     global $DB;
     $grades = array();
     if($userid != 0){
-        $notas = \league_model::getArrayMarkByStudent($league->id, $userid, false);
+        $notas = \league_model::get_mark_array_by_student($league->id, $userid, false);
         $n = sizeof($notas);
         $t = array_sum($notas);
             $media = ($n ? (int) $t / $n : 0);
@@ -300,7 +300,7 @@ function league_get_user_grades($league, $userid = 0){
         foreach($data as $user){
             $d = get_object_vars($user);
             $uid = $d['userid'];
-            $notas = \league_model::getArrayMarkByStudent($league->id, $uid, false);
+            $notas = \league_model::get_mark_array_by_student($league->id, $uid, false);
             $n = sizeof($notas);
             $t = array_sum($notas);
             $media = ($n ? (int) $t / $n : 0);

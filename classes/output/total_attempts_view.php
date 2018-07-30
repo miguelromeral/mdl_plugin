@@ -127,7 +127,7 @@ class total_attempts_view implements \renderable {
             $attempt = get_object_vars($attempt);
             $data = array();
             // User picture.
-            $data[] = \league_model::get_user_image($attempt['id_user'], 40);
+            $data[] = \league_model::get_user_image($attempt['id_user']);
             // User name.
             $user = $attempt['firstname'] . " " . $attempt['lastname'];
             $data[] = $user;

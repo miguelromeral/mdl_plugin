@@ -96,7 +96,7 @@ $lastattempt = \league_model::is_last_attempt($attemptuser, $exerciseid, $attemp
 if($canmark and $sameleague and $lastattempt){
     
     // Retrieve data to be printed in the form.
-    $studentname = \league_model::league_get_student_name($attemptuser);
+    $studentname = \league_model::get_student_name($attemptuser);
     $name = \league_model::getNameExerByID($exerciseid);
     $mark = \league_model::getDataFromAttempt($attemptid, 'mark');
     $observations = \league_model::getDataFromAttempt($attemptid, 'observations');

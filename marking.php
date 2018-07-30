@@ -90,7 +90,7 @@ $validexercise = ($exerciseid == -1 || \league_model::isleagueexercise($exercise
 
 if($canmark and $validexercise){
     // Retrieve all the students attempts to this exercises and render it.
-    $attempts = \league_model::get_total_students_exercises($exerciseid);
+    $attempts = \league_model::get_attempts_by_exercise($exerciseid);
     $panel = new mod_league\output\total_attempts_view($cmid, $attempts, $exerciseid, \league_model::getNameExerByID($exerciseid), $context->id);
     echo $output->render($panel);
     

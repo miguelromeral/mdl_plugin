@@ -131,7 +131,7 @@ if($mod->useruploadfiles($USER->id) && \league_model::isleagueexercise($exercise
                 foreach ($files as $file) {
                     // Obtain the content file ID (different from item ID)
                     $contenthash = $file->get_contenthash();
-                    $fileid = \league_model::getIDFileFromContenthash($contenthash);
+                    $fileid = \league_model::get_file_id_from_content_hash($contenthash);
 
                     // Create the attempt in the database.
                     $attemptid = league_attempt_add_instance($course->id, $USER->id, $exerciseid, $file->get_itemid(), null, $name, $league->id, $context);

@@ -133,7 +133,7 @@ class league_qualy {
                 $row += array('totalexer' => $data['te']);
                 $row += array('exeruplo' => $data['eu']);
                 $row += array('totalmark' => $data['acum'] + $data['sc']);
-                $row += array('marks' => \league_model::getArrayMarkByStudent($this->leagueid, $d['id'], true));
+                $row += array('marks' => \league_model::get_mark_array_by_student($this->leagueid, $d['id'], true));
                 $row += array('notes' => "");
                 $row += array('picture' => new user_picture(\league_model::get_user_by_id($d['id'])));
             }

@@ -1,18 +1,81 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-//namespace mod_league\model;
+/**
+ * Defines the Model class (MVC).
+ * 
+ * This class is used to get records from database. On this way, we keep
+ * the MVC design pattern.
+ *
+ * @package     mod_league
+ * @copyright   2018 Miguel Romeral
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * A full model on League.
+ * 
+ * This class is used as a Model (Like an MVC pattern). It can retrieve 
+ * database records.
+ * 
+ * @copyright 2018 Miguel Romeral
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class league_model {
     
-    public static function get_user_by_id($id){
+    /**
+     * Retrieve an user record given its ID.
+     * 
+     * @global object $DB Moodle database.
+     * @param int $userid User ID.
+     * @return object User info.
+     */
+    public static function get_user_by_id($userid){
         global $DB;
-        return $DB->get_record('user', array('id' => $id));
+        return $DB->get_record('user', array('id' => $userid));
     }
     
-    public static function get_user_image($iduser, $size){
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * Return the user picture given its ID.
+     * 
+     * @global object $COURSE Current course.
+     * @global object $DB Moodle database.
+     * @global object $OUTPUT Moodle core output.
+     * @param int $userid User ID.
+     * @return string HTML string with the user picture to be printed.
+     */
+    public static function get_user_image($userid){
         global $COURSE, $DB, $OUTPUT;
         $cContext = context_course::instance($COURSE->id);
         $query = 'select u.id as id, firstname, lastname, picture, imagealt, '
@@ -20,89 +83,110 @@ class league_model {
                 . 'contextid=' . $cContext->id . ' and roleid=5 and a.userid=u.id';
         $rs = $DB->get_recordset_sql( $query );
         foreach( $rs as $r ) {
-            if($r->id == $iduser){
+            if($r->id == $userid){
                 return $OUTPUT->user_picture($r, array('courseid'=>$COURSE->id));
-                //return $OUTPUT->user_picture($r, array('size' => $size, 'courseid'=>$COURSE->id));
             }
         }
         return null;
     }
     
-    public static function get_exercises_from_id($idliga){
+    /**
+     * Return all exercises given the league id.
+     * 
+     * @global object $DB Moodle database.
+     * @param int $leagueid
+     * @return object 
+     */
+    public static function get_exercises_from_id($leagueid){
         global $DB;
-        $var="SELECT * 
-        FROM mdl_league_exercise
-        WHERE league = $idliga
-        ORDER BY id";
-        $data = $DB->get_records_sql($var);
-
-        return $data;
+        $query = "SELECT * 
+                    FROM {league_exercise}
+                   WHERE league = :id
+                ORDER BY id";
+        return $DB->get_records_sql($query, array('id' => $leagueid));
     }
     
+    /**
+     * Return a league instance given the course ID.
+     * 
+     * @global object $DB Moodle database.
+     * @param int $courseid
+     * @return object
+     */
     public static function get_league_from_course($courseid){
         global $DB;
-        $var="SELECT * 
-        FROM mdl_league
-        WHERE course = $courseid";
-        $data = $DB->get_records_sql($var);
-
-        return $data;
+        $query = "SELECT * 
+                    FROM {league}
+                   WHERE course = :id";
+        
+        return $DB->get_records_sql($query, array('id' => $courseid));
     }
     
-    public static function get_exercises_from_id_by_user($idliga, $iduser){
+    /**
+     * Return all exercises to an user (it also counts the number of attempts).
+     * 
+     * @global object $DB Moodle database.
+     * @param int $leagueid League ID.
+     * @param int $userid User ID.
+     * @return object
+     */
+    public static function get_exercises_from_id_by_user($leagueid, $userid){
         global $DB;
-        $var="SELECT e.*, a.num 
-            FROM mdl_league_exercise e
-            LEFT JOIN (
-                    select count(id) as num, exercise
-                    from mdl_league_attempt
-                    where id_user = $iduser
-                    group by exercise
-            ) a 
-            ON e.id = a.exercise
-            WHERE league = $idliga
-            ORDER BY id";
-        $data = $DB->get_records_sql($var);
+        $query = "SELECT e.*, a.num 
+                    FROM {league_exercise} AS e
+               LEFT JOIN (
+                            SELECT COUNT(id) AS num, exercise
+                              FROM {league_attempt}
+                             WHERE id_user = :user
+                          GROUP BY exercise
+                         ) 
+                         AS a ON e.id = a.exercise
+                   WHERE league = :league
+                ORDER BY id";
 
-        return $data;
+        return $DB->get_records_sql($query, array('league' => $leagueid, 'user' => $userid));
     }
-    /*
-    public static function get_students_exercise($id_exer){
-        global $DB;
-        //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
-        $var="select *
-        from mdl_league_attempt as a
-        inner join (
-                select max(c.id) as id, count(c.id) as num, c.id_user, d.firstname, d.lastname
-                from mdl_league_attempt as c
-                inner join mdl_user as d
-                on c.id_user = d.id
-                where c.exercise = $id_exer
-                group by c.id_user
-                order by c.id desc
-        ) as b
-        on a.id = b.id
-        group by b.id_user
-        order by a.timemodified desc";
-        $data = $DB->get_records_sql($var);
-        return $data;
-    }*/
     
-    public static function get_total_students_exercises($id_exer){
+    /**
+     * Return all attempts (sorted by time of modification) given an exercise ID.
+     * 
+     * @global object $DB Moodle database.
+     * @param int $exerciseid Exercise ID.
+     * @return object
+     */
+    public static function get_attempts_by_exercise($exerciseid){
         global $DB;
-        //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
-        $var="select *
-        from mdl_league_attempt as a
-        join (
-                select id as us, firstname, lastname
-                from mdl_user
-        ) as b
-        on a.id_user = b.us
-        where a.exercise = $id_exer
-        order by a.timemodified desc";
-        $data = $DB->get_records_sql($var);
-        return $data;
+        $query = "SELECT *
+                    FROM {league_attempt} AS a
+                    JOIN (
+                            SELECT id AS us, firstname, lastname
+                              FROM {user}
+                         ) 
+                         AS b ON a.id_user = b.us
+                   WHERE a.exercise = :id
+                ORDER BY a.timemodified DESC";
+        
+        return $DB->get_records_sql($query, array('id' => $exerciseid));
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     public static function get_students(){
         global $COURSE, $DB;
@@ -115,126 +199,167 @@ class league_model {
         return $rs;
     }
     
-    
-    public static function league_get_student_name($userid){
+    /**
+     * Return student name
+     * 
+     * @global object $DB Moodle database.
+     * @param int $userid User ID.
+     * @return string
+     */
+    public static function get_student_name($userid){
         global $DB;
-        $result = $DB->get_records_sql('SELECT * FROM {user} WHERE id = ?', array($userid));
-        $alumno = "";
-        foreach ($result as $rowclass)
+        $query = "SELECT *
+                    FROM {user}
+                    WHERE id = :id";
+        
+        $data = $DB->get_records_sql($query, array('id' => $userid));
+        
+        $name = "";
+        foreach ($data as $row)
         {
-            $rowclass = json_decode(json_encode($rowclass), True);
-            $alumno = $rowclass['firstname'] ." ".$rowclass['lastname'];
-            return $alumno;
+            $name = $row->firstname . ' ' . $row->lastname;
         }
-        return null;
+        return $name;
     }
 
-
-    public static function getIDFileFromContenthash($contenthash){
+    /**
+     * Return File ID given its content hash.
+     * 
+     * @global object $DB Moodle database.
+     * @param string $contenthash Content hash.
+     * @return int File ID
+     */
+    public static function get_file_id_from_content_hash($contenthash){
         global $DB;
-        $var="SELECT max(id) as 'm'
-        FROM mdl_files
-        WHERE contenthash = '$contenthash'";
+        $query = "SELECT MAX(id) AS m
+                    FROM {files}
+                   WHERE contenthash = :ch";
 
-        $data = $DB->get_records_sql($var);
+        $data = $DB->get_records_sql($query, array('ch' => $contenthash));
+        
         $id = -1;
         foreach ($data as $d){
-            //print_r($d);
             foreach($d as $i => $l){
                 $id = $l;
             }
         }
-
         return $id;
     }
     
-    public static function get_notas_alumno($idleague, $cmid, $userid, $contextid){
+    /**
+     * Return all student marks to a league.
+     * 
+     * @global object $DB Moodle database.
+     * @param int $leagueid League ID.
+     * @param int $userid User ID.
+     * @return object
+     */
+    public static function get_student_marks($leagueid, $userid){
         global $DB;
-        //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
-        $var="select *
-        from mdl_league_exercise as a
-        left outer join
-        (
-            select a.id as idat, a.timemodified as tma,
-            a.observations, a.name as fname,
-            a.exercise, b.id_user, a.mark, a.id_file
-            from mdl_league_attempt as a
-            inner join (
-                select max(id) as m, id_user
-                from mdl_league_attempt
-                where id_user = $userid
-                group by exercise
-            ) as b
-            on a.id = b.m
-        ) as b
-        on a.id = b.exercise
-        where a.league = $idleague";
-        $data = $DB->get_records_sql($var);
-
-        return $data;
+        $query = "SELECT *
+                    FROM {league_exercise} AS a
+         LEFT OUTER JOIN (
+                            SELECT a.id AS idat, a.timemodified AS tma,
+                                   a.observations, a.name as fname,
+                                   a.exercise, b.id_user, a.mark, a.id_file
+                              FROM mdl_league_attempt AS a
+                        INNER JOIN (
+                                        SELECT MAX(id) AS m, id_user
+                                          FROM {league_attempt}
+                                         WHERE id_user = :user
+                                      GROUP BY exercise
+                                    ) 
+                                    AS b ON a.id = b.m
+                         ) 
+                         AS b ON a.id = b.exercise
+                   WHERE a.league = :league";
+        
+        return $DB->get_records_sql($query, array('user' => $userid, 'league' => $leagueid));
     }
     
-    public static function getArrayMarkByStudent($idleague, $iduser, $toprint){
+    /**
+     * Return an array with the best marks of a student sorted from highest to smallest.
+     * 
+     * @global object $DB Moodle database.
+     * @param int $leagueid League ID.
+     * @param int $userid User ID.
+     * @param bool $toprint Handles -1 mark (do not marked yet) to TBA.
+     * @return array
+     */
+    public static function get_mark_array_by_student($leagueid, $userid, $toprint){
         global $DB;
-        //Lista de estudiantes de un curso
-        $var="select a.id, b.mark, a.published
-                from mdl_league_exercise as a
-                left outer join
-                (
-                    select a.id as idat, a.timemodified as tma,
-                            a.observations, a.name as fname,
-                            a.exercise, b.id_user, a.mark, a.id_file
-                            from mdl_league_attempt as a
-                            inner join (
-                                    select max(id) as m, id_user
-                                    from mdl_league_attempt
-                                    where id_user = $iduser
-                                    group by exercise
-                            ) as b
-                            on a.id = b.m
-                ) as b
-                on a.id = b.exercise
-                where a.league = $idleague
-        order by mark desc";
-        $data = $DB->get_records_sql($var);
+        $query = "SELECT a.id, b.mark, a.published
+                    FROM {league_exercise} AS a
+         LEFT OUTER JOIN (
+                            SELECT a.id AS idat, a.timemodified AS tma,
+                                   a.observations, a.name AS fname,
+                                   a.exercise, b.id_user, a.mark, a.id_file
+                              FROM {league_attempt} AS a
+                        INNER JOIN (
+                                            SELECT MAX(id) AS m, id_user
+                                              FROM {league_attempt}
+                                             WHERE id_user = :user
+                                          GROUP BY exercise
+                                    ) 
+                                    AS b ON a.id = b.m
+                        )
+                        AS b ON a.id = b.exercise
+                WHERE a.league = :league
+             ORDER BY mark DESC";
+        
+        $data = $DB->get_records_sql($query, array('user' => $userid, 'league' => $leagueid));
         $mark = Array();
         foreach ($data as $d){
-            $d = get_object_vars($d);
-            if ($d['mark'] != -1){
-                if($toprint || $d['published'] == 1){
-                    array_push($mark, $d['mark']);
+            // If the attempt is not marked yet
+            if ($d->mark != -1){
+                // If is the exercise is to print or the exercise is published, add it.
+                if($toprint || $d->published == 1){
+                    array_push($mark, $d->mark);
                 }
             }else{
+                // If not, and is only to print, add it.
                 if($toprint){
                     array_push($mark, get_string('q_tba','league'));
                 }
             }
         }
+        
         return $mark;
     }
     
+    /**
+     * Return the context ID from a league instance.
+     * 
+     * @global object $DB Moodle database.
+     * @param int $leagueid League ID.
+     * @return int
+     */
     public static function get_context_module_id_from_league($leagueid){
         global $DB;
-        //Lista de estudiantes de un curso
-        $var="SELECT l.id, m.id as cm
-            from mdl_league as l
-            inner join (
-                select cm.id, cm.module, cm.instance
-                from mdl_course_modules as cm
-                inner join mdl_modules as m
-                on m.id = cm.module
-                where m.name = 'league'
-            ) as m
-            on l.id = m.instance
-            where l.id = $leagueid";
-        $data = $DB->get_records_sql($var);
+        $query = "SELECT l.id, m.id AS cm
+                    FROM {league} AS l
+              INNER JOIN (
+                                SELECT cm.id, cm.module, cm.instance
+                                  FROM {course_modules} AS cm
+                            INNER JOIN {modules} AS m ON m.id = cm.module
+                                 WHERE m.name = 'league'
+                         ) 
+                         AS m ON l.id = m.instance
+                   WHERE l.id = :id";
+        
+        $data = $DB->get_records_sql($query, array('id' => $leagueid));
         foreach ($data as $d){
-            $d = get_object_vars($d);
-            return $d['cm'];
+            return $d->cm;
         }
         return null;
     }
     
+    /**
+     * 
+     * @global object $DB
+     * @param type $exercise
+     * @return boolean
+     */
     public static function publishedMarks($exercise){
         global $DB;
         //Lista de estudiantes de un curso
@@ -347,7 +472,7 @@ class league_model {
         if ($files = $fs->get_area_files($contextid, $component, $filearea, $itemid, 'sortorder', false)) {               
             foreach ($files as $file) {
                 $contenthash = $file->get_contenthash();
-                $id_file = \league_model::getIDFileFromContenthash($contenthash);
+                $id_file = \league_model::get_file_id_from_content_hash($contenthash);
 
 
                 $url = \league_model::getURLFile($file->get_contextid(), $file->get_component(), 
