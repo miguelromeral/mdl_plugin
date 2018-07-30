@@ -1,4 +1,26 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Class to create a qualy in function of the league instance.
+ *
+ * @package    mod_league
+ * @copyright  2018 Miguel Romeral
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
@@ -6,44 +28,75 @@ defined('MOODLE_INTERNAL') || die();
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
+/**
+ * Class to generate a qualy in function of the league instance.
+ * 
+ * With all appropiate data, this class generates a qualy.
+ * 
+ * @copyright 2018 Miguel Romeral
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class league_qualy {
     
+    /** @var int League ID. */
     private $leagueid = null;
+    
+    /** @var int Course ID. */
     private $courseid = null;
+    
+    /** @var string User role. */
     private $role = null;
+    
+    /** @var int Method to sort the qualy. */
     private $method = null;
+    
+    /** @var object An array of array with the qualy data. */
     private $qualy = null;
     
+    /**
+     * Load the class and generates automatically the qualy.
+     * 
+     * @param int $idleague League ID.
+     * @param int $idcurso Course ID.
+     * @param string $rol User role.
+     * @param int $method Method to sort the qualy.
+     */
     public function __construct($idleague, $idcurso, $rol, $method){
         $this->leagueid = $idleague;
         $this->courseid = $idcurso;
         $this->role = $rol;
         $this->method = $method;
-        $this->qualy = $this->get_qualy_array();
+        $this->qualy = $this->generate_qualy();
     }
     
+    /**
+     * Return the league's qualy.
+     * 
+     * @return object
+     */
     public function get_qualy(){
         return $this->qualy;
     }
     
-    private function get_qualy_array(){
+    /**
+     * Generates the qualy with all role student users in the course.
+     * 
+     * @global object $DB Moodle Database
+     * @return object Array of array with the qualy sorted appropiately.
+     */
+    private function generate_qualy(){
         global $DB;
-        //Lista de estudiantes de un curso
-        $var="SELECT DISTINCT u.id AS userid, c.id AS courseid, u.firstname, u.lastname, u.username
-        FROM mdl_user u
-        JOIN mdl_user_enrolments ue ON ue.userid = u.id
-        JOIN mdl_enrol e ON e.id = ue.enrolid
-        JOIN mdl_role_assignments ra ON ra.userid = u.id
-        JOIN mdl_context ct ON ct.id = ra.contextid AND ct.contextlevel = 50
-        JOIN mdl_course c ON c.id = ct.instanceid AND e.courseid = c.id
-        JOIN mdl_role r ON r.id = ra.roleid AND r.shortname = 'student'
-        WHERE e.status = 0 AND u.suspended = 0 AND u.deleted = 0
-          AND (ue.timeend = 0 OR ue.timeend > NOW()) AND ue.status = 0 and c.id = $this->courseid";
-        $data = $DB->get_records_sql($var);
-        $q = Array();
-        foreach ($data as $d){
+        // Get all users in the course.
+        $students = \league_model::get_students();
+        $qualy = Array();
+        // For the moment, WE DON'T SORT THE QUALY, only recover students data.
+        foreach ($students as $d){
             $d = get_object_vars($d);
-            $var2 = "select count(id) as te, count(idat) as eu, sum(mark) as acum, COUNT(CASE WHEN mark = -1 THEN 1 END) as sc
+            
+            // Get all the attempts data for this user: 
+            // total exercises, total exercises uploaded, total mark earned
+            // and number of non marked attempts.
+            $query = "select count(id) as te, count(idat) as eu, sum(mark) as acum, COUNT(CASE WHEN mark = -1 THEN 1 END) as sc
             from mdl_league_exercise as a
             left outer join
             (
@@ -54,233 +107,343 @@ class league_qualy {
                         inner join (
                                 select max(id) as m, id_user
                                 from mdl_league_attempt
-                                where id_user = ${d['userid']}
+                                where id_user = ${d['id']}
                                 group by exercise
                         ) as b
                         on a.id = b.m
             ) as b
             on a.id = b.exercise
             where a.league = $this->leagueid";
+                                
+            // If the user is a student, only get the data of published marks exercises.                    
             if($this->role == 'student'){
-                $var2 .= " and a.published = 1";
+                $query .= " and a.published = 1";
             }
-            $data2 = $DB->get_records_sql($var2);
-            foreach ($data2 as $d2){
-                $d2 = get_object_vars($d2);
-                $fila = Array();
-                $fila += array('name' => $d['firstname']." ".$d['lastname']);
-                $fila += array('uname' => $d['username']);
-                $fila += array('uid' => $d['userid']);
-                $fila += array('totalexer' => $d2['te']);
-                $fila += array('exeruplo' => $d2['eu']);
-                $fila += array('totalmark' => $d2['acum'] + $d2['sc']);
-                $fila += array('marks' => \league_model::getArrayMarkByStudent($this->leagueid, $d['userid'], true));
-                $fila += array('notes' => "");
-                $fila += array('picture' => new user_picture(\league_model::get_user_by_id($d['userid'])));
+            
+            $exercisesdata = $DB->get_records_sql($query);
+            
+            // Only one row returned by the last query.
+            foreach ($exercisesdata as $data){
+                $data = get_object_vars($data);
+                // Create an array with the user data.
+                $row = Array();
+                $row += array('name' => $d['firstname']." ".$d['lastname']);
+                $row += array('uname' => $d['username']);
+                $row += array('uid' => $d['id']);
+                $row += array('totalexer' => $data['te']);
+                $row += array('exeruplo' => $data['eu']);
+                $row += array('totalmark' => $data['acum'] + $data['sc']);
+                $row += array('marks' => \league_model::getArrayMarkByStudent($this->leagueid, $d['id'], true));
+                $row += array('notes' => "");
+                $row += array('picture' => new user_picture(\league_model::get_user_by_id($d['id'])));
             }
-            array_push($q, $fila);
+            // Add the user data to the global qualy.
+            array_push($qualy, $row);
         }
 
+        // In function of the league method, sort the qualy on the right way.
         switch($this->method){
-            case 1: return $this->sort_qualy_array_best_marks($q);
-            case 2: return $this->sort_qualy_array_more_exercises($q);
-            default: return $q;
+            case 1: return $this->sort_qualy_array_best_marks($qualy);
+            case 2: return $this->sort_qualy_array_more_exercises($qualy);
+                // Non sorted qualy by default.
+            default: return $qualy;
         }
     }
     
-    
-    private function sort_qualy_array_best_marks($q){
-        $n = sizeof($q);
-        //Algoritmo burbuja
-        for ($i = 1; $i < $n; $i++){
-            for($j = 0; $j < $n - $i; $j++){
-                $r1 = $q[$j];
-                $r2 = $q[$j+1];
-                //echo "<br> Miro ".$j." y ".($j+1)." ( ${r1['totalmark']} / ${r2['totalmark']}) <br>";
-                if($r2['totalmark'] > $r1['totalmark'] || 
-                        ($r2['totalmark'] === $r1['totalmark'] && $this->mejoresNotasSegundo($q, $r1, $r2))){
-                   // echo "<br>CAMBIO<br>";
-                    $q = $this->exchange($q, $j, $j+1);
+    /**
+     * Sort the qualy by best global mark, 
+     * then by best individual marks 
+     * and then by exercises uploaded.
+     * 
+     * @param object $qualy Qualy unsorted.
+     * @return object Qualy sorted.
+     */
+    private function sort_qualy_array_best_marks($qualy){
+        $size = sizeof($qualy);
+        
+        // Bubble sort algorithm.
+        for ($i = 1; $i < $size; $i++){
+            for($j = 0; $j < $size - $i; $j++){
+                $leader = $qualy[$j];
+                $follower = $qualy[$j+1];
+                
+                // Check if follower has best total mark than leader.
+                $followerbestglobal = $follower['totalmark'] > $leader['totalmark'];
+                $equalglobal = $follower['totalmark'] === $leader['totalmark'];
+                // Check if the follower has best individual marks.
+                $followerbestindividuals = $this->mejoresNotasSegundo($qualy, $leader, $follower);
+                
+                // If a switch is needed, do it!
+                if($followerbestglobal or
+                        ($equalglobal and $followerbestindividuals)){
+                    $qualy = $this->exchange($qualy, $j, $j+1);
                 }
             }
            }
-        //Ya está ordenado, ahora a poner las aclaraciones en caso de empates
-        for ($i = 0; $i < $n - 1; $i++){
-            $r1 = $q[$i];
-            $r2 = $q[$i+1];
-            $q = $this->setNotesBM($q, $r1, $r2, $i, $i+1);
+           
+        // Once is sorted, put the notes why a leader is ahead the follower.
+        for ($i = 0; $i < $size - 1; $i++){
+            $leader = $qualy[$i];
+            $follower = $qualy[$i+1];
+            $qualy = $this->set_notes_best_marks($qualy, $leader, $follower, $i, $i+1);
         }
-        return $q;
+        
+        return $qualy;
     }
 
-    private function sort_qualy_array_more_exercises($q){
-        $n = sizeof($q);
-        //Algoritmo burbuja
-        for ($i = 1; $i < $n; $i++){
-            for($j = 0; $j < $n - $i; $j++){
-                $r1 = $q[$j];
-                $r2 = $q[$j+1];
-                //echo "<br> Miro ".$j." y ".($j+1)." ( ${r1['totalmark']} / ${r2['totalmark']}) <br>";
-                if($r2['exeruplo'] > $r1['exeruplo'] ||
-                        ($r2['exeruplo'] === $r1['exeruplo'] && 
-                            ($r2['totalmark'] > $r1['totalmark']))){
-                    //echo "<br>CAMBIO<br>";
-                    $q = $this->exchange($q, $j, $j+1);
+    /**
+     * Sort the qualy by more exercises uploaded,
+     * then by global best marks,
+     * then by best individual marks.
+     * 
+     * @param object $qualy Qualy unsorted.
+     * @return object Qualy sorted.
+     */
+    private function sort_qualy_array_more_exercises($qualy){
+        $size = sizeof($qualy);
+        
+        // Bubble sort algorithm.
+        for ($i = 1; $i < $size; $i++){
+            for($j = 0; $j < $size - $i; $j++){
+                $leader = $qualy[$j];
+                $follower = $qualy[$j+1];
+                
+                // Check if the follower has more exercises uploaded.
+                $followermoreexercises = $follower['exeruplo'] > $leader['exeruplo'];
+                // Check if the follower has more exercises uploaded.
+                $sameexercises = $follower['exeruplo'] == $leader['exeruplo'];
+                // Check if the follower has best global mark.
+                $followerbestglobal = $follower['totalmark'] > $leader['totalmark'];
+                // Check if they have the same global mark.
+                $sameglobal= $follower['totalmark'] == $leader['totalmark'];
+                // Check if the follower has best individual marks.
+                $followerbestindividuals = $this->mejoresNotasSegundo($qualy, $leader, $follower);
+                
+                // If a switch is needed, do it!
+                if($followermoreexercises or 
+                        ($sameexercises and 
+                        ($followerbestglobal or 
+                        ($sameglobal and $followerbestindividuals)))){
+                    $qualy = $this->exchange($qualy, $j, $j+1);
                 }
             }
            }
-        //Ya está ordenado, ahora a poner las aclaraciones en caso de empates
-        for ($i = 0; $i < $n - 1; $i++){
-            $r1 = $q[$i];
-            $r2 = $q[$i+1];
-            $q = $this->setNotesME($q, $r1, $r2, $i, $i+1);
+           
+        // Once is sorted, put the notes why a leader is ahead the follower.
+        for ($i = 0; $i < $size - 1; $i++){
+            $leader = $qualy[$i];
+            $follower = $qualy[$i+1];
+            $qualy = $this->set_notes_more_exercises($qualy, $leader, $follower, $i);
         }
-        return $q;
+        
+        return $qualy;
     }
     
-
-    private function exchange($array, $id1, $id2){
-        $aux = $array[$id1];
-        $array[$id1] = $array[$id2];
-        $array[$id2] = $aux;
+    /**
+     * Exchange two elements on an array.
+     * 
+     * @param array $array Array to switch between elements.
+     * @param object $elementone element to switch.
+     * @param object $elementtwo element to switch.
+     * @return array Array with the elements switched.
+     */
+    private function exchange($array, $elementone, $elementtwo){
+        $aux = $array[$elementone];
+        $array[$elementone] = $array[$elementtwo];
+        $array[$elementtwo] = $aux;
         return $array;
     }
 
-
-    private function setNotesBM($q, $r1, $r2, $f, $s){
-        $aux = 0;
-        $s = $r1['exeruplo'];
-        if($r1['exeruplo'] > $r2['exeruplo'] && $r1['totalmark'] === $r2['totalmark']){
-            $q[$f]['notes'] = get_string('more_exercises_uploaded','league');
+    /**
+     * Set aclarations why a leader is ahead the follower with best marks.
+     * 
+     * @param object $qualy Qualy.
+     * @param object $leader Leader row.
+     * @param object $follower Follower row.
+     * @param int $li Leader index.
+     * @param int $fi Follower index.
+     * @return object Qualy with notes set. 
+     */
+    private function set_notes_best_marks($qualy, $leader, $follower, $li, $fi){
+        $index = 0;
+        // Get the leader total exercise uploaded.
+        $exercisesuploaded = $leader['exeruplo'];
+        // If the global mark is the same, check if the leader has more exercise uploaded.
+        if($leader['exeruplo'] > $follower['exeruplo'] && $leader['totalmark'] === $follower['totalmark']){
+            $qualy[$li]['notes'] = get_string('more_exercises_uploaded','league');
         }else{
-            if($r1['totalmark'] === $r2['totalmark']){
+            // If both users has the same global mark:
+            if($leader['totalmark'] === $follower['totalmark']){
+                // Continue until a note will be set or we reached the end
+                // comparing their marks (in that case, total draw).
                 while (true) {
-                    if($s != $aux){
-                        $n1 = $r1['marks'][$aux];
-                        $n2 = $r2['marks'][$aux];
-                        if($n1 && $n2){
-                            if($n1 > $n2){
-                                $q[$f]['notes'] = get_string('higher_mark','league').' '. $this->comparaNotas($q, $f, $s, true).' a '
-                                        . $this->comparaNotas($q, $f, $s, false);
-                                return $q;
+                    if($exercisesuploaded != $index){
+                        // We get the $index best individual mark of each one.
+                        $leadermark = $leader['marks'][$index];
+                        $followermark = $follower['marks'][$index];
+                        // If there are both marks, that mean they uploaded,
+                        // at least, $ind exercises. We compare it.
+                        if($leadermark && $followermark){
+                            // If the individual leader mark is higher...
+                            if($leadermark > $followermark){
+                                $qualy[$li]['notes'] = get_string('higher_mark','league').' ('. $this->compare_marks($qualy, $li, $fi, true).' > '
+                                        . $this->compare_marks($qualy, $li, $fi, false).')';
+                                return $qualy;
                             }
-                            if($n1 == $n2){
-                                $aux += 1;
+                            // If the individual $index mark is the same, check the next one.
+                            if($leadermark == $followermark){
+                                $index += 1;
                             }else{
-                                if($n2 == get_string('q_tba', 'league')){
-                                    //$q[$f]['notes'] = "REVISAR";
-                                    return $q;
+                                // If the follower mark is not set yet (TBA), return the qualy.
+                                if($followermark == get_string('q_tba', 'league')){
+                                    return $qualy;
                                 }
                             }
                         }else{
-                            $q[$f]['notes'] = get_string('total_draw','league');
-                            return $q;
+                            // If both two users has not mark in $index position, total draw.
+                            $qualy[$li]['notes'] = get_string('total_draw','league');
+                            return $qualy;
                         }
                     }else {
-                        $q[$f]['notes'] = get_string('total_draw','league');
-                        return $q;
+                        // If we reached the end, total draw.
+                        $qualy[$li]['notes'] = get_string('total_draw','league');
+                        return $qualy;
                     }
                 }
             }
         }
-        return $q;
+        return $qualy;
     }
     
-    private function setNotesME($q, $r1, $r2, $f, $s){
-
-        $aux = 0;
-        $s = $r1['exeruplo'];
-        if($r1['exeruplo'] != $r2['exeruplo']){
-            if($r1['exeruplo'] > $r2['exeruplo']){
-                $q[$f]['notes'] = get_string('more_exercises_uploaded','league');
-            }
+    /**
+     * Set aclarations why a leader is ahead the follower with more exercises.
+     * 
+     * @param object $qualy Qualy.
+     * @param object $leader Leader row.
+     * @param object $follower Follower row.
+     * @param int $li Leader index.
+     * @return object Qualy with notes set. 
+     */
+    private function set_notes_more_exercises($qualy, $leader, $follower, $li){
+        $index = 0;
+        // Get the leader total exercise uploaded.
+        $exercisesuploaded = $leader['exeruplo'];
+        // If the leader has more exercises uploaded...
+        if($leader['exeruplo'] > $follower['exeruplo']){
+            $qualy[$li]['notes'] = get_string('more_exercises_uploaded','league');
         }else{
-            if($r1['totalmark'] === $r2['totalmark']){
+            // If the global mark is the same, we check the individual ones.
+            if($leader['totalmark'] === $follower['totalmark']){
                 while (true) {
-                    if($s != $aux){
-                        $n1 = $r1['marks'][$aux];
-                        $n2 = $r2['marks'][$aux];
-                        if($n1 && $n2){
-                            if($n1 > $n2){
-                                $q[$f]['notes'] = get_string('higher_mark','league').' '. $this->comparaNotas($q, $f, $s, true).' - '
-                                        . $this->comparaNotas($q, $f, $s, false);
-                                return $q;
+                    // If there are individual marks availables:
+                    if($exercisesuploaded != $index){
+                        // Get the individual marks on index $index.
+                        $leadermark = $leader['marks'][$index];
+                        $followermark = $follower['marks'][$index];
+                        if($leadermark && $followermark){
+                            // If there are a better individual mark.
+                            if($leadermark > $followermark){
+                                $qualy[$li]['notes'] = get_string('higher_mark','league').' ('. $this->compare_marks($qualy, $li, $li + 1, true).' > '
+                                        . $this->compare_marks($qualy, $li, $li + 1, false) . ')';
+                                return $qualy;
                             }
-                            if($n1 == $n2){
-                                $aux += 1;
-                            }else{
-                                if($n2 == get_string('q_tba', 'league')){
-                                    //$q[$f]['notes'] = "REVISAR";
-                                    return $q;
+                            // If is the same, continue
+                            $index += 1;
+                            if($leadermark != $followermark){
+                                // If the follower has a mark with no mark yet.
+                                if($followermark == get_string('q_tba', 'league')){
+                                    return $qualy;
                                 }
                             }
                         }else{
-                            $q[$f]['notes'] = get_string('total_draw','league');
-                            return $q;
+                            // There already are no more individual marks.
+                            $qualy[$li]['notes'] = get_string('total_draw','league');
+                            return $qualy;
                         }
                     }else{
-                        $q[$f]['notes'] = get_string('total_draw','league');
-                        return $q;
+                        // If we reached the end, total draw.
+                        $qualy[$li]['notes'] = get_string('total_draw','league');
+                        return $qualy;
                     }
                 } 
             }
         }
-        return $q;
+        
+        return $qualy;
     }
 
-    private function comparaNotas($q, $i, $j, $primero){
-        $notas1 = $q[$i]['marks'];
-        $notas2 = $q[$j]['marks'];
-        //$ant1 = -1;
-        //$ant2 = -1;
-        $i = 0;
+    /**
+     * Compare between two marks and get the appropiate (the highest or smallest one).
+     * 
+     * @param object $qualy Qualy sorted.
+     * @param int $li Leader index.
+     * @param int $fi Follower index.
+     * @param bool $highest Return the highest mark.
+     * @return int Highest (or slowest) mark. 
+     */
+    private function compare_marks($qualy, $li, $fi, $highest){
+        // Get all individual marks.
+        $leader = $qualy[$li]['marks'];
+        $follower = $qualy[$fi]['marks'];
+        $index = 0;
+        // Seek for each individual mark until a difference is found.
         while (true) {
-            $n1 = (isset($notas1[$i]) ? $notas1[$i] : -1);
-            $n2 = (isset($notas2[$i]) ? $notas2[$i] : -1);
+            // Get individual marks.
+            $n1 = (isset($leader[$index]) ? $leader[$index] : -1);
+            $n2 = (isset($follower[$index]) ? $follower[$index] : -1);
+            // Difference found.
             if($n2 != $n1){
-                return ($primero ? $n1 : $n2);
+                return ($highest ? $n1 : $n2);
             }
             if($n1 == $n2){
+                // If there are the same and the leader one is under TBA, return it.
                 if($n1 == -1){
                     return get_string('q_tba', 'league');
-                    //return ($primero ? $ant1 : $ant2);
                 }
-                //$ant1 = $n1;
-                //$ant2 = $n2;
-                $i += 1;
+                $index += 1;
             }
         }
     }
 
-    // TRUE si r2 tiene mejores notas
-    private function mejoresNotasSegundo($q, $r1, $r2){
-        $i = 0;
-        $s = max($r1['exeruplo'],$r2['exeruplo']);
-        if($r1['exeruplo'] != $r2['exeruplo']){
-            if($r2['exeruplo'] > $r1['exeruplo']){
-                return true;
-            }
-        }else{
-            while (true) {
-                if($i != $s){
-                    $n1 = ($r1['marks'][$i] ? $r1['marks'][$i] : null);
-                    $n2 = ($r2['marks'][$i] ? $r2['marks'][$i] : null);
-                    if($n1 && $n2){
-                        if($n2 > $n1){
-                            return true;
-                        }
-                        if($n1 > $n2){
-                            return false;
-                        }
-                        if($n1 == $n2){
-                            $i += 1;
-                        }
-                    }else{
+    /**
+     * Return true if the follower has best individual marks.
+     * 
+     * @param object $qualy Qualy.
+     * @param object $leader Current leader row.
+     * @param object $follower Current follower row.
+     * @return boolean
+     */
+    private function mejoresNotasSegundo($qualy, $leader, $follower){
+        $index = 0;
+        // Max of uploaded exercises.
+        $size = max($leader['exeruplo'], $follower['exeruplo']);
+        while (true) {
+            // Until we reach the end
+            if($index != $size){
+                // Get individual marks on index $index.
+                $n1 = ($leader['marks'][$index] ? $leader['marks'][$index] : null);
+                $n2 = ($follower['marks'][$index] ? $follower['marks'][$index] : null);
+                //If there are marks, check them.
+                if($n1 && $n2){
+                    if($n2 > $n1){
+                        return true;
+                    }
+                    if($n1 > $n2){
                         return false;
                     }
+                    if($n1 == $n2){
+                        $index += 1;
+                    }
                 }else{
-                    return false;
+                    if($n1){
+                        return false;
+                    }
+                    if($n2){
+                        return true;
+                    }
                 }
+            }else{
+                return false;
             }
         }
     }
