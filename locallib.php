@@ -4,43 +4,90 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/league/lib.php');
 
+/**
+ * Handle league_created event
+ *
+ * @param object $event The event object.
+ * @deprecated since 2.6. {@link \mod_league\league::trigger_league_created_event($league)}
+ */
 function league_created_handler($event) {
-    global $DB;
-    $course  = $DB->get_record('course', array('id' => $event->courseid));
-    $cm      = get_coursemodule_from_id('quiz', $event->get_context()->instanceid, $event->courseid);
-    if (!($course && $cm)) {
-        // Something has been deleted since the event was raised. Therefore, the
-        // event is no longer relevant.
-        return true;
-    }
-    // Update completion state.
-    $completion = new completion_info($course);
-    if ($completion->is_enabled($cm)) {
-        $completion->update_state($cm, COMPLETION_COMPLETE, $event->userid);
-    }
-    
-    //return quiz_send_notification_messages($course, $quiz, $attempt,
-    //        context_module::instance($cm->id), $cm);
-    return true;      
+    debugging('league_created_handler() is deprecated, please use a call function '.
+            'to trigger_league_created_event instead.', DEBUG_DEVELOPER);   
 }
+
+/**
+ * Handle league_updated event
+ *
+ * @param object $event The event object.
+ * @deprecated since 2.6. {@link \mod_league\league::trigger_league_updated_event($league)}
+ */
 function league_updated_handler($event) {
-    return true;      
+    debugging('league_updated_handler() is deprecated, please use a call function '.
+            'to trigger_league_updated_event instead.', DEBUG_DEVELOPER);
 }
+
+/**
+ * Handle exercise_created event
+ *
+ * @param object $event The event object.
+ * @deprecated since 2.6. {@link \mod_league\league::trigger_exercise_created_event($league)}
+ */
 function exercise_created_handler($event) {
-    return true;      
+    debugging('exercise_created_handler() is deprecated, please use a call function '.
+            'to trigger_exercise_created_event instead.', DEBUG_DEVELOPER);
 }
+
+/**
+ * Handle exercise_updated event
+ *
+ * @param object $event The event object.
+ * @deprecated since 2.6. {@link \mod_league\league::trigger_exercise_updated_event($league)}
+ */
 function exercise_updated_handler($event) {
-    return true;      
+    debugging('exercise_updated_handler() is deprecated, please use a call function '.
+            'to trigger_exercise_updated_event instead.', DEBUG_DEVELOPER);
 }
+
+/**
+ * Handle exercise_deleted event
+ *
+ * @param object $event The event object.
+ * @deprecated since 2.6. {@link \mod_league\league::trigger_exercise_deleted_event($league)}
+ */
 function exercise_deleted_handler($event) {
-    return true;      
+    debugging('exercise_deleted_handler() is deprecated, please use a call function '.
+            'to trigger_exercise_deleted_event instead.', DEBUG_DEVELOPER);
 }
+
+/**
+ * Handle attempt_submitted event
+ *
+ * @param object $event The event object.
+ * @deprecated since 2.6. {@link \mod_league\league::trigger_attempt_submitted_event($league)}
+ */
 function attempt_submitted_handler($event) {
-    return true;      
+    debugging('attempt_submitted_handler() is deprecated, please use a call function '.
+            'to trigger_attempt_submitted_event instead.', DEBUG_DEVELOPER);
 }
+
+/**
+ * Handle attempt_downloaded event
+ *
+ * @param object $event The event object.
+ * @deprecated since 2.6. {@link \mod_league\league::trigger_attempt_downloaded_event($league)}
+ */
 function attempt_downloaded_handler($event) {
-    return true;      
+    debugging('attempt_downloaded_handler() is deprecated, please use a call function '.
+            'to trigger_attempt_downloaded_event instead.', DEBUG_DEVELOPER);
 }
+
+/**
+ * Handle attempt_graded event
+ *
+ * @param object $event The event object.
+ * @deprecated since 2.6. {@link \mod_league\league::trigger_attempt_graded_event($league)}
+ */
 function attempt_graded_handler($event) {
-    return true;      
+    debugging('attempt_graded_handler() is deprecated, please use a call function '.
+            'to trigger_attempt_graded_event instead.', DEBUG_DEVELOPER);
 }
