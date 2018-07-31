@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'league', language 'en'.
+ * Strings for component 'league', language 'es'.
  *
  * @package    mod_league
  * @category   string
@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['add_exercise_button'] = 'Add exercise';
+$string['add_exercise_button'] = 'Añadir ejercicio';
 $string['add_exercise_title'] = 'Añadir nuevo ejercicio';
 $string['ae_cancel'] = 'Cancelada la modificación del ejercicio';
 $string['ae_cancel_new'] = 'Cancelada la creación del ejercicio';
@@ -87,7 +87,7 @@ $string['league:uploadfiles'] = "Subir ficheros para ejercicios";
 $string['league:view'] = "Ver liga";
 $string['league_name'] = 'Nombre de la liga';
 $string['leagues_in_course'] = 'Ligas creadas en el curso';
-$string['main_panel_student'] = "Students' control panel";
+$string['main_panel_student'] = 'Panel de control del alumno';
 $string['manage_exercises_button'] = 'Administrar ejercicios';
 $string['management_title'] = 'Administración';
 $string['mark'] = 'Nota';

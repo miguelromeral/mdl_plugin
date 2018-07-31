@@ -1,2 +1,3 @@
+# mod_league
 
-RELLENAR!
+*You also can read this in other languages: [English](README.md), [Spanish](README.es.md)*
