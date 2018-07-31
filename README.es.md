@@ -1,7 +1,7 @@
 
 # mod_league
 
-![alt](pic/icon.svg=20px)
+![image](pix/icon.svg=20x20)
 
 Breve Descripción
 
