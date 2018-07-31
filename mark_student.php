@@ -84,7 +84,7 @@ $output = $PAGE->get_renderer('mod_league');
 
 // Retrieve attempt data from the database.
 $attemptleague = \league_model::get_data_from_attempt($attemptid, 'league');
-$attemptuser = \league_model::get_data_from_attempt($attemptid, 'id_user');
+$attemptuser = \league_model::get_data_from_attempt($attemptid, 'user');
 $exerciseid = \league_model::get_data_from_attempt($attemptid, 'exercise');
 
 // Check if the attempt belongs to this league and user can mark students.
@@ -110,7 +110,7 @@ if($canmark and $sameleague and $lastattempt){
         'student'       => $studentname,
         'idat'          => $attemptid,
         'observations'  => $observations,
-        'id_user'       => $attemptuser
+        'user'       => $attemptuser
     );
     $mform = new mod_league\form\mark_form(null, $params);
 

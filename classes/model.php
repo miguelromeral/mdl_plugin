@@ -137,7 +137,7 @@ class league_model {
                LEFT JOIN (
                             SELECT COUNT(id) AS num, exercise
                               FROM {league_attempt}
-                             WHERE id_user = :user
+                             WHERE user = :user
                           GROUP BY exercise
                          ) 
                          AS a ON e.id = a.exercise
@@ -162,7 +162,7 @@ class league_model {
                             SELECT id AS us, firstname, lastname
                               FROM {user}
                          ) 
-                         AS b ON a.id_user = b.us
+                         AS b ON a.user = b.us
                    WHERE a.exercise = :id
                 ORDER BY a.timemodified DESC";
         
@@ -263,12 +263,12 @@ class league_model {
                             SELECT a.id AS idat, a.timemodified AS tma,
                                    a.timecreated AS tmc,
                                    a.observations, a.name as fname,
-                                   a.exercise, b.id_user, a.mark, a.id_file
+                                   a.exercise, b.user, a.mark, a.itemid
                               FROM mdl_league_attempt AS a
                         INNER JOIN (
-                                        SELECT MAX(id) AS m, id_user
+                                        SELECT MAX(id) AS m, user
                                           FROM {league_attempt}
-                                         WHERE id_user = :user
+                                         WHERE user = :user
                                       GROUP BY exercise
                                     ) 
                                     AS b ON a.id = b.m
@@ -295,12 +295,12 @@ class league_model {
          LEFT OUTER JOIN (
                             SELECT a.id AS idat, a.timemodified AS tma,
                                    a.observations, a.name AS fname,
-                                   a.exercise, b.id_user, a.mark, a.id_file
+                                   a.exercise, b.user, a.mark, a.itemid
                               FROM {league_attempt} AS a
                         INNER JOIN (
-                                            SELECT MAX(id) AS m, id_user
+                                            SELECT MAX(id) AS m, user
                                               FROM {league_attempt}
-                                             WHERE id_user = :user
+                                             WHERE user = :user
                                           GROUP BY exercise
                                     ) 
                                     AS b ON a.id = b.m
@@ -396,12 +396,12 @@ class league_model {
          LEFT OUTER JOIN (
                             SELECT a.id AS idat, a.timemodified AS tma,
                                    a.observations, a.name AS fname,
-                                   a.exercise, b.id_user, a.mark, a.id_file
+                                   a.exercise, b.user, a.mark, a.itemid
                               FROM {league_attempt} AS a
                         INNER JOIN (
-                                        SELECT MAX(id) AS m, id_user
+                                        SELECT MAX(id) AS m, user
                                           FROM {league_attempt}
-                                         WHERE id_user = :user
+                                         WHERE user = :user
                                       GROUP BY exercise
                                    ) 
                                    AS b ON a.id = b.m
@@ -459,14 +459,14 @@ class league_model {
             $found = true;
             $random = rand($min, $max);
             
-            $query = "SELECT DISTINCT id_file
+            $query = "SELECT DISTINCT itemid
                                  FROM {league_attempt}";
             
             $data = $DB->get_records_sql($query);
             // Check if there is a file with this ID.
             // If not, repeat a random.
             foreach ($data as $file){
-                if($file->id_file == $random){
+                if($file->itemid == $random){
                     $found = false;
                 }
             } 
@@ -517,12 +517,12 @@ class league_model {
                 // Content hash of the File.
                 $contenthash = $file->get_contenthash();
                 // Get the File ID from its content hash.
-                $id_file = \league_model::get_file_id_from_content_hash($contenthash);
+                $itemid = \league_model::get_file_id_from_content_hash($contenthash);
                 // Restore URL.
                 $url = \league_model::get_url_file($file->get_contextid(), $file->get_itemid(), $file->get_filename());
                 // Return the result.
                 $resultado = new stdClass();
-                $resultado->id = $id_file;
+                $resultado->id = $itemid;
                 $resultado->url = $url;
                 return $resultado;
             }
@@ -544,7 +544,7 @@ class league_model {
         global $DB;
         $query = "SELECT id
                     FROM {league_attempt}
-                   WHERE id_user = :user AND exercise = :exercise
+                   WHERE user = :user AND exercise = :exercise
                 ORDER BY id DESC
                    LIMIT 1;";
         
@@ -642,15 +642,15 @@ class league_model {
     public static function get_attempt_data_by_itemid($itemid){
         global $DB;
         $result = new stdClass();
-        $query = "SELECT id, id_user, league, exercise
+        $query = "SELECT id, user, league, exercise
                     FROM {league_attempt}
-                   WHERE id_file = :id";
+                   WHERE itemid = :id";
         
         $data = $DB->get_records_sql($query, array('id' => $itemid));
         
         foreach ($data as $attempt){
             $result->id = $attempt->id;
-            $result->id_user = $attempt->id_user;
+            $result->user = $attempt->user;
             $result->exercise = $attempt->exercise;
             $result->league = $attempt->league;
             return $result;

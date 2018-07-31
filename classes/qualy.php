@@ -102,12 +102,12 @@ class league_qualy {
             (
                 select a.id as idat, a.timemodified as tma,
                         a.observations, a.name as fname,
-                        a.exercise, b.id_user, a.mark, a.id_file
+                        a.exercise, b.user, a.mark, a.itemid
                         from mdl_league_attempt as a
                         inner join (
-                                select max(id) as m, id_user
+                                select max(id) as m, user
                                 from mdl_league_attempt
-                                where id_user = ${d['id']}
+                                where user = ${d['id']}
                                 group by exercise
                         ) as b
                         on a.id = b.m

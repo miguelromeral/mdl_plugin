@@ -127,7 +127,7 @@ class total_attempts_view implements \renderable {
             $attempt = get_object_vars($attempt);
             $data = array();
             // User picture.
-            $data[] = \league_model::get_user_image($attempt['id_user']);
+            $data[] = \league_model::get_user_image($attempt['user']);
             // User name.
             $user = $attempt['firstname'] . " " . $attempt['lastname'];
             $data[] = $user;
@@ -147,8 +147,8 @@ class total_attempts_view implements \renderable {
             // Here there is no capability check to download because
             // it's supposed the only way to be here is having that
             // capability.
-            if($attempt['id_file']){
-                $file = \league_model::restoreURLFile($this->contextid, $attempt['id_file']);
+            if($attempt['itemid']){
+                $file = \league_model::restoreURLFile($this->contextid, $attempt['itemid']);
                 if($file){
                     $data[] = '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
                 }else{

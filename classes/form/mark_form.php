@@ -47,7 +47,7 @@ class mark_form extends \moodleform {
         
         // Check the exercise and user ID exists.
         $exercises = ($this->_customdata['id_exer'] ? $this->_customdata['id_exer'] : -1);
-        $user = ($this->_customdata['id_user'] ? $this->_customdata['id_user'] : -1);
+        $user = ($this->_customdata['user'] ? $this->_customdata['user'] : -1);
         
         // Get the current mark and observations to the attempt.
         $mark = ($this->_customdata['mark'] ? $this->_customdata['mark'] : -1);
@@ -63,8 +63,8 @@ class mark_form extends \moodleform {
         $mform->addElement('hidden', 'exercise', $exercises);
         $mform->setType('exercise', PARAM_INT);
         
-        $mform->addElement('hidden', 'id_user', $user);
-        $mform->setType('id_user', PARAM_INT);
+        $mform->addElement('hidden', 'user', $user);
+        $mform->setType('user', PARAM_INT);
         
         $mform->addElement('hidden', 'id', $this->_customdata['id']);
         $mform->setType('id', PARAM_INT);

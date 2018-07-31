@@ -89,7 +89,7 @@ class restore_league_activity_structure_step extends restore_activity_structure_
         
         $data->league = $this->get_new_parentid('league');
         $data->exercise = $this->get_mappingid('league_exercise', $data->exercise);
-        $data->id_user = $this->get_mappingid('user', $data->id_user);
+        $data->user = $this->get_mappingid('user', $data->user);
         
         $newitemid = $DB->insert_record('league_attempt', $data);
         $this->set_mapping('league_attempt', $oldid, $newitemid);

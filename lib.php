@@ -196,10 +196,10 @@ function league_attempt_add_instance($userid, $exerciseid, $itemid, $filename, $
     $record->name = ($filename ? $filename : "$userid-$exerciseid-$time");
     $record->timemodified = $time;
     $record->timecreated = $time;
-    $record->id_user = $userid;
+    $record->user = $userid;
     $record->exercise = $exerciseid;
     $record->mark = -1;
-    $record->id_file = $itemid;
+    $record->itemid = $itemid;
     $record->league = $leagueid;
   
     $id = $DB->insert_record('league_attempt', $record);
@@ -467,7 +467,7 @@ function league_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
     // Get appropiate data belonging to this attempt to be able to trigger the event.
     $ids = \league_model::get_attempt_data_by_itemid($itemid);
     if($ids){
-        \mod_league\league::trigger_attempt_downloaded_event($ids->id, $ids->id_user, 
+        \mod_league\league::trigger_attempt_downloaded_event($ids->id, $ids->user, 
                 $ids->league, $ids->exercise, $context);
     }
   
@@ -495,7 +495,6 @@ function league_extend_navigation(navigation_node $leaguenode, stdclass $course,
             new moodle_url('/mod/league/qualy.php', array('id' => $leaguenode->key)));
     // Make the node active.
     $qualynode->make_active();
-    
 }
 
 /**

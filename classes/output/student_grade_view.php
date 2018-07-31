@@ -108,9 +108,9 @@ class student_grade_view implements \renderable {
 
                 // If the exercise has an file ID associated, that 
                 // means an attempt was sent. Make a URL to download. 
-                if($mark['id_file']){
+                if($mark['itemid']){
                     if($this->candownload){
-                        $file = \league_model::restoreURLFile($this->contextid, $mark['id_file']);
+                        $file = \league_model::restoreURLFile($this->contextid, $mark['itemid']);
                         if($file){
                             $this->marks[] = '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
                         }else{
