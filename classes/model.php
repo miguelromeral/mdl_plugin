@@ -261,6 +261,7 @@ class league_model {
                     FROM {league_exercise} AS a
          LEFT OUTER JOIN (
                             SELECT a.id AS idat, a.timemodified AS tma,
+                                   a.timecreated AS tmc,
                                    a.observations, a.name as fname,
                                    a.exercise, b.id_user, a.mark, a.id_file
                               FROM mdl_league_attempt AS a

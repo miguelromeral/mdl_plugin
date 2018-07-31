@@ -57,7 +57,6 @@ function league_supports($feature) {
 function league_add_instance(stdClass $league, mod_league_mod_form $mform = null) {
     global $DB;
     $league->timemodified = time();
-    $league->gradeweighting = 100;
     $league->filearea = 'exuplod';
     $league->id = $DB->insert_record('league', $league);
     // Create the Gradebook.
@@ -108,6 +107,8 @@ function league_delete_instance($id) {
     }
     // Delete any dependent records here.
     $DB->delete_records('league', array('id' => $league->id));
+    // Delete Gradebook.
+    league_grade_item_delete($league);
     return true;
 }
 
@@ -194,6 +195,7 @@ function league_attempt_add_instance($userid, $exerciseid, $itemid, $filename, $
     $time = time();
     $record->name = ($filename ? $filename : "$userid-$exerciseid-$time");
     $record->timemodified = $time;
+    $record->timecreated = $time;
     $record->id_user = $userid;
     $record->exercise = $exerciseid;
     $record->mark = -1;
@@ -259,6 +261,7 @@ function league_attempt_delete_instance($id) {
 /**
  * Update the Gradebook of the league.
  * 
+ * @category grade
  * @global object $CFG Global Moodle configuration.
  * @param object $league League instance.
  * @param int $userid User ID for update specific user gradebook. 0 if update all users.
@@ -268,16 +271,19 @@ function league_attempt_delete_instance($id) {
 function league_update_grades($league, $userid=0, $nullifnone=true){
     global $CFG;
     require_once($CFG->libdir.'/gradelib.php');
+    
     if ($grades = league_get_user_grades($league, $userid)) {
         // If the element is gradable, it tries to retrieve grades from users
         // with league_get_user_grades (that belongs to Rating API).
         league_grade_item_update($league, $grades);
     } else if ($userid and $nullifnone) {
+        
         // If the user has no grades (or user = 0), then set NULL grade.
         $grade = new stdClass();
         $grade->userid   = $userid;
         $grade->rawgrade = NULL;
         league_grade_item_update($league, $grade);
+        
     } else {
         // In any case, update all grades.
         league_grade_item_update($league);
@@ -290,6 +296,7 @@ function league_update_grades($league, $userid=0, $nullifnone=true){
  * $grades value). Usually, $grades accepts the string 'reset' to reset the 
  * gradebook.
  * 
+ * @category grade
  * @global object $CFG Global Moodle configuration.
  * @param object $league League instance.
  * @param object $grades Grades.
@@ -313,14 +320,28 @@ function league_grade_item_update($league, $grades=NULL){
     $params['grademax']  = 100;
     $params['grademin']  = 0;
 
- 
-    //HABRÍA QUE ARREGLAR ESTO:
-    /*
     if ($grades  === 'reset') {
         $params['reset'] = true;
         $grades = NULL;
-    }*/
+    }
+    
     return grade_update('mod/league', $league->course, 'mod', 'league', $league->id, 0, $grades, $params);
+}
+
+/**
+ * Delete grade item for given league.
+ * 
+ * @category grade
+ * @global object $CFG Global Moodle configuration.
+ * @param object $league League instance.
+ * @return object League.
+ */
+function league_grade_item_delete($league){
+    global $CFG;
+    require_once($CFG->libdir . '/gradelib.php');
+
+    return grade_update('mod/league', $league->course, 'mod', 'league', $league->id, 0,
+            null, array('deleted' => 1));
 }
 
     //////////////////////////////////////////////////////////////////////

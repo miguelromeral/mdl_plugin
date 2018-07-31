@@ -104,7 +104,7 @@ class student_grade_view implements \renderable {
                 $this->marks = array();
                 $this->marks[] = $mark['name'];
                 // If there is an attempt show modification time.
-                $this->marks[] = ($mark['tma'] ? date("H:i:s, d (D) M Y", $mark['tma']) : "");
+                $this->marks[] = ($mark['tmc'] ? date("H:i:s, d (D) M Y", $mark['tmc']) : "");
 
                 // If the exercise has an file ID associated, that 
                 // means an attempt was sent. Make a URL to download. 

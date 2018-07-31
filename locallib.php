@@ -34,8 +34,8 @@ require_once($CFG->dirroot . '/mod/league/lib.php');
  * @deprecated since 2.6. {@link \mod_league\league::trigger_league_created_event($league)}
  */
 function league_created_handler($event) {
-    debugging('league_created_handler() is deprecated, please use a call function '.
-            'to trigger_league_created_event instead.', DEBUG_DEVELOPER);   
+    //debugging('league_created_handler() is deprecated, please use a call function '.
+    //        'to trigger_league_created_event instead.', DEBUG_DEVELOPER);   
 }
 
 /**
@@ -45,8 +45,8 @@ function league_created_handler($event) {
  * @deprecated since 2.6. {@link \mod_league\league::trigger_league_updated_event($league)}
  */
 function league_updated_handler($event) {
-    debugging('league_updated_handler() is deprecated, please use a call function '.
-            'to trigger_league_updated_event instead.', DEBUG_DEVELOPER);
+    //debugging('league_updated_handler() is deprecated, please use a call function '.
+    //        'to trigger_league_updated_event instead.', DEBUG_DEVELOPER);
 }
 
 /**
@@ -56,8 +56,8 @@ function league_updated_handler($event) {
  * @deprecated since 2.6. {@link \mod_league\league::trigger_exercise_created_event($league)}
  */
 function exercise_created_handler($event) {
-    debugging('exercise_created_handler() is deprecated, please use a call function '.
-            'to trigger_exercise_created_event instead.', DEBUG_DEVELOPER);
+    //debugging('exercise_created_handler() is deprecated, please use a call function '.
+    //        'to trigger_exercise_created_event instead.', DEBUG_DEVELOPER);
 }
 
 /**
@@ -67,8 +67,8 @@ function exercise_created_handler($event) {
  * @deprecated since 2.6. {@link \mod_league\league::trigger_exercise_updated_event($league)}
  */
 function exercise_updated_handler($event) {
-    debugging('exercise_updated_handler() is deprecated, please use a call function '.
-            'to trigger_exercise_updated_event instead.', DEBUG_DEVELOPER);
+    //debugging('exercise_updated_handler() is deprecated, please use a call function '.
+    //        'to trigger_exercise_updated_event instead.', DEBUG_DEVELOPER);
 }
 
 /**
@@ -78,8 +78,8 @@ function exercise_updated_handler($event) {
  * @deprecated since 2.6. {@link \mod_league\league::trigger_exercise_deleted_event($league)}
  */
 function exercise_deleted_handler($event) {
-    debugging('exercise_deleted_handler() is deprecated, please use a call function '.
-            'to trigger_exercise_deleted_event instead.', DEBUG_DEVELOPER);
+    //debugging('exercise_deleted_handler() is deprecated, please use a call function '.
+    //        'to trigger_exercise_deleted_event instead.', DEBUG_DEVELOPER);
 }
 
 /**
@@ -89,8 +89,8 @@ function exercise_deleted_handler($event) {
  * @deprecated since 2.6. {@link \mod_league\league::trigger_attempt_submitted_event($league)}
  */
 function attempt_submitted_handler($event) {
-    debugging('attempt_submitted_handler() is deprecated, please use a call function '.
-            'to trigger_attempt_submitted_event instead.', DEBUG_DEVELOPER);
+    //debugging('attempt_submitted_handler() is deprecated, please use a call function '.
+    //        'to trigger_attempt_submitted_event instead.', DEBUG_DEVELOPER);
 }
 
 /**
@@ -100,8 +100,8 @@ function attempt_submitted_handler($event) {
  * @deprecated since 2.6. {@link \mod_league\league::trigger_attempt_downloaded_event($league)}
  */
 function attempt_downloaded_handler($event) {
-    debugging('attempt_downloaded_handler() is deprecated, please use a call function '.
-            'to trigger_attempt_downloaded_event instead.', DEBUG_DEVELOPER);
+    //debugging('attempt_downloaded_handler() is deprecated, please use a call function '.
+    //        'to trigger_attempt_downloaded_event instead.', DEBUG_DEVELOPER);
 }
 
 /**
@@ -111,6 +111,6 @@ function attempt_downloaded_handler($event) {
  * @deprecated since 2.6. {@link \mod_league\league::trigger_attempt_graded_event($league)}
  */
 function attempt_graded_handler($event) {
-    debugging('attempt_graded_handler() is deprecated, please use a call function '.
-            'to trigger_attempt_graded_event instead.', DEBUG_DEVELOPER);
+    //debugging('attempt_graded_handler() is deprecated, please use a call function '.
+    //        'to trigger_attempt_graded_event instead.', DEBUG_DEVELOPER);
 }
