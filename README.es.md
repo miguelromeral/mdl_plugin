@@ -34,7 +34,7 @@ Este proyecto consiste en el Trabajo ( *ACTUALMENTE EN DESARROLLO* ) de Fin de G
     git clone https://github.com/miguelromeral/moodle-mod_league.git
     ```
 
-2. Sitúe la carpeta raíz ```league``` dentro del directorio ```(DIRECTORIO_MOODLE)/mod/```. Normalmente ```(DIRECTORIO_MOODLE)``` se suele encontrar en ```/var/www/html/moodle```, aunque depende de cada servidor.
+2. Cree un subdirectorio llamado ```league``` dentro del directorio ```(DIRECTORIO_MOODLE)/mod/``` y copie los ficheros descargados dentro. Normalmente ```(DIRECTORIO_MOODLE)``` se suele encontrar en ```/var/www/html/moodle```, aunque depende de cada servidor.
 
 3. Inicie sesión como *Administrador* en su sitio Moodle y acceda a *Administración del sitio* -> *Notificaciones*.
 
