@@ -86,12 +86,12 @@ echo $output->header();
 
 // Check if the user can mark studentds and the exercise ID belongs to this league.
 $canmark = $mod->usermarkstudents($USER->id);
-$validexercise = ($exerciseid == -1 || \league_model::isleagueexercise($exerciseid, $league->id));
+$validexercise = ($exerciseid == -1 || \league_model::is_league_exercise($exerciseid, $league->id));
 
 if($canmark and $validexercise){
     // Retrieve all the students attempts to this exercises and render it.
     $attempts = \league_model::get_attempts_by_exercise($exerciseid);
-    $panel = new mod_league\output\total_attempts_view($cmid, $attempts, $exerciseid, \league_model::getNameExerByID($exerciseid), $context->id);
+    $panel = new mod_league\output\total_attempts_view($cmid, $attempts, $exerciseid, \league_model::get_data_from_exercise($exerciseid, 'name'), $context->id);
     echo $output->render($panel);
     
     $panel = new mod_league\output\go_back_view($cmid);

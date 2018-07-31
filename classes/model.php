@@ -355,200 +355,278 @@ class league_model {
     }
     
     /**
+     * Return if an exercise has published marks.
      * 
-     * @global object $DB
-     * @param type $exercise
+     * @global object $DB Moodle database.
+     * @param int $exerciseid Exercise ID.
      * @return boolean
      */
-    public static function publishedMarks($exercise){
+    public static function has_exercise_published_marks($exerciseid){
         global $DB;
-        //Lista de estudiantes de un curso
-        $var="select a.published
-            from mdl_league_exercise as a
-            where id = $exercise";
-        $data = $DB->get_records_sql($var);
-        foreach ($data as $d){
-            $d = get_object_vars($d);
-            if ($d['published'] == 0){
+        $query = "SELECT a.published
+                    FROM {league_exercise} AS a
+                   WHERE id = :id";
+        
+        $data = $DB->get_records_sql($query, array('id' => $exerciseid));
+        foreach ($data as $exercise){
+            if ($exercise->published == 0){
                 return false;
             }else{
                 return true;
             }
         }
+        return false;
     }
     
-    public static function get_notas_alumno_para_profesor($iduser, $idleague){
+    /**
+     * Get all individual marks for each exercise in league (only for the 
+     * last attempts).
+     * 
+     * @global object $DB Moodle database.
+     * @param int $userid User ID.
+     * @param int $leagueid League ID.
+     * @return array
+     */
+    public static function get_student_individual_marks_to_teacher($userid, $leagueid){
         global $DB;
-        //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
-        $var="select *
-        from mdl_league_exercise as a
-        left outer join
-        (
-            select a.id as idat, a.timemodified as tma,
-            a.observations, a.name as fname,
-            a.exercise, b.id_user, a.mark, a.id_file
-            from mdl_league_attempt as a
-            inner join (
-                select max(id) as m, id_user
-                from mdl_league_attempt
-                where id_user = $iduser
-                group by exercise
-            ) as b
-            on a.id = b.m
-        ) as b
-        on a.id = b.exercise
-        where a.league = $idleague";
-        $data = $DB->get_records_sql($var);
+        $query = "SELECT *
+                    FROM {league_exercise} AS a
+         LEFT OUTER JOIN (
+                            SELECT a.id AS idat, a.timemodified AS tma,
+                                   a.observations, a.name AS fname,
+                                   a.exercise, b.id_user, a.mark, a.id_file
+                              FROM {league_attempt} AS a
+                        INNER JOIN (
+                                        SELECT MAX(id) AS m, id_user
+                                          FROM {league_attempt}
+                                         WHERE id_user = :user
+                                      GROUP BY exercise
+                                   ) 
+                                   AS b ON a.id = b.m
+                         ) 
+                         AS b ON a.id = b.exercise
+                   WHERE a.league = :league";
+        
+        $data = $DB->get_records_sql($query, array('league' => $leagueid, 'user' => $userid));
 
         $total = array();
-
-        foreach ($data as $d){
-            $d = get_object_vars($d);
+        foreach ($data as $exercise){
             $notas = new stdClass();
-            $notas->exercise = $d['exercise'];
-            $notas->mark = $d['mark'];
+            $notas->exercise = $exercise->exercise;
+            $notas->mark = $exercise->mark;
             array_push($total, $notas);
         }
         return $total;
     }
 
-    
-    public static function get_tabla_notas($idliga){
+    /**
+     * Return all individual marks for each student in the league.
+     * 
+     * @param int $leagueid League id
+     * @return object Array collection with arrays with user individual marks.
+     */
+    public static function get_tabla_notas($leagueid){
         $marks = array();
-        $estudiantes = league_model::get_students();
-        foreach($estudiantes as $e){
+        $students = league_model::get_students();
+        
+        foreach($students as $student){
             $fila = new stdClass();
-            $fila->id = $e->id;
-            $fila->firstname = $e->firstname;
-            $fila->lastname = $e->lastname;
-            $fila->notas = league_model::get_notas_alumno_para_profesor($e->id, $idliga);
+            $fila->id = $student->id;
+            $fila->firstname = $student->firstname;
+            $fila->lastname = $student->lastname;
+            $fila->notas = league_model::get_student_individual_marks_to_teacher($student->id, $leagueid);
             array_push($marks, $fila);
         }
+        
         return $marks;
     }
 
-    
-    public static function generateRandomFileID(){
+    /**
+     * Generate a random File ID checking that is the only one in the database.
+     * 
+     * @global object $DB Moodle database.
+     * @return int File ID.
+     */
+    public static function generate_random_file_id(){
+        global $DB;
         $min = 1;
         $max = 10000000000;
-        $encontrado = false;
-        $r = -1;
-        while(! $encontrado){
-            $encontrado = true;
-            $r = rand($min, $max);
-            global $DB;
-            $var="select distinct id_file
-            from mdl_league_attempt";
-            $data = $DB->get_records_sql($var);
-            foreach ($data as $d){
-                $d = get_object_vars($d);
-                if($d['id_file'] == $r){
-                    $encontrado = false;
+        $found = false;
+        $random = -1;
+        while(! $found){
+            $found = true;
+            $random = rand($min, $max);
+            
+            $query = "SELECT DISTINCT id_file
+                                 FROM {league_attempt}";
+            
+            $data = $DB->get_records_sql($query);
+            // Check if there is a file with this ID.
+            // If not, repeat a random.
+            foreach ($data as $file){
+                if($file->id_file == $random){
+                    $found = false;
                 }
             } 
+            
         }
-        return $r;
+        return $random;
     }
     
-    
-    public static function getURLFile($contextid, $component, $filearea, $itemid, $name){
+    /**
+     * Create an URL with the current server setup.
+     * 
+     * @global object $CFG Global Moodle configuration.
+     * @param int $contextid Context ID.
+     * @param int $itemid File ID.
+     * @param string $name File name.
+     * @return string
+     */
+    public static function get_url_file($contextid, $itemid, $name){
         global $CFG;
 
         $url = $CFG->wwwroot;
         $url .= "/pluginfile.php/";
         $url .= ($contextid)."/";
-        $url .= ($component)."/";
-        $url .= ($filearea)."/";
+        $url .= "mod_league/";
+        $url .= "exuplod/";
         $url .= ($itemid)."/";
         $url .= $name;
+        
         return $url;
     }
 
-
+    /**
+     * Restore a URL used to download the file with the item ID given.
+     * 
+     * @param int $contextid Context ID.
+     * @param int $itemid item ID.
+     * @return \stdClass File ID and URL to that file.
+     */
     public static function restoreURLFile($contextid, $itemid){
         $component = 'mod_league';
         $filearea = 'exuplod';
+        // Get all files.
         $fs = get_file_storage();
+        
+        // Retrieve all files for this module (it has have this Item ID).
         if ($files = $fs->get_area_files($contextid, $component, $filearea, $itemid, 'sortorder', false)) {               
             foreach ($files as $file) {
+                // Content hash of the File.
                 $contenthash = $file->get_contenthash();
+                // Get the File ID from its content hash.
                 $id_file = \league_model::get_file_id_from_content_hash($contenthash);
-
-
-                $url = \league_model::getURLFile($file->get_contextid(), $file->get_component(), 
-                        $file->get_filearea(), $file->get_itemid(), $file->get_filename());
-
+                // Restore URL.
+                $url = \league_model::get_url_file($file->get_contextid(), $file->get_itemid(), $file->get_filename());
+                // Return the result.
                 $resultado = new stdClass();
                 $resultado->id = $id_file;
                 $resultado->url = $url;
                 return $resultado;
             }
         }
+        
         return null;
     }
     
-    
-    public static function is_last_attempt($iduser, $idexer, $idattempt){
+    /**
+     * Return if an attempt is the last one for the user and exercise.
+     * 
+     * @global object $DB Moodle database.
+     * @param int $userid User ID.
+     * @param int $exerciseid Exercise ID.
+     * @param int $attemptid Attempt ID.
+     * @return boolean True if is the last one.
+     */
+    public static function is_last_attempt($userid, $exerciseid, $attemptid){
         global $DB;
-        //Lista de ejercicios subidos por los alumnos (solo uno por alumno, ordenado por más reciente)
-        $var="select id
-            from mdl_league_attempt
-            where id_user = $iduser and exercise = $idexer
-            order by id desc
-            limit 1;";
-        $data = $DB->get_records_sql($var);
-
-        if($data){
-            foreach ($data as $d){
-                $d = get_object_vars($d);
-                
-                return $d['id'] == $idattempt;
+        $query = "SELECT id
+                    FROM {league_attempt}
+                   WHERE id_user = :user AND exercise = :exercise
+                ORDER BY id DESC
+                   LIMIT 1;";
+        
+        if($data = $DB->get_records_sql($query, array('user' => $userid, 'exercise' => $exerciseid))){
+            foreach ($data as $attempt){
+                return $attempt->id == $attemptid;
             }
         }
         
         return false;
     }
 
-    public static function getNameExerByID($id, $name = true){
+    /**
+     * Retrieve specific data from an exercise.
+     * 
+     * @global object $DB Moodle database.
+     * @param int $id Exercise ID.
+     * @param string $field Exercise field to retrieve.
+     * @return object
+     */
+    public static function get_data_from_exercise($id, $field){
         global $DB;
-        $var="select name, statement
-        from mdl_league_exercise
-        where id = $id";
-        $data = $DB->get_records_sql($var);
+        $query = "SELECT *
+                    FROM {league_exercise}
+                   WHERE id = :id";
+        
+        $data = $DB->get_records_sql($query, array('id' => $id));
+        
         foreach ($data as $d){
-            $d = get_object_vars($d);
-            return ($name ? $d['name'] : $d['statement']);
-        } 
+            if(isset($d->$field)){
+                return $d->$field;
+            }
+        }
+        
         return null;
     }
     
-    public static function isleagueexercise($idexer, $idleague){
+    /**
+     * Return if the exercise ID belongs to a league.
+     * 
+     * @global object $DB Moodle database.
+     * @param int $exerciseid Exercise ID.
+     * @param int $leagueid League ID.
+     * @return boolean
+     */
+    public static function is_league_exercise($exerciseid, $leagueid){
         global $DB;
-        $var="select id, league
-        from mdl_league_exercise
-        where id = $idexer";
-        $data = $DB->get_records_sql($var);
-        foreach ($data as $d){
-            $d = get_object_vars($d);
-            if($d['id']){
-                return ($d['league'] == $idleague);
+        $query = "SELECT id, league
+                    FROM {league_exercise}
+                   WHERE id = :id";
+        
+        $data = $DB->get_records_sql($query, array('id' => $exerciseid));
+        
+        foreach ($data as $exercise){
+            if($exercise->id){
+                return ($exercise->league == $leagueid);
             }
-        } 
+        }
+        
         return false;
     }
 
-    public static function getDataFromAttempt($id, $field){
+    /**
+     * Retrieve specific data from an attempt.
+     * 
+     * @global object $DB Moodle database.
+     * @param int $id Attempt ID.
+     * @param string $field Field to retrieve.
+     * @return object
+     */
+    public static function get_data_from_attempt($id, $field){
         global $DB;
-        $var="select *
-        from mdl_league_attempt
-        where id = $id";
-        $data = $DB->get_records_sql($var);
-        foreach ($data as $d){
-            $d = get_object_vars($d);
-            if($d[$field]){
-                return $d[$field];
+        $query = "SELECT *
+                    FROM {league_attempt}
+                   WHERE id = :id";
+        
+        $data = $DB->get_records_sql($query, array('id' => $id));
+        
+        foreach ($data as $attempt){
+            if(isset($attempt->$field)){
+                return $attempt->$field;
             }
-        } 
+        }
+        
         return null;
     }
 }

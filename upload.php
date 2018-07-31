@@ -88,11 +88,11 @@ $output = $PAGE->get_renderer('mod_league');
 // If the user can upload files and the exercise ID belongs to the current league,
 // user can upload the file (it's recommended only students are available to
 // upload files).
-if($mod->useruploadfiles($USER->id) && \league_model::isleagueexercise($exerciseid, $league->id)){
+if($mod->useruploadfiles($USER->id) && \league_model::is_league_exercise($exerciseid, $league->id)){
 
     // Get the name and statement from exercise ID:
-    $name = \league_model::getNameExerByID($exerciseid);
-    $exercisestatement = \league_model::getNameExerByID($exerciseid, false);
+    $name = \league_model::get_data_from_exercise($exerciseid, 'name');
+    $exercisestatement = \league_model::get_data_from_exercise($exerciseid, 'statement');
 
     // Create the upload form with aproppiate data.
     $params = array(
@@ -119,7 +119,7 @@ if($mod->useruploadfiles($USER->id) && \league_model::isleagueexercise($exercise
         // If the user has uploaded a file:
         if($name){
             // Create a unique ID to this file (the item ID).
-            $itemid = \league_model::generateRandomFileID();
+            $itemid = \league_model::generate_random_file_id();
             
             // Store the file with the all the necessary data.
             $attemptid = $mform->save_stored_file('userfile', $context->id, $component, $filearea, $itemid);

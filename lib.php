@@ -168,7 +168,7 @@ function league_attempt_update_instance($league, $idat, $mark, $observations, $i
     //echo "<br>----<br>";
   
     $id = $DB->update_record('league_attempt', $record);
-    if(\league_model::publishedMarks($idexer)){
+    if(\league_model::has_exercise_published_marks($idexer)){
         league_update_grades($league);
     }
     

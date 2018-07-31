@@ -84,14 +84,14 @@ $output = $PAGE->get_renderer('mod_league');
 // Check the if the user can manage exercises and the
 // exercise belongs to the current league.
 $canmanage = $mod->usermanageexercises($USER->id);
-$exerciseinleague = \league_model::isleagueexercise($exerciseid, $league->id);
+$exerciseinleague = \league_model::is_league_exercise($exerciseid, $league->id);
 
 // If the exercise is -1 (that means is new) we can go on.
 if($canmanage && ($exerciseid == -1 || $exerciseinleague)){
   
     
-    $name = ($exerciseid == -1 ? '' : \league_model::getNameExerByID($exerciseid));
-    $description = ($exerciseid == -1 ? '' : \league_model::getNameExerByID($exerciseid, false));
+    $name = ($exerciseid == -1 ? '' : \league_model::get_data_from_exercise($exerciseid, 'name'));
+    $description = ($exerciseid == -1 ? '' : \league_model::get_data_from_exercise($exerciseid, 'statement'));
 
     // Form to modify exercise.
     $mform = new mod_league\form\exercise_form(null,
