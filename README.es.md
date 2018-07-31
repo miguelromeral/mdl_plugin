@@ -1,11 +1,15 @@
 
-# mod_league
+# ![alt](pix/icon.gif) mod_league
 
-![image](pix/icon.svg=20x20)
+Copyright 2018 Miguel Romeral (Universidad de Alcalá)
 
-Breve Descripción
+*También puedes leer esto en otros idiomas: [English](README.md), [Spanish](README.es.md)*
+
+Módulo de actividad para Moodle que consiste en una liga en la que los alumnos pueden competir entre sí y llegar a lo más alto de la clasificación con sus calificaciones.
 
 ## Descripción
+
+## Requisitos
 
 ## Motivación
 
@@ -22,5 +26,3 @@ Breve Descripción
 ## Licencia
 
 Licencia Pública General GNU 3.0
-
-*También puedes leer esto en otros idiomas: [English](README.md), [Spanish](README.es.md)*
