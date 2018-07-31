@@ -135,7 +135,7 @@ switch($role){
         break;
     
     case 'teacher':
-    
+        
         //////////////////////////////////////////////////////////////////////
         //                                                                  //
         //                       TEACHERS' VIEW                             //
@@ -171,7 +171,7 @@ switch($role){
                     // If the exercises is enabled, we can't delete it
                     if ($exerciseenabled == 0){
                         // Delete instance of the exercise given the ID.
-                        $attemptid = league_exercise_delete_instance($exerciseid, $context);
+                        $attemptid = league_exercise_delete_instance($exerciseid);
                     }
 
                     // If the deleting of exercises was successfull, we alert 
@@ -192,7 +192,7 @@ switch($role){
                     $changedflag = ($exerciseenabled == 0 ? 1 : 0);
 
                     // Update the exercise with de data given.
-                    league_exercise_update_instance($league, null, $name, $description, $leagueid, $exerciseid, $changedflag, $exercisepublished, $context);
+                    league_exercise_update_instance($name, $description, $leagueid, $exerciseid, $changedflag, $exercisepublished);
                     $mod->trigger_exercise_updated_event($exerciseid);
                     
                     // Depending on the operation we made, we print one alert.
@@ -211,9 +211,12 @@ switch($role){
                     $changedflag = ($exercisepublished == 0 ? 1 : 0);
 
                     // Update the exercise with de data given.
-                    league_exercise_update_instance($league, null, $name, $description, $leagueid, $exerciseid, $exerciseenabled, $changedflag, $context);
+                    league_exercise_update_instance($name, $description, $leagueid, $exerciseid, $exerciseenabled, $changedflag);
                     $mod->trigger_exercise_updated_event($exerciseid);
 
+                    // Update Gradebook.
+                    league_update_grades($league);
+                    
                     // Depending on the operation we made, we print one alert.
                     if ($changedflag == 0){
                         $alert = get_string('currently_unpublished', 'league');

@@ -177,6 +177,7 @@ class league_model {
     
     
     
+
     
     
     
@@ -629,4 +630,31 @@ class league_model {
         
         return null;
     }
+
+    /**
+     * Return IDs according the Item ID.
+     * 
+     * @global object $DB Moodle database.
+     * @param int Item ID.
+     * @return object Object with IDs.
+     */
+    public static function get_attempt_data_by_itemid($itemid){
+        global $DB;
+        $result = new stdClass();
+        $query = "SELECT id, id_user, league, exercise
+                    FROM {league_attempt}
+                   WHERE id_file = :id";
+        
+        $data = $DB->get_records_sql($query, array('id' => $itemid));
+        
+        foreach ($data as $attempt){
+            $result->id = $attempt->id;
+            $result->id_user = $attempt->id_user;
+            $result->exercise = $attempt->exercise;
+            $result->league = $attempt->league;
+            return $result;
+        }
+        return $result;
+    }
+    
 }

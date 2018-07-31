@@ -134,7 +134,7 @@ if($mod->useruploadfiles($USER->id) && \league_model::is_league_exercise($exerci
                     $fileid = \league_model::get_file_id_from_content_hash($contenthash);
 
                     // Create the attempt in the database.
-                    $attemptid = league_attempt_add_instance($course->id, $USER->id, $exerciseid, $file->get_itemid(), null, $name, $league->id, $context);
+                    $attemptid = league_attempt_add_instance($USER->id, $exerciseid, $file->get_itemid(), $name, $league->id);
 
                     // If everything is OK in the database, we trigger the event
                     // and warn the user that's OK.

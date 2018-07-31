@@ -118,7 +118,7 @@ if($canmanage && ($exerciseid == -1 || $exerciseinleague)){
             // If the exercise is new, add an instance of it.
             if($exerciseid == -1){
                 
-                $idexernuevo = league_exercise_add_instance($course, $name, $statement, $league->id, $USER->id, $context);
+                $idexernuevo = league_exercise_add_instance($name, $statement, $league->id);
                 if($idexernuevo){
                     // Trigger the event.
                     $mod->trigger_exercise_created_event($idexernuevo);
@@ -129,7 +129,7 @@ if($canmanage && ($exerciseid == -1 || $exerciseinleague)){
 
             }else{
                 // If the exercise is old, update the instance.
-                $attemptid = league_exercise_update_instance($league, $course, $name, $statement, $league->id, $exerciseid, 0, 0, $context);
+                $attemptid = league_exercise_update_instance($name, $statement, $league->id, $exerciseid, 0, 0);
                 $mod->trigger_exercise_updated_event($exerciseid);
             }
 
