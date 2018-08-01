@@ -70,7 +70,7 @@ $PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');
 
 // Print title and header.
-$PAGE->set_title(format_string(get_string('add_exercise_title', 'league')));
+$PAGE->set_title(format_string(get_string('add_new_exercise', 'league')));
 $PAGE->set_heading(format_string($course->fullname));
 
 // Create an instance of league. Usefull to check capabilities.

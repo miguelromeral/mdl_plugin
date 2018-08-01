@@ -150,7 +150,7 @@ class main_teacher_view implements \renderable {
                         'exercise' => $exer['id'],
                         ));
 
-                $data[] = '<a href="'.$url.'">'.get_string('mark_exercise', 'league')."</a>";
+                $data[] = '<a href="'.$url.'">'.get_string('to_grade', 'league')."</a>";
             }
 
             $table->data[] = $data;
@@ -186,6 +186,6 @@ class main_teacher_view implements \renderable {
                 ));
 
 
-        return '<a href="'.$url.'">'.get_string('add_exercise_button', 'league')."</a>";
+        return '<a href="'.$url.'">'.get_string('add_exercise', 'league')."</a>";
     }
 }

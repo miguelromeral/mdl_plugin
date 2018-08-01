@@ -23,11 +23,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['add_exercise_button'] = 'Add exercise';
-$string['add_exercise_title'] = 'Add new exercise';
+$string['add_exercise'] = 'Add exercise';
+$string['add_new_exercise'] = 'Add new exercise';
 $string['ae_cancel'] = 'The modification of the exercise has been canceled';
 $string['ae_cancel_new'] = 'The exercise addition has been canceled';
-$string['ae_description'] = 'Description';
+$string['description'] = 'Description';
 $string['ae_name'] = 'Exercise name';
 $string['ae_success'] = 'Successfully created exercise. Ativate it in the Activities Panel';
 $string['ae_warning'] = "WARNING: when saving the exercise it will automatically be disabled for the students and without publishing the notes (this change must be done manually from the teacher's control panel.";
@@ -81,7 +81,7 @@ $string['main_panel_student'] = "Students' control panel";
 $string['manage_exercises_button'] = 'Manage exercises';
 $string['management_title'] = 'Management';
 $string['mark'] = 'Grade';
-$string['mark_exercise'] = 'To grade';
+$string['to_grade'] = 'To grade';
 $string['mark_sent_success'] = 'Successfully updated grade.';
 $string['mark_student_button'] = 'To grade student';
 $string['mark_title'] = 'To grade';
@@ -120,7 +120,7 @@ $string['nan'] = 'NaN';
 $string['no'] = 'No';
 $string['no_attempts_yet'] = 'There are no attempts for this exercise. Enable it and wait for the students to send their attempts.';
 $string['no_exercises_availables'] = 'At this time there is no exercise available.';
-$string['no_exercises_created'] = 'You have not created any exercises yet. Click on the bottom link that says "'.$string['add_exercise_button'].'" to create the first exercise of the league.';
+$string['no_exercises_created'] = 'You have not created any exercises yet. Click on the bottom link that says "'.$string['add_exercise'].'" to create the first exercise of the league.';
 $string['no_grades_availables'] = "You hasn't yet sent any attempt for any exercise.";
 $string['no_mark_error'] = 'You must specify a note for the attempt.';
 $string['no_mark_yet'] = 'Not graded yet';
@@ -154,7 +154,7 @@ $string['q_total_exercises_des'] = 'Total number of exercises.';
 $string['q_total_mark'] = 'Total';
 $string['q_total_mark_des'] = 'Total score (sum of all exercise grades).';
 $string['q_user'] = 'User';
-$string['qts'] = 'qualifying (view by students)';
+$string['qts'] = 'Qualifying (view by students)';
 $string['qualy_title'] = 'Qualifying';
 $string['remaining_attempts'] = 'Remaining attempts';
 $string['reviews'] = 'Observations';

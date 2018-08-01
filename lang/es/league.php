@@ -23,11 +23,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['add_exercise_button'] = 'Añadir ejercicio';
-$string['add_exercise_title'] = 'Añadir nuevo ejercicio';
+$string['add_exercise'] = 'Añadir ejercicio';
+$string['add_new_exercise'] = 'Añadir nuevo ejercicio';
 $string['ae_cancel'] = 'Cancelada la modificación del ejercicio';
 $string['ae_cancel_new'] = 'Cancelada la creación del ejercicio';
-$string['ae_description'] = 'Descripción';
+$string['description'] = 'Descripción';
 $string['ae_name'] = 'Nombre del ejercicio';
 $string['ae_success'] = 'Creado con éxito el ejercicio. Actívelo en el panel de actividades.';
 $string['ae_warning'] = 'ADVERTENCIA: al guardar el ejercicio automáticamente pasará a estar deshabilitado para los alumnos y sin publicar las notas (este cambio deberá hacerse manualmente desde el panel de control del profesor.';
@@ -81,7 +81,7 @@ $string['main_panel_student'] = 'Panel de control del alumno';
 $string['manage_exercises_button'] = 'Administrar ejercicios';
 $string['management_title'] = 'Administración';
 $string['mark'] = 'Nota';
-$string['mark_exercise'] = 'Corregir';
+$string['to_grade'] = 'Corregir';
 $string['mark_sent_success'] = 'Nota actualizada con éxito.';
 $string['mark_student_button'] = 'Calificar alumno';
 $string['mark_title'] = 'Calificar alumno';
@@ -120,7 +120,7 @@ $string['nan'] = 'NaN';
 $string['no'] = 'No';
 $string['no_attempts_yet'] = 'No existen intentos para este ejercicio. Habilítelo y espere a que los estudiantes envíen sus intentos.';
 $string['no_exercises_availables'] = 'En este momento no hay ningún ejercicio disponible.';
-$string['no_exercises_created'] = 'Aún no ha creado ningún ejercicio. Pulse el enlace inferior que indica "'.$string['add_exercise_button'].'" para crear el primer ejercicio de la liga.';
+$string['no_exercises_created'] = 'Aún no ha creado ningún ejercicio. Pulse el enlace inferior que indica "'.$string['add_exercise'].'" para crear el primer ejercicio de la liga.';
 $string['no_grades_availables'] = 'Aun no ha enviado ningún intento para ningún ejercicio.';
 $string['no_mark_error'] = 'Debe especificar una nota para el intento.';
 $string['no_mark_yet'] = 'Sin corrección';

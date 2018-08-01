@@ -50,7 +50,7 @@ class exercise_form extends \moodleform {
         
         // Print appropiate header.
         if($exercise == -1){
-            $mform->addElement('header', 'header_form', get_string('add_exercise_title','league'));
+            $mform->addElement('header', 'header_form', get_string('add_new_exercise','league'));
         }else{
             $mform->addElement('header', 'header_form', get_string('modify_exercise_title','league'));
         }
@@ -70,7 +70,7 @@ class exercise_form extends \moodleform {
         
         // Exercise statement.
         $statement = (empty($this->_customdata['statement']) ? "" : $this->_customdata['statement']);
-        $mform->addElement('textarea', 'statement', get_string("ae_description", "league"), 'wrap="virtual" rows="20" cols="50"');
+        $mform->addElement('textarea', 'statement', get_string("description", "league"), 'wrap="virtual" rows="20" cols="50"');
         $mform->addRule('statement', get_string('maximumchars', '', 4096), 'maxlength', 4096, 'client');
         $mform->setDefault('statement', $statement);
         
