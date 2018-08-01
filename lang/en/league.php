@@ -37,9 +37,9 @@ $string['courseidincorrect'] = 'Course ID is incorrect.';
 $string['coursemoduleiidincorrect'] = 'Course Module ID was incorrect.';
 $string['coursemoduleincorrect'] = 'Course module was incorrect.';
 $string['coursemodulemisconfigured'] = 'Course is misconfigured.';
-$string['currently_published'] = 'Grades published. Now the students can see their owns grades for this exercise.';
-$string['currently_unpublished'] = 'Grades has been unpublished. No student can see their own grades for this exercise.';
-$string['del'] = 'Delete';
+$string['currently_published'] = 'Grades published. Now the students can view their owns grades for this exercise.';
+$string['currently_unpublished'] = 'Grades has been unpublished. No student can view their own grades for this exercise.';
+$string['del'] = 'Delete exercise';
 $string['disable_exercise_button'] = 'Disable';
 $string['download_file_button'] = 'Download file';
 $string['enable_exercise_button'] = 'Enable';
@@ -55,144 +55,132 @@ $string['eventleagueupdated'] = 'League updated';
 $string['exercise'] = 'Exercise';
 $string['exercise_deleted'] = 'Successfully deleted exercise.';
 $string['exercise_disabled'] = 'Disabled exercise. No student can currently upload files for this exercise.';
-$string['exercise_enabled'] = 'El ejercicio está habilitado para todos los alumnos del curso. Ahora podrán subir la tarea.';
-$string['exercise_not_deleted'] = 'No se ha podido eliminar el ejercicio. Deshabilítelo primero.';
-$string['exercises'] = 'Ejercicios';
-$string['file_uploaded'] = 'Fichero subido';
-$string['fill_course'] = 'Introduce el ID del curso';
-$string['final_attempt'] = 'Definitivo';
-$string['go_back'] = 'Volver';
-$string['h_manag_exer'] = 'Administrar ejercicios de la Liga';
-$string['higher_mark'] = 'Tiene una nota más alta';
-$string['image'] = 'Foto';
-$string['individual_marks'] = 'Calificaciones individuales';
-$string['last_attempt'] = 'Último íntento';
-$string['league'] = 'Liga';
-$string['league:addinstance'] = "Crear una nueva liga";
-$string['league:downloadfiles'] = "Descargar ficheros subidos";
-$string['league:manageexercises'] = "Administrar ejercicios";
-$string['league:markstudents'] = "Calificar a alumnos";
-$string['league:seequaly'] = "Ver clasificación completa";
-$string['league:seerestrictedqualy'] = "Ver clasificación restringida (para alumnos)";
-$string['league:uploadfiles'] = "Subir ficheros para ejercicios";
-$string['league:view'] = "Ver liga";
-$string['league_name'] = 'Nombre de la liga';
-$string['leagues_in_course'] = 'Ligas creadas en el curso';
+$string['exercise_enabled'] = 'Enabled exercise for all course students. They can currently upload their attempts.';
+$string['exercise_not_deleted'] = "Can't delete the exercise. You have to disable before.";
+$string['exercises'] = 'Exercises';
+$string['file_uploaded'] = 'File uploaded';
+$string['fill_course'] = 'Fill the course ID';
+$string['go_back'] = 'Come back';
+$string['h_manag_exer'] = 'Manage league exercises';
+$string['higher_mark'] = 'Has a higher individual grade';
+$string['image'] = 'Picture';
+$string['individual_marks'] = 'Individual grades';
+$string['last_attempt'] = 'Last attempt';
+$string['league'] = 'League';
+$string['league:addinstance'] = "Create a new League";
+$string['league:downloadfiles'] = "Download uploaded files";
+$string['league:manageexercises'] = "Manage league exercises";
+$string['league:markstudents'] = "Grade the students";
+$string['league:seequaly'] = "View a full qualifying";
+$string['league:seerestrictedqualy'] = "View a restricted qualifying (for students)";
+$string['league:uploadfiles'] = "Upload files to exercises";
+$string['league:view'] = "View league";
+$string['league_name'] = "League's name";
+$string['leagues_in_course'] = 'Created leagues in the course';
 $string['main_panel_student'] = "Students' control panel";
-$string['manage_exercises_button'] = 'Administrar ejercicios';
-$string['management_title'] = 'Administración';
-$string['mark'] = 'Nota';
-$string['mark_cancel'] = 'Cancelada la modificación de la nota';
-$string['mark_exercise'] = 'Corregir';
-$string['mark_sent_success'] = 'Nota actualizada con éxito.';
-$string['mark_student_button'] = 'Calificar alumno';
-$string['mark_title'] = 'Calificar alumno';
-$string['max_attempts_reached'] = "Ha alcanzado el máximo número de intentos";
-$string['max_num_attempts'] = "Máximo número de intentos";
-$string['max_num_attempts_desc'] = "Establece el número máximo de intentos que un usuario tiene para enviar un ejercicio.";
-$string['mod_form_presentation'] = 'Mensaje de presentación de la liga';
-$string['mod_form_select_course'] = 'Escoja el nombre del curso al que añadir una liga.';
-$string['mod_form_select_method'] = 'Seleccione el criterio de ordenación';
-$string['modify'] = 'Modificar';
-$string['modify_exercise_button'] = 'Modificar';
-$string['modify_exercise_title'] = 'Modificar ejercicio';
-$string['modulename'] = 'Liga';
-$string['modulename_help'] = 'Una actividad de módulo Liga permite a los estudiantes competir por quién es más participativo.
+$string['manage_exercises_button'] = 'Manage exercises';
+$string['management_title'] = 'Management';
+$string['mark'] = 'Grade';
+$string['mark_exercise'] = 'To grade';
+$string['mark_sent_success'] = 'Successfully updated grade.';
+$string['mark_student_button'] = 'To grade student';
+$string['mark_title'] = 'To grade';
+$string['max_attempts_reached'] = "You've reached the maximum number of attempts";
+$string['max_num_attempts'] = "Maximum number of attempts";
+$string['max_num_attempts_desc'] = "Sets the maximum number of attempts a user has to send an exercise.";
+$string['mod_form_presentation'] = "League's presentation message";
+$string['mod_form_select_method'] = 'Select the sort order';
+$string['modify_exercise_button'] = 'Modify';
+$string['modify_exercise_title'] = 'Modify exercise';
+$string['modulename'] = 'League';
+$string['modulename_help'] = 'A League module activity allows students to compete for who is more participatory.
     
-Los profesores pueden crear ejercicios para que suban la tarea los alumnos. Los ejercicios constan de un breve título y una descripción en la que se indica cómo debe enviarse las respuestas. Los profesores pueden habilitar ejercicios para que los alumnos pueden subir su tarea. El profesor puede entonces descargar los trabajos que han subido sus alumnos para los ejercicios y corregirlos de la manera que considere oportuna. Con esas calificaciones, se completa una clasificación entre los alumnos, correspondiéndose con los trabajos de éstos.
+Teachers can create exercises for students to upload their homework. The exercises consist of a brief title and a description of how the answers should be sent. Teachers can enable exercises so that students can upload their homework. The teacher can then download the work that his students have uploaded for the exercises and correct them in the way he considers appropriate. With these qualifications, a classification is completed among the students, corresponding to their work.
 
-Entre las características del módulo relativa a los usuarios se encuentran:
+Among the characteristics of the module relating to users are:
 
-* Subir ficheros por cada ejercicio.
-* Ver en una clasificación las notas globales (en ningún caso mostrar información sensible de otros alumnos).
-* Descargar sus propios ficheros que hayan subido.
-* Ver las notas de ejercicios disponibles o realizados por el alumno.
+* Upload files for each exercise.
+* See global notes in a classification (in no case show sensitive information of other students).
+* Download your own files that have uploaded.
+* See the notes of exercises available or made by the student.
 
-Los profesores por su parte, disfrutarán de funciones como:
+Teachers, on the other hand, will enjoy functions such as:
 
-* Ver clasificación completa y restringida de los alumnos.
-* Crear, modificar y eliminar ejercicios.
-* Corregir tareas de los estudiantes para cada ejercicio.
-* Hacer las notas visibles u ocultas.
-* Ver notas individuales por cada ejercicio.
+* See complete and restricted classification of students.
+* Create, modify and eliminate exercises.
+* Correct student assignments for each exercise.
+* Make the notes visible or hidden.
+* See individual notes for each exercise.
 ';
-$string['modulenameplural'] = 'Ligas';
-$string['more_exercises_uploaded'] = 'Ha subido más ejercicios';
-$string['more_than_5_att_remaining'] = 'Más de 5';
-$string['my_marks'] = 'Mis notas';
+$string['modulenameplural'] = 'Leagues';
+$string['more_exercises_uploaded'] = 'Have uploaded more exercises';
+$string['more_than_5_att_remaining'] = 'More than 5';
+$string['my_marks'] = 'My grades';
 $string['nan'] = 'NaN';
 $string['no'] = 'No';
-$string['no_attempts_yet'] = 'No existen intentos para este ejercicio. Habilítelo y espere a que los estudiantes envíen sus intentos.';
-$string['no_exercises_availables'] = 'En este momento no hay ningún ejercicio disponible.';
-$string['no_exercises_created'] = 'Aún no ha creado ningún ejercicio. Pulse el enlace inferior que indica "'.$string['add_exercise_button'].'" para crear el primer ejercicio de la liga.';
-$string['no_grades_availables'] = 'Aun no ha enviado ningún intento para ningún ejercicio.';
-$string['no_mark_error'] = 'Debe especificar una nota para el intento.';
-$string['no_mark_yet'] = 'Sin corrección';
-$string['nopermission'] = 'No tiene los permisos suficientes para poder ver esta página.';
-$string['not_done'] = 'Sin hacer';
-$string['not_sent_yet'] = 'SIN HACER EJERCICIO';
-$string['notallowedpage'] = 'Página no encontrada';
-$string['noviewdiscussionspermission'] = 'No tiene los suficientes permisos para ver esta liga.';
-$string['num_attempt'] = '# Intento';
-$string['only_one_attempt'] = "Sólo un intento";
-$string['pluginadministration'] = 'Administrar Liga';
-$string['pluginname'] = 'Liga';
-$string['presentation'] = 'Presentación';
-$string['publish'] = 'Publicar notas';
-$string['published_marks'] = 'Notas publicadas';
-$string['q_best_marks'] = 'Mejores notas';
-$string['q_exercises_uploaded'] = 'ES';
-$string['q_exercises_uploaded_des'] = 'Número de ejercicios realizados.';
+$string['no_attempts_yet'] = 'There are no attempts for this exercise. Enable it and wait for the students to send their attempts.';
+$string['no_exercises_availables'] = 'At this time there is no exercise available.';
+$string['no_exercises_created'] = 'You have not created any exercises yet. Click on the bottom link that says "'.$string['add_exercise_button'].'" to create the first exercise of the league.';
+$string['no_grades_availables'] = "You hasn't yet sent any attempt for any exercise.";
+$string['no_mark_error'] = 'You must specify a note for the attempt.';
+$string['no_mark_yet'] = 'Not graded yet';
+$string['nopermission'] = 'You do not have permission to view this page.';
+$string['not_done'] = 'Not done';
+$string['not_sent_yet'] = 'NO ATTEMPTS SENT';
+$string['notallowedpage'] = 'Page not found';
+$string['noviewdiscussionspermission'] = 'You do not have enough permissions to view this league.';
+$string['num_attempt'] = '# Attempt';
+$string['only_one_attempt'] = "Only one attempt";
+$string['pluginadministration'] = 'Manage league';
+$string['pluginname'] = 'League';
+$string['presentation'] = 'Presentation';
+$string['publish'] = 'Publish grades';
+$string['published_marks'] = 'Published grades';
+$string['q_best_marks'] = 'Best grades';
+$string['q_exercises_uploaded'] = 'UE';
+$string['q_exercises_uploaded_des'] = 'Number of uploaded exercises.';
 $string['q_id'] = 'ID';
-$string['q_name'] = 'Nombre';
-$string['q_name_hashed'] = 'Usuario hasheado';
-$string['q_notes'] = 'Criterio';
-$string['q_notes_des'] = 'Criterio de desempate en caso de haberlo.';
-$string['q_percentage'] = 'PERC';
-$string['q_percentage_des'] = 'Porcentaje de la nota total (nota del módulo).';
+$string['q_name'] = 'Name';
+$string['q_name_hashed'] = 'Hashed user';
+$string['q_notes'] = 'Tie-breaker';
+$string['q_notes_des'] = 'Tie-break criterion if there is one.';
+$string['q_percentage'] = '%';
+$string['q_percentage_des'] = 'Percentage of the total score of the league.';
 $string['q_pos'] = 'POS';
-$string['q_pos_des'] = 'Posición en la clasificación.';
+$string['q_pos_des'] = 'Position in the qualifying.';
 $string['q_tba'] = 'TBA';
 $string['q_total_exercises'] = 'TE';
-$string['q_total_exercises_des'] = 'Número total de ejercicios.';
-$string['q_total_mark'] = 'NT';
-$string['q_total_mark_des'] = 'Nota total (Suma de todos los ejercicios).';
-$string['q_user'] = 'Usuario';
-$string['qts'] = 'Clasificación (Vista por estudiantes)';
-$string['qualy_title'] = 'Clasificación';
-$string['remaining_attempts'] = 'Intentos restantes';
-$string['reviews'] = 'Observaciones';
-$string['select_best_marks'] = 'Mejores notas';
-$string['select_course_activity'] = '¿Añadir una liga a un curso?';
-$string['select_course_activity_help'] = 'AYUDA';
-$string['select_method'] = 'Seleccionar criterios de ordenación';
-$string['select_more_exercises'] = 'Más ejercicios subidos';
-$string['select_method_help'] = 'Si selecciona "'.$string['select_best_marks'].'" se ordenará la clasificación en función de cuales son las mejores notas obtenidas. Sin embargo, si selecciona "'.$string['select_more_exercises'].'" se premiará a los alumnos que hayan subido más ejercicios.';
-$string['send_exercise'] = 'Enviar ejercicio';
-$string['set_mark'] = 'Calificación (0 a 100)';
-$string['set_observation'] = 'Observaciones';
-$string['student'] = 'Alumno';
-$string['teacher_panel'] = 'Panel del profesor';
-$string['timemofied'] = 'Fecha de modificación';
-$string['title_create_istance'] = 'Rellene los siguientes datos para crear la actividad';
-$string['title_grade'] = 'Calificaciones';
-$string['to_mark'] = 'Corregir';
-$string['total_draw'] = 'Empate total';
-$string['ue_cancel'] = 'Cancelada la subida de ficheros.';
-$string['ue_error_max_size'] = 'Compruebe que el fichero está por debajo del límite del tamaño de un fichero a ser subido: ';
-$string['ue_error_type'] = 'El tipo del fichero subido no es válido (Debe ser PDF).';
-$string['ue_error_unknown'] = 'Hubo un problema al cargar el fichero.';
-$string['ue_no_file'] = 'Debe proporcionar un fichero para poder enviar el ejercicio.';
-$string['ue_success'] = 'Fichero subido con éxito';
-$string['unpublish'] = 'Ocultar notas';
-$string['upload_attempt'] = 'Enviar intento';
-$string['upload_exercise'] = 'Subir ejercicio';
-$string['upload_exercise_file'] = 'Subir fichero';
-$string['upload_time'] = 'Fecha de subida';
-$string['upload_title'] = 'Subir Ejercicio';
-$string['usercantdownload'] = "No tiene permisos para descargar ficheros.";
-$string['usercantupload'] = "No tiene permisos para subir ficheros.";
-$string['view_individual_marks'] = 'Ver notas individuales';
-$string['view_qualy_button'] = 'Ver clasificación';
-$string['view_total_attempts_button'] = 'Ver todos los intentos para este ejercicio';
-$string['yes'] = 'Sí';
+$string['q_total_exercises_des'] = 'Total number of exercises.';
+$string['q_total_mark'] = 'Total';
+$string['q_total_mark_des'] = 'Total score (sum of all exercise grades).';
+$string['q_user'] = 'User';
+$string['qts'] = 'qualifying (view by students)';
+$string['qualy_title'] = 'Qualifying';
+$string['remaining_attempts'] = 'Remaining attempts';
+$string['reviews'] = 'Observations';
+$string['select_best_marks'] = 'Best grades';
+$string['select_method'] = 'Select sort criteria';
+$string['select_more_exercises'] = 'More exercises uploaded';
+$string['select_method_help'] = 'If you select "'. $string['select_best_marks'].'" the classification will be ordered based on which are the best grades obtained. However, if you select "'. $string['select_more_exercises']. '", Students who have uploaded more exercises will be rewarded.';
+$string['send_exercise'] = 'Send exercise';
+$string['set_mark'] = 'Grade (0 to 100)';
+$string['set_observation'] = 'Observations';
+$string['student'] = 'Student';
+$string['teacher_panel'] = "Teacher's Panel";
+$string['timemofied'] = 'Time of modification';
+$string['title_grade'] = 'Grades';
+$string['to_mark'] = 'To grade';
+$string['total_draw'] = 'Total draw';
+$string['ue_no_file'] = 'You must provide a file to send the attempt.';
+$string['ue_success'] = 'Successfully uploaded file';
+$string['unpublish'] = 'Unpublish grades';
+$string['upload_attempt'] = 'Send attempt';
+$string['upload_exercise'] = 'Upload exercise';
+$string['upload_exercise_file'] = 'Upload file';
+$string['upload_time'] = 'Date of upload';
+$string['upload_title'] = 'Upload exercise';
+$string['usercantdownload'] = "You do not have permissions to download files.";
+$string['usercantupload'] = "You do not have permission to upload files.";
+$string['view_individual_marks'] = 'View individual grades';
+$string['view_qualy_button'] = 'View qualifying';
+$string['yes'] = 'Yes';

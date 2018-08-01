@@ -143,6 +143,17 @@ if($canmanage && ($exerciseid == -1 || $exerciseinleague)){
             $panel = new mod_league\output\single_content_view(get_string('ae_warning','league'));
             echo $output->render($panel);
 
+            if($exerciseid != -1){
+                // Delete an exercise (it has been disabled first).
+                echo '<p>
+                    <form action="view.php" method="post" >
+                    <input type="hidden" name="id" value="'. $cmid. '" />
+                    <input type="hidden" name="action" value="delete" />
+                    <input type="hidden" name="id_exer" value="'. $exerciseid .'" />
+                    <input type="submit" value="'.get_string('del', 'league').'"/>
+                </form></p>';
+            }
+            
             //displays the form
             $mform->display();
         }

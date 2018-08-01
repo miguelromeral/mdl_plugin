@@ -116,9 +116,6 @@ if($canmark and $sameleague and $lastattempt){
 
     if ($mform->is_cancelled()) {
         // If the form is cancelled, a render page to go back.
-        //$panel = new mod_league\output\go_back_view($cmid, get_string('mark_cancel','league'), null, 'marking.php', array('exercise' => $attemptexercise));
-        //echo $output->render($panel);
-        
         redirect(new moodle_url('/mod/league/marking.php', array('id' => $cmid, 'exercise' => $exerciseid)));
 
     } else{ 

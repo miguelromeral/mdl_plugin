@@ -97,52 +97,52 @@ class main_teacher_view implements \renderable {
         {
             $exer = json_decode(json_encode($exer), True);
             $data = array();
-            $data[] =  $exer['name'];
+            
+            // Modify an exercise.
+            $url= new \moodle_url('/mod/league/add_exercise.php', array(
+                    'id' => $this->cmid,
+                    'exercise' => $exer['id'],
+                    ));
+
+            $data[] = '<a href="'.$url.'" title="'. get_string('modify_exercise_title', 'league') .'">'.$exer['name']."</a>";
+            
+            // Time of modification.
             $data[] =  date("H:i:s, d (D) M Y", $exer['timemodified']);
             
-            // Enabled / Disabled properity.
-            $data[] =  ($exer['enabled'] == 0 ? 
-                '<img src="pix/no.png" width="30" height="30"/>' : 
-                '<img src="pix/yes.png" width="30" height="30"/>');
-            
-            // Published / Unpublished properity.
-            $data[] =  ($exer['published'] == 0 ? 
-                '<img src="pix/no.png" width="30" height="30"/>' : 
-                '<img src="pix/yes.png" width="30" height="30"/>');
-
-            // Delete an exercise (it has been disabled first).
-            $data[] = '<form action="view.php" method="post" >
-                <input type="hidden" name="id" value="'.$this->cmid.'" />
-                <input type="hidden" name="action" value="delete" />
-                <input type="hidden" name="id_exer" value="'.$exer['id'].'" />
-                <input type="hidden" name="exer_name" value="'.$exer['name'].'" />
-                <input type="hidden" name="exer_description" value="'.$exer['statement'].'" />
-                <input type="hidden" name="exer_enabled" value="'.$exer['enabled'].'" />
-                <input type="hidden" name="exer_published" value="'.$exer['published'].'" />
-                <input type="submit" value="'.get_string('del', 'league').'"/>
-            </form>';
-
-            // Modify an exercise.
-            $data[] = '<form action="add_exercise.php" method="get" >
-                <input type="hidden" name="id" value="'.$this->cmid.'" />
-                <input type="hidden" name="exercise" value="'.$exer['id'].'" />
-                <input type="submit" value="'.get_string('modify_exercise_button', 'league').'"/>
-            </form>';
-
             // Enable / Disable an exercise.
+            $image = null;
+            $title = null;
+            if($exer['enabled'] == 0){
+                $image = 'pix/no.png';
+                $title = get_string('enable_exercise_button', 'league');
+            }else{
+                $image = 'pix/yes.png';
+                $title = get_string('disable_exercise_button', 'league');
+            }
             $data[] = '<form action="view.php" method="post" >
                 <input type="hidden" name="id" value="'. $this->cmid .'" />
                 <input type="hidden" name="action" value="enable_disable" />
                 <input type="hidden" name="id_exer" value="'. $exer['id'] .'" />
-                <input type="hidden" name="exer_name" value="'. $exer['name'] .'" />
-                <input type="hidden" name="exer_description" value="'. $exer['statement'] .'" />
-                <input type="hidden" name="exer_enabled" value="'. $exer['enabled'] .'" />
-                <input type="hidden" name="exer_published" value="'. $exer['published'] .'" />
-                <input type="submit" value="'. 
-                ($exer['enabled'] == 0 ? get_string('enable_exercise_button', 'league') : get_string('disable_exercise_button', 'league')) 
-            .'"/>
+                <input type="image" title="'. $title .'" src="'. $image .'" width="30" height="30">
             </form>';
-
+            
+            // Publish / Unpublish students grades to that exercise.
+            $image = null;
+            $title = null;
+            if($exer['published'] == 0){
+                $image = 'pix/no.png';
+                $title = get_string('publish', 'league');
+            }else{
+                $image = 'pix/yes.png';
+                $title = get_string('unpublish', 'league');
+            }
+            $data[] = '<form action="view.php" method="post" >
+                <input type="hidden" name="id" value="'. $this->cmid .'" />
+                <input type="hidden" name="action" value="publish" />
+                <input type="hidden" name="id_exer" value="'. $exer['id'] .'" />
+                <input type="image" title="'. $title .'" src="'. $image .'" width="30" height="30">
+            </form>';
+            
             // If the user can mark students, print a link to redirect there.
             if($this->canmark){
                 $url= new \moodle_url('/mod/league/marking.php', array(
@@ -152,20 +152,6 @@ class main_teacher_view implements \renderable {
 
                 $data[] = '<a href="'.$url.'">'.get_string('mark_exercise', 'league')."</a>";
             }
-
-            // Publish / Unpublish students grades to that exercise.
-            $data[] = '<form action="view.php" method="post" >
-                <input type="hidden" name="id" value="'. $this->cmid .'" />
-                <input type="hidden" name="action" value="publish" />
-                <input type="hidden" name="id_exer" value="'. $exer['id'] .'" />
-                <input type="hidden" name="exer_name" value="'. $exer['name'] .'" />
-                <input type="hidden" name="exer_description" value="'. $exer['statement'] .'" />
-                <input type="hidden" name="exer_published" value="'. $exer['published'] .'" />
-                <input type="hidden" name="exer_enabled" value="'. $exer['enabled'] .'" />
-                <input type="submit" value="'. 
-                ($exer['published'] == 0 ? get_string('publish', 'league') : get_string('unpublish', 'league')) 
-            .'"/>
-            </form>';
 
             $table->data[] = $data;
         }

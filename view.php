@@ -152,13 +152,13 @@ switch($role){
             // Get the exercise ID from POST.
             $exerciseid = required_param('id_exer', PARAM_INT);
             // Get the exercise name from POST.
-            $name = required_param('exer_name', PARAM_TEXT);
+            $name = \league_model::get_data_from_exercise($exerciseid, 'name');
             // Get the exercise description from POST.
-            $description = required_param('exer_description', PARAM_TEXT);
+            $description = \league_model::get_data_from_exercise($exerciseid, 'statement');
             // Get the exercise enabled flag from POST.
-            $exerciseenabled = required_param('exer_enabled', PARAM_INT);
+            $exerciseenabled = \league_model::get_data_from_exercise($exerciseid, 'enabled');
             // Get the exercise published marks flag from POST.
-            $exercisepublished = required_param('exer_published', PARAM_INT);
+            $exercisepublished = \league_model::get_data_from_exercise($exerciseid, 'published');
             // Get the league ID.
             $leagueid = $league->id;
             
