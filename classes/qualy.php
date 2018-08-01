@@ -81,11 +81,9 @@ class league_qualy {
     /**
      * Generates the qualy with all role student users in the course.
      * 
-     * @global object $DB Moodle Database
      * @return object Array of array with the qualy sorted appropiately.
      */
     private function generate_qualy(){
-        global $DB;
         // Get all users in the course.
         $students = \league_model::get_students();
         $qualy = Array();
@@ -96,32 +94,8 @@ class league_qualy {
             // Get all the attempts data for this user: 
             // total exercises, total exercises uploaded, total mark earned
             // and number of non marked attempts.
-            $query = "select count(id) as te, count(idat) as eu, sum(mark) as acum, COUNT(CASE WHEN mark = -1 THEN 1 END) as sc
-            from mdl_league_exercise as a
-            left outer join
-            (
-                select a.id as idat, a.timemodified as tma,
-                        a.observations, a.name as fname,
-                        a.exercise, b.user, a.mark, a.itemid
-                        from mdl_league_attempt as a
-                        inner join (
-                                select max(id) as m, user
-                                from mdl_league_attempt
-                                where user = ${d['id']}
-                                group by exercise
-                        ) as b
-                        on a.id = b.m
-            ) as b
-            on a.id = b.exercise
-            where a.league = $this->leagueid";
-                                
-            // If the user is a student, only get the data of published marks exercises.                    
-            if($this->role == 'student'){
-                $query .= " and a.published = 1";
-            }
-            
-            $exercisesdata = $DB->get_records_sql($query);
-            
+            $exercisesdata = \league_model::get_qualy_data($this->leagueid, $d['id'], $this->role);
+             
             // Only one row returned by the last query.
             foreach ($exercisesdata as $data){
                 $data = get_object_vars($data);

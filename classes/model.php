@@ -658,4 +658,46 @@ class league_model {
         return $result;
     }
     
+    
+    
+    /**
+     * Get all the attempts data for this user:
+     * total exercises, total exercises uploaded, 
+     * total mark earned and number of non marked attempts.
+     * 
+     * @global object $DB Moodle database.
+     * @param int $leagueid League ID.
+     * @param int $userid User ID.
+     * @param string $role User role (to return more or less data).
+     * @return object User attempts data.
+     */
+    public static function get_qualy_data($leagueid, $userid, $role){
+        global $DB;
+        $query = "SELECT COUNT(id) AS te, COUNT(idat) AS eu, 
+                         SUM(mark) AS acum, 
+                         COUNT(CASE WHEN mark = -1 THEN 1 END) AS sc
+                    FROM {league_exercise} AS a
+         LEFT OUTER JOIN (
+                            SELECT a.id AS idat, a.timemodified AS tma,
+                                   a.observations, a.name AS fname,
+                                   a.exercise, b.user, a.mark, a.itemid
+                              FROM {league_attempt} AS a
+                        INNER JOIN (
+                                        SELECT MAX(id) AS m, user
+                                          FROM {league_attempt}
+                                         WHERE user = :user
+                                      GROUP BY exercise
+                                    ) 
+                                    AS b ON a.id = b.m
+                         ) AS b ON a.id = b.exercise
+                   WHERE a.league = :league";
+
+        // If the user is a student, only get the data of published marks exercises.                    
+        if($role == 'student'){
+            $query .= " AND a.published = 1";
+        }
+        
+        return $DB->get_records_sql($query, array('user' => $userid, 'league' => $leagueid));
+    }
+    
 }
