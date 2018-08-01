@@ -78,7 +78,6 @@ class teacher_grade_view implements \renderable {
      * Print directly the table sorted by the user preferences.
      */
     function print_table_grades(){
-
         // Create the flexible table with all appropiate data.
         $table = new \flexible_table('mod-league-grade');
         $table->define_baseurl($this->url);
@@ -116,7 +115,7 @@ class teacher_grade_view implements \renderable {
     function sort_grade_rows($sortby){
         // Cut the initial string to get only the first one.
         $cut = explode(', ', $sortby);
-        $headers = $this->tableheaders;
+        $headers = $this->tablecolumns;
         
         // If a criterion exists, get the first one and sort the rows.
         foreach($cut as $criterion){
@@ -198,12 +197,19 @@ class teacher_grade_view implements \renderable {
                 }
             }
 
+            // We sure the sort will be done nicely.
+            $method = SORT_NUMERIC;
+            if($on == 1){
+                // Students names.
+                $method = SORT_STRING;
+            }
+            
             switch ($order) {
                 case SORT_ASC:
-                    asort($sortable_array);
+                    asort($sortable_array, $method);
                 break;
                 case SORT_DESC:
-                    arsort($sortable_array);
+                    arsort($sortable_array, $method);
                 break;
             }
 

@@ -149,7 +149,9 @@ switch($role){
         $tableheaders = array(get_string('image', 'league'), get_string('student', 'league'));
         // For each exercises name, add a new column.
         foreach($exercises as $e){
-            array_push($tablecolumns, $e->name);
+            //array_push($tablecolumns, $e->name);
+            //array_push($tableheaders, $e->name);
+            array_push($tablecolumns, "e".$e->id);
             array_push($tableheaders, $e->name);
             array_push($exercisesnames, $e->id);
         }
