@@ -85,10 +85,12 @@ $mod = new mod_league\league($cminfo, $context, $league);
 // Get and render the appropiate class to this page.
 $output = $PAGE->get_renderer('mod_league');
         
-// If the user can upload files and the exercise ID belongs to the current league,
-// user can upload the file (it's recommended only students are available to
-// upload files).
-if($mod->useruploadfiles($USER->id) && \league_model::is_league_exercise($exerciseid, $league->id)){
+// If the user can upload files, the exercise is currently enabled and the 
+// exercise ID belongs to the current league, user can upload the file 
+// (it's recommended only students are available to upload files).
+if(\league_model::is_league_exercise($exerciseid, $league->id) and 
+        \league_model::get_data_from_exercise($exerciseid, 'enabled') == 1 and
+        $mod->useruploadfiles($USER->id)){
 
     // Get the name and statement from exercise ID:
     $name = \league_model::get_data_from_exercise($exerciseid, 'name');
@@ -170,6 +172,7 @@ if($mod->useruploadfiles($USER->id) && \league_model::is_league_exercise($exerci
         $mform->display();
     }
 }else{
+    echo $output->header();
     // If the user has no upload capabilities, render an error page.
     $panel = new mod_league\output\go_back_view($cmid, get_string('notallowedpage','league'), get_string('nopermission','league'));
     echo $output->render($panel);

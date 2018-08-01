@@ -88,28 +88,28 @@ class league_qualy {
         $students = \league_model::get_students();
         $qualy = Array();
         // For the moment, WE DON'T SORT THE QUALY, only recover students data.
-        foreach ($students as $d){
-            $d = get_object_vars($d);
+        foreach ($students as $student){
+            $student = get_object_vars($student);
             
             // Get all the attempts data for this user: 
             // total exercises, total exercises uploaded, total mark earned
             // and number of non marked attempts.
-            $exercisesdata = \league_model::get_qualy_data($this->leagueid, $d['id'], $this->role);
+            $attemptsdata = \league_model::get_qualy_data($this->leagueid, $student['id'], $this->role);
              
             // Only one row returned by the last query.
-            foreach ($exercisesdata as $data){
+            foreach ($attemptsdata as $data){
                 $data = get_object_vars($data);
                 // Create an array with the user data.
                 $row = Array();
-                $row += array('name' => $d['firstname']." ".$d['lastname']);
-                $row += array('uname' => $d['username']);
-                $row += array('uid' => $d['id']);
+                $row += array('name' => $student['firstname']." ".$student['lastname']);
+                $row += array('uname' => $student['username']);
+                $row += array('uid' => $student['id']);
                 $row += array('totalexer' => $data['te']);
                 $row += array('exeruplo' => $data['eu']);
                 $row += array('totalmark' => $data['acum'] + $data['sc']);
-                $row += array('marks' => \league_model::get_mark_array_by_student($this->leagueid, $d['id'], true));
+                $row += array('marks' => \league_model::get_mark_array_by_student($this->leagueid, $student['id'], true));
                 $row += array('notes' => "");
-                $row += array('picture' => new user_picture(\league_model::get_user_by_id($d['id'])));
+                $row += array('picture' => new user_picture(\league_model::get_user_by_id($student['id'])));
             }
             // Add the user data to the global qualy.
             array_push($qualy, $row);
