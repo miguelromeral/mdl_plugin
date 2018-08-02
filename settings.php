@@ -18,6 +18,7 @@
  * Main page to set up the plugin.
  *
  * @package   mod_league
+ * @category  admin
  * @copyright 2018 Miguel Romeral
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,10 +31,10 @@ if ($ADMIN->fulltree) {
     
     require_once($CFG->dirroot.'/mod/league/lib.php');
 
-    // Settings to specify maximum attempts number (1 to 20).
+    // Settings to specify maximum attempts number (1 to 10).
     $options = array();
     $options[1] = get_string('only_one_attempt', 'league');
-    for($i = 2; $i <= 20; $i++){
+    for($i = 2; $i <= 10; $i++){
         $options[$i] = $i;
     }
     
