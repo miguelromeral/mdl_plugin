@@ -53,7 +53,8 @@ class upload_form extends \moodleform {
         // Filepicker to get the user uploaded file.
         // All types availables.
         $mform->addElement('filepicker', 'userfile', get_string('upload_exercise_file', 'league'), null,
-                   array('maxbytes' => 10000000, 'accepted_types' => '*'));
+                   array('accepted_types' => '*'));
+        $mform->addRule('userfile', null, 'required', null, 'client');
         
         // Add action buttons.
         $this->add_action_buttons();

@@ -112,7 +112,7 @@ class student_grade_view implements \renderable {
                     if($this->candownload){
                         $file = \league_model::restoreURLFile($this->contextid, $mark['itemid']);
                         if($file){
-                            $this->marks[] = '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
+                            $this->marks[] = '<a href="'.$file.'">'.get_string('download_file_button', 'league')."</a>";
                         }else{
                             $this->marks[] = get_string('cant_create_url', 'league');
                         }

@@ -450,7 +450,7 @@ class league_model {
      * @global object $DB Moodle database.
      * @return int File ID.
      */
-    public static function generate_random_file_id(){
+    public static function generate_random_item_id(){
         global $DB;
         $min = 1;
         $max = 10000000000;
@@ -477,34 +477,11 @@ class league_model {
     }
     
     /**
-     * Create an URL with the current server setup.
-     * 
-     * @global object $CFG Global Moodle configuration.
-     * @param int $contextid Context ID.
-     * @param int $itemid File ID.
-     * @param string $name File name.
-     * @return string
-     */
-    public static function get_url_file($contextid, $itemid, $name){
-        global $CFG;
-
-        $url = $CFG->wwwroot;
-        $url .= "/pluginfile.php/";
-        $url .= ($contextid)."/";
-        $url .= "mod_league/";
-        $url .= "exuplod/";
-        $url .= ($itemid)."/";
-        $url .= $name;
-        
-        return $url;
-    }
-
-    /**
      * Restore a URL used to download the file with the item ID given.
      * 
      * @param int $contextid Context ID.
      * @param int $itemid item ID.
-     * @return \stdClass File ID and URL to that file.
+     * @return \stdClass File URL generated.
      */
     public static function restoreURLFile($contextid, $itemid){
         $component = 'mod_league';
@@ -515,17 +492,10 @@ class league_model {
         // Retrieve all files for this module (it has have this Item ID).
         if ($files = $fs->get_area_files($contextid, $component, $filearea, $itemid, 'sortorder', false)) {               
             foreach ($files as $file) {
-                // Content hash of the File.
-                $contenthash = $file->get_contenthash();
-                // Get the File ID from its content hash.
-                $itemid = \league_model::get_file_id_from_content_hash($contenthash);
-                // Restore URL.
-                $url = \league_model::get_url_file($file->get_contextid(), $file->get_itemid(), $file->get_filename());
-                // Return the result.
-                $resultado = new stdClass();
-                $resultado->id = $itemid;
-                $resultado->url = $url;
-                return $resultado;
+                // Generate appropiate URL.
+                return \moodle_url::make_pluginfile_url($file->get_contextid(), 
+                        'mod_league', 'exuplod', $file->get_itemid(), 
+                        $file->get_filepath(), $file->get_filename());
             }
         }
         

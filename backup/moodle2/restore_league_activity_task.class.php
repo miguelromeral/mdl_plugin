@@ -59,7 +59,7 @@ class restore_league_activity_task extends restore_activity_task {
     static public function define_decode_contents() {
         $contents = array();
  
-        $contents[] = new restore_decode_content('league', array('filearea'), 'league');
+        $contents[] = new restore_decode_content('league', array('intro'), 'league');
  
         return $contents;
     }

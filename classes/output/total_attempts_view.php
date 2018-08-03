@@ -150,7 +150,7 @@ class total_attempts_view implements \renderable {
             if($attempt['itemid']){
                 $file = \league_model::restoreURLFile($this->contextid, $attempt['itemid']);
                 if($file){
-                    $data[] = '<a href="'.$file->url.'">'.get_string('download_file_button', 'league')."</a>";
+                    $data[] = '<a href="'.$file.'">'.get_string('download_file_button', 'league')."</a>";
                 }else{
                     $data[] = get_string('cant_create_url', 'league');
                 }

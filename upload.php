@@ -116,40 +116,26 @@ if(\league_model::is_league_exercise($exerciseid, $league->id) and
         // Get all components to store a file.
         $component = 'mod_league';
         $filearea = $league->filearea;
+        //$filearea = $league->intro;
         $name = $mform->get_new_filename('userfile');
 
         // If the user has uploaded a file:
         if($name){
             // Create a unique ID to this file (the item ID).
-            $itemid = \league_model::generate_random_file_id();
+            $itemid = \league_model::generate_random_item_id();
             
             // Store the file with the all the necessary data.
-            $attemptid = $mform->save_stored_file('userfile', $context->id, $component, $filearea, $itemid);
-
-            // Create and attempt once the file was stored.
-            $fs = get_file_storage();
+            $mform->save_stored_file('userfile', $context->id, $component, $filearea, $itemid);
+            // Register the attempt.
+            $success = league_attempt_add_instance($USER->id, $exerciseid, $itemid, $name, $league->id);
             
-            if ($files = $fs->get_area_files($contextid, $component, $filearea, $itemid, 'sortorder', false)) {               
-                foreach ($files as $file) {
-                    // Obtain the content file ID (different from item ID)
-                    $contenthash = $file->get_contenthash();
-                    $fileid = \league_model::get_file_id_from_content_hash($contenthash);
+            if($success){
+                // Trigger the attempt submitted event.
+                $mod->trigger_attempt_submitted_event($exerciseid, $success);
 
-                    // Create the attempt in the database.
-                    $attemptid = league_attempt_add_instance($USER->id, $exerciseid, $file->get_itemid(), $name, $league->id);
-
-                    // If everything is OK in the database, we trigger the event
-                    // and warn the user that's OK.
-                    if($attemptid){
-                        
-                        // Trigger the attempt submitted event.
-                        $mod->trigger_attempt_submitted_event($exerciseid, $attemptid);
-                        
-                        // Render a page to go back to main menu.
-                        $panel = new mod_league\output\go_back_view($cmid, get_string('ue_success','league'));
-                        echo $output->render($panel);
-                    }
-                }
+                // Render a page to go back to main menu.
+                $panel = new mod_league\output\go_back_view($cmid, get_string('ue_success','league'));
+                echo $output->render($panel);
             }
             
         }else{

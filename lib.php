@@ -58,6 +58,7 @@ function league_add_instance(stdClass $league, mod_league_mod_form $mform = null
     global $DB;
     $league->timemodified = time();
     $league->filearea = 'exuplod';
+    $league->intro = 'exuplod';
     $league->id = $DB->insert_record('league', $league);
     // Create the Gradebook.
     league_grade_item_update($league);
