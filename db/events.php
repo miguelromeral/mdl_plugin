@@ -32,56 +32,48 @@ $observers = array(
         'eventname'   => '\mod_league\event\league_created',
         'callback'    => 'league_created_handler',
         'includefile' => '/mod/league/locallib.php',
-        'internal'    => true,
     ),
     
     array(
         'eventname'   => '\mod_league\event\league_updated',
         'callback'    => 'league_updated_handler',
         'includefile' => '/mod/league/locallib.php',
-        'internal'    => true,
     ),
     
     array(
         'eventname'   => '\mod_league\event\exercise_created',
         'callback'    => 'exercise_created_handler',
         'includefile' => '/mod/league/locallib.php',
-        'internal'    => true,
     ),
     
     array(
         'eventname'   => '\mod_league\event\exercise_updated',
         'callback'    => 'exercise_updated_handler',
         'includefile' => '/mod/league/locallib.php',
-        'internal'    => true,
     ),
     
     array(
         'eventname'   => '\mod_league\event\exercise_deleted',
         'callback'    => 'exercise_deleted_handler',
         'includefile' => '/mod/league/locallib.php',
-        'internal'    => true,
     ),
     
     array(
         'eventname'   => '\mod_league\event\attempt_submitted',
         'callback'    => 'attempt_submitted_handler',
         'includefile' => '/mod/league/locallib.php',
-        'internal'    => true,
     ),
     
     array(
         'eventname'   => '\mod_league\event\attempt_downloaded',
         'callback'    => 'attempt_downloaded_handler',
         'includefile' => '/mod/league/locallib.php',
-        'internal'    => true,
     ),
     
     array(
         'eventname'   => '\mod_league\event\attempt_graded',
         'callback'    => 'attempt_graded_handler',
         'includefile' => '/mod/league/locallib.php',
-        'internal'    => true,
     )
     
 );

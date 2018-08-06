@@ -37,6 +37,7 @@ defined('MOODLE_INTERNAL') || die();
 
 // Identifies the Course Module ID.
 $cmid = optional_param('id', 0, PARAM_INT);
+$userid = optional_param('userid', 0, PARAM_INT);
 
 // Check if a course module exists.
 if ($cmid) {
@@ -136,75 +137,85 @@ switch($role){
         $panel = new mod_league\output\single_content_view(null, get_string('individual_marks','league'));
         echo $output->render($panel);
         
-        // Retrieve exercises and marks for that exercise.
-        $exercises = \league_model::get_exercises_from_id($league->id);
-        $marks = \league_model::get_tabla_notas($league->id);
-
-        // Array to store exercises names.
-        $exercisesnames = array();
-        // Arrays with the names of each column (in addition to these one, 
-        // we'll add the exercises name later).
-        $tablecolumns = array('userpic','student');
-        // The same as above, but these ones are to display de headers.
-        $tableheaders = array(get_string('image', 'league'), get_string('student', 'league'));
-        // For each exercises name, add a new column.
-        foreach($exercises as $e){
-            //array_push($tablecolumns, $e->name);
-            //array_push($tableheaders, $e->name);
-            array_push($tablecolumns, "e".$e->id);
-            array_push($tableheaders, $e->name);
-            array_push($exercisesnames, $e->id);
-        }
-
-        // Get all data from each user WITH NO ORDER (another function will
-        // do that).
-        $rows = array();
-        foreach ($marks as $mark){
-            $mark = get_object_vars($mark);
+        if($userid){
+            // Retrieve all marks for the current user and print all of them.
+            $marks = \league_model::get_student_marks($league->id, $userid);
+            $panel = new mod_league\output\student_grade_view($cmid, $context->id, $marks, $mod->userdownloadfiles($USER->id), \league_model::get_student_name($userid));
+            echo $output->render($panel);
             
-            // Data to this row.
-            $data = array();
-            // User picture profile and name.
-            $data[] = $OUTPUT->render(new user_picture(league_model::get_user_by_id($mark['id'])));
-            
-            
-            $data[] = $mark['firstname'] . " " . $mark['lastname'];
+        } else {
 
-            // For each exercise we set the appropiate mark.
-            foreach($exercisesnames as $exercise){
-                // We search through the array to the mark that belongs to
-                // this exercise.
-                $hasmark = false;
-                foreach($mark['notas'] as $outcome){
-                    
-                    if($outcome->exercise == $exercise){
-                        $nota = $outcome->mark;
-                        $hasmark = true;
-                        
-                        if($nota == -1){
-                            // Attempt sent but no graded.
-                            $data[] = "0 (".get_string('no_mark_yet','league').")";
-                        }else{
-                            // Attempt already graded.
-                            $data[] = $outcome->mark . " %";
+            // Retrieve exercises and marks for that exercise.
+            $exercises = \league_model::get_exercises_from_id($league->id);
+            $marks = \league_model::get_tabla_notas($league->id);
+
+            // Array to store exercises names.
+            $exercisesnames = array();
+            // Arrays with the names of each column (in addition to these one, 
+            // we'll add the exercises name later).
+            $tablecolumns = array('userpic','student');
+            // The same as above, but these ones are to display de headers.
+            $tableheaders = array(get_string('image', 'league'), get_string('student', 'league'));
+            // For each exercises name, add a new column.
+            foreach($exercises as $e){
+                //array_push($tablecolumns, $e->name);
+                //array_push($tableheaders, $e->name);
+                array_push($tablecolumns, "e".$e->id);
+                array_push($tableheaders, $e->name);
+                array_push($exercisesnames, $e->id);
+            }
+
+            // Get all data from each user WITH NO ORDER (another function will
+            // do that).
+            $rows = array();
+            foreach ($marks as $mark){
+                $mark = get_object_vars($mark);
+
+                // Data to this row.
+                $data = array();
+                // User picture profile and name.
+                $data[] = $OUTPUT->render(new user_picture(league_model::get_user_by_id($mark['id'])));
+
+
+                $data[] = $mark['firstname'] . " " . $mark['lastname'];
+
+                // For each exercise we set the appropiate mark.
+                foreach($exercisesnames as $exercise){
+                    // We search through the array to the mark that belongs to
+                    // this exercise.
+                    $hasmark = false;
+                    foreach($mark['notas'] as $outcome){
+
+                        if($outcome->exercise == $exercise){
+                            $nota = $outcome->mark;
+                            $hasmark = true;
+
+                            if($nota == -1){
+                                // Attempt sent but no graded.
+                                $data[] = "0 (".get_string('no_mark_yet','league').")";
+                            }else{
+                                // Attempt already graded.
+                                $data[] = $outcome->mark . " %";
+                            }
+
                         }
+                    }
 
+                    if(!$hasmark){
+                        // Attempt no even sent.
+                        $data[] = "(". get_string('not_done','league'). ")";
                     }
                 }
-                
-                if(!$hasmark){
-                    // Attempt no even sent.
-                    $data[] = "(". get_string('not_done','league'). ")";
-                }
+                // Add this row to all rows.
+                array_push($rows, $data);
             }
-            // Add this row to all rows.
-            array_push($rows, $data);
+
+            // Once we have all data, print everything with renderer.
+            $panel = new mod_league\output\teacher_grade_view($rows, $tablecolumns, $tableheaders, $exercisesnames, $PAGE->url);
+            echo $output->render($panel);
+
         }
-
-        // Once we have all data, print everything with renderer.
-        $panel = new mod_league\output\teacher_grade_view($rows, $tablecolumns, $tableheaders, $exercisesnames, $PAGE->url);
-        echo $output->render($panel);
-
+        
         break;
     
     default:    // The user has no role allowed to see this page.

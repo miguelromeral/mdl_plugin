@@ -58,7 +58,7 @@ class mod_league_renderer extends plugin_renderer_base {
      * @return string HTML output data.
      */
     protected function render_student_grade_view(\mod_league\output\student_grade_view $view) {
-        $out = $this->output->heading(format_string(get_string('my_marks','league')), 3);
+        $out = $this->output->heading(format_string($view->header), 3);
         
         // If there are marks, print the table.
         if(isset($view->marks)){

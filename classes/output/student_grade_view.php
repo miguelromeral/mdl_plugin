@@ -53,6 +53,9 @@ class student_grade_view implements \renderable {
     /** @var bool Capability if an user can download attempts. */
     public $candownload = false;
     
+    /** @var bool Header to be printed. */
+    public $header = false;
+    
     /**
      * Class constructor.
      * 
@@ -61,11 +64,16 @@ class student_grade_view implements \renderable {
      * @param object $marks Array with the marks according to the exercises. 
      * @param bool $candownload Capability if an user can download attempts. 
      */
-    public function __construct($cmid, $contextid = 0, $marks = null, $candownload = false) {
+    public function __construct($cmid, $contextid = 0, $marks = null, $candownload = false, $header = '') {
         $this->marks = $marks;
         $this->cmid = $cmid;
         $this->contextid = $contextid;
         $this->candownload = $candownload;
+        if($header){
+            $this->header = $header;
+        }else{
+            $this->header = get_string('my_marks','league');
+        }
     }
     
     /**
