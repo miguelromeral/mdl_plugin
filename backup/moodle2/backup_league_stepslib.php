@@ -52,13 +52,13 @@ class backup_league_activity_structure_step extends backup_activity_structure_st
  
         $exercise = new backup_nested_element('exercise', array('id'), array(
             'name', 'timemodified',
-            'statement', 'enabled','league','published'));
+            'statement', 'enabled','published'));
  
         $attempts = new backup_nested_element('attempts');
  
         $attempt = new backup_nested_element('attempt', array('id'), array(
-            'name', 'timemodified', 'intro', 'introformat', 'exercise', 
-            'user', 'mark', 'observations', 'itemid', 'url', 'league', 'timecreated'));
+            'name', 'timemodified', 'exercise', 
+            'user', 'mark', 'observations', 'itemid', 'timecreated'));
         
         // Build the tree.
         $league->add_child($exercises);
@@ -85,7 +85,7 @@ class backup_league_activity_structure_step extends backup_activity_structure_st
                 array(backup::VAR_PARENTID));
         }
         
-        // Define id annotations.
+        // Define id annotations (DB - Field).
         $attempt->annotate_ids('user', 'user');
  
         // Define file annotations.

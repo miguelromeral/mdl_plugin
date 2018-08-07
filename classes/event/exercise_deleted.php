@@ -80,6 +80,7 @@ class exercise_deleted extends \core\event\base {
      */
     public function get_description() {
         return "The user with id '$this->userid' deleted an exercise "
-                . "with id '$this->objectid' with course module id '$this->contextinstanceid'.";
+                . "with id '$this->objectid' and all the attempts associated"
+                . " in course module id '$this->contextinstanceid'.";
     }
 }

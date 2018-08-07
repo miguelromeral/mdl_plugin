@@ -37,6 +37,7 @@ require_once($CFG->dirroot.'/mod/league/classes/league.php');
  */
 function league_supports($feature) {
     switch($feature) {
+        case FEATURE_GRADE_HAS_GRADE:         return true;
         case FEATURE_BACKUP_MOODLE2:          return true;
         default: return null;
     }
@@ -175,9 +176,10 @@ function league_exercise_delete_instance($id) {
         return false;
     }
     $DB->delete_records('league_exercise', array('id' => $exercise->id));
-    
+    league_attempt_delete_all_instances($id);
     return true;
 }
+
 
 /**
  * Add an attempt instance.
@@ -250,6 +252,22 @@ function league_attempt_delete_instance($id) {
         return false;
     }
     $DB->delete_records('league_attempt', array('id' => $id));
+    return true;
+}
+
+/**
+ * Delete all attempts associated to an exercise.
+ * 
+ * @global object $DB Moodle database.
+ * @param int $exerciseid Exercise ID.
+ * @return boolean Success / Fail.
+ */
+function league_attempt_delete_all_instances($exerciseid){
+    global $DB;
+    if (! $exercise = $DB->get_record('league_attempt', array('exercise' => $exerciseid))) {
+        return false;
+    }
+    $DB->delete_records('league_attempt', array('exercise' => $exerciseid));
     return true;
 }
 
