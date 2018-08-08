@@ -58,8 +58,8 @@ function league_supports($feature) {
 function league_add_instance(stdClass $league, mod_league_mod_form $mform = null) {
     global $DB;
     $league->timemodified = time();
-    $league->filearea = 'exuplod';
-    $league->intro = 'exuplod';
+    $league->filearea = 'null';
+    $league->presentation = 'null';
     $league->id = $DB->insert_record('league', $league);
     // Create the Gradebook.
     league_grade_item_update($league);
@@ -451,7 +451,7 @@ function league_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
     
     // Check the filearea is the league's file area (We can't download others
     // module files.
-    if ($filearea !== 'exuplod') {
+    if ($filearea !== \mod_league\league::$FILEAREA) {
         return false;
     }
     

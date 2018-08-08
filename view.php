@@ -117,7 +117,7 @@ switch($role){
         //                                                                  //
         //////////////////////////////////////////////////////////////////////
 
-        $panel = new mod_league\output\single_content_view($league->presentation, get_string('main_panel_student','league'));
+        $panel = new mod_league\output\single_content_view($league->intro, get_string('main_panel_student','league'));
         echo $output->render($panel);
         
         // Get all exercises enabled in this league.

@@ -51,17 +51,21 @@ class league {
     /** @var object The league instance. */
     private $league = null;
  
+    /** @var string League's file area. */
+    public static $FILEAREA = 'exuplod';
+    
+    /**
+     * Constructor of League Controller.
+     * 
+     * @param \cm_info $cm Course Module Info.
+     * @param object $context_module Context Module.
+     * @param object $league League instance.
+     */
     function __construct(\cm_info $cm, $context_module, $league) {
         $this->cm = $cm;
         $this->context = $context_module;
         $this->league = $league;
     }
-    
-    
-    
-    // Begin to check capabilities from users.
-    // This is an idea viewed on 
-    // {@link https://docs.moodle.org/dev/NEWMODULE_Documentation#Check_the_capability_of_a_user}.
     
     /**
      * Check if an user can view the module.
@@ -126,6 +130,11 @@ class league {
         return (has_capability('mod/league:markstudents', $this->context, $userid));
     }
     
+    /**
+     * Trigger a league_created_event.
+     * 
+     * @param object $league League instance.
+     */
     public static function trigger_league_created_event($league) {
 
         $params = array(
@@ -137,6 +146,12 @@ class league {
         $event->trigger();
     }
 
+    
+    /**
+     * Trigger a league_updated_event.
+     * 
+     * @param object $league League instance.
+     */
     public static function trigger_league_updated_event($league){
 
         $params = array(
@@ -148,6 +163,12 @@ class league {
         $event->trigger();
     }
 
+    
+    /**
+     * Trigger an exercise_created_event.
+     * 
+     * @param int $id Exercise ID.
+     */
     public function trigger_exercise_created_event($id) {
 
         $params = array(
@@ -160,6 +181,11 @@ class league {
         $event->trigger();
     }
 
+    /**
+     * Trigger an exercise_deleted_event.
+     * 
+     * @param int $idexer Exercise ID.
+     */
     public function trigger_exercise_deleted_event($idexer){
         $params = array(
             'objectid' => $idexer,
@@ -171,6 +197,12 @@ class league {
         $event->trigger();
     }
 
+    
+    /**
+     * Trigger an exercise_updated_event.
+     * 
+     * @param int $idexer Exercise ID.
+     */
     public function trigger_exercise_updated_event($idexer){
         $params = array(
             'objectid' => $idexer,
@@ -182,6 +214,16 @@ class league {
         $event->trigger();
     }
 
+    /**
+     * Trigger an attempt_downloaded_event. It must be static because
+     * no controller is created when download a file.
+     * 
+     * @param int $idat Attempt ID.
+     * @param int $iduser User ID.
+     * @param int $idleague League ID.
+     * @param int $idexer Exercise ID.
+     * @param object $context Context Module.
+     */
     public static function trigger_attempt_downloaded_event($idat, $iduser, $idleague, $idexer, $context){
         $params = array(
             'objectid' => $idat,
@@ -195,6 +237,12 @@ class league {
         $event->trigger();
     }
 
+    /**
+     * Trigger an attempt_submitted_event.
+     * 
+     * @param int $exercise Exercise ID.
+     * @param int $id Attempt ID.
+     */
     public function trigger_attempt_submitted_event($exercise, $id) {
 
         $params = array(
@@ -207,7 +255,14 @@ class league {
         $event->trigger();
     }
 
-    
+    /**
+     * Trigger an attempt_graded_event.
+     * 
+     * @param int $attemptid Attempt ID.
+     * @param int $user User ID.
+     * @param int $exercise Exercise ID.
+     * @param int $mark Mark.
+     */
     public function trigger_attempt_graded_event($attemptid, $user, $exercise, $mark) {
 
         $params = array(

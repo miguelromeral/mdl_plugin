@@ -66,10 +66,10 @@ class mod_league_mod_form extends moodleform_mod {
         $mform->addHelpButton('method', 'select_method', 'league');
         
         // Sort description (or presentation) about the league.
-        $mform->addElement('textarea', 'presentation', get_string("mod_form_presentation", "league"), 'wrap="virtual" rows="20" cols="50"');
-        $mform->setType('presentation', PARAM_TEXT);
-        $mform->setDefault('presentation', '');
-        $mform->addRule('presentation', null, 'required', null, 'client');
+        $mform->addElement('textarea', 'intro', get_string("mod_form_presentation", "league"), 'wrap="virtual" rows="20" cols="50"');
+        $mform->setType('intro', PARAM_TEXT);
+        $mform->setDefault('intro', '');
+        $mform->addRule('intro', null, 'required', null, 'client');
         
         // Features to the Course Module elements.
         $features = new stdClass();

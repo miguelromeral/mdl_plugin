@@ -89,7 +89,7 @@ class backup_league_activity_structure_step extends backup_activity_structure_st
         $attempt->annotate_ids('user', 'user');
  
         // Define file annotations.
-        $league->annotate_files('mod_league', 'exuplod', null);
+        $league->annotate_files('mod_league', \mod_league\league::$FILEAREA, null);
         
         // Return the root element (League),
         // wrapped into standard activity structure.

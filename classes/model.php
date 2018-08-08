@@ -485,7 +485,7 @@ class league_model {
      */
     public static function restoreURLFile($contextid, $itemid){
         $component = 'mod_league';
-        $filearea = 'exuplod';
+        $filearea = \mod_league\league::$FILEAREA;
         // Get all files.
         $fs = get_file_storage();
         
@@ -494,7 +494,7 @@ class league_model {
             foreach ($files as $file) {
                 // Generate appropiate URL.
                 return \moodle_url::make_pluginfile_url($file->get_contextid(), 
-                        'mod_league', 'exuplod', $file->get_itemid(), 
+                        'mod_league', $filearea, $file->get_itemid(), 
                         $file->get_filepath(), $file->get_filename());
             }
         }

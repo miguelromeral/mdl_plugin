@@ -115,8 +115,7 @@ if(\league_model::is_league_exercise($exerciseid, $league->id) and
         
         // Get all components to store a file.
         $component = 'mod_league';
-        $filearea = $league->filearea;
-        //$filearea = $league->intro;
+        $filearea = \mod_league\league::$FILEAREA;
         $name = $mform->get_new_filename('userfile');
 
         // If the user has uploaded a file:
