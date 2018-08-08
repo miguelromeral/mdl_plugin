@@ -112,7 +112,7 @@ if($canmanage && ($exerciseid == -1 || $exerciseinleague)){
         if ($formdata = $mform->get_data()) {
             // Get the appropiate data.
             $name = $formdata->name;
-            $statement = $formdata->statement;
+            $statement = $formdata->statement['text'];
             $course = $cm->course;
             
             // If the exercise is new, add an instance of it.

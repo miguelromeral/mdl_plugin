@@ -151,7 +151,8 @@ class mod_league_renderer extends plugin_renderer_base {
             $out .= $this->output->heading($view->title, 2);
         }
         
-        $out .= $this->output->container($view->content);
+        $out .= html_writer::div($view->content);
+        
         return $this->output->container($out, 'main');
     }
     

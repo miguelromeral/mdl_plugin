@@ -71,9 +71,12 @@ class exercise_form extends \moodleform {
         
         // Exercise statement.
         $statement = (empty($this->_customdata['statement']) ? "" : $this->_customdata['statement']);
-        $mform->addElement('textarea', 'statement', get_string("description", "league"), 'wrap="virtual" rows="20" cols="50"');
+        
+        
+        $mform->addElement('editor', 'statement', get_string("description", "league"));
+        $mform->setType('statement', PARAM_RAW);
         $mform->addRule('statement', null, 'required', null, 'client');
-        $mform->addRule('statement', get_string('maximumchars', '', 4096), 'maxlength', 4096, 'client');
+        $mform->addRule('statement', get_string('maximumchars', '', 16384), 'maxlength', 16384, 'client');
         $mform->setDefault('statement', $statement);
         
         // Add action buttons.
