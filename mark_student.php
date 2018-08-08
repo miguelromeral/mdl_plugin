@@ -83,7 +83,7 @@ $mod = new mod_league\league($cminfo, $context, $league);
 $output = $PAGE->get_renderer('mod_league');
 
 // Retrieve attempt data from the database.
-$attemptleague = \league_model::get_data_from_attempt($attemptid, 'league');
+$attemptleague = \league_model::get_league_from_attempt($attemptid);
 $attemptuser = \league_model::get_data_from_attempt($attemptid, 'user');
 $exerciseid = \league_model::get_data_from_attempt($attemptid, 'exercise');
 

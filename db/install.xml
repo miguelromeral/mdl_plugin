@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/league/db" VERSION="20180731" COMMENT="XMLDB file for Moodle mod/league"
+<XMLDB PATH="mod/league/db" VERSION="20180808" COMMENT="XMLDB file for Moodle mod/league"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -10,11 +10,9 @@
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del curso"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Nombre instancia"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Tiempo modificación"/>
-        <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Descripción de actividad."/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Descripción de actividad."/>
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false" COMMENT="Formato de intro"/>
         <FIELD NAME="method" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Metodo de clasificación: 1: por notas, 2: por ejercicios subidos"/>
-        <FIELD NAME="filearea" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Filearea para los archivos"/>
-        <FIELD NAME="presentation" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Presentacion de la liga"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -24,11 +22,11 @@
     <TABLE NAME="league_exercise" COMMENT="Tabla que almacena los ejercicios que pertenecen a la liga.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="league" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Liga a la que pertenece la actividad."/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Nombre del ejercicio"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Tiempo de modificación"/>
         <FIELD NAME="statement" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Enunciado del ejercicio."/>
         <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Indica si los estudiantes pueden realizar esa ejercicio."/>
-        <FIELD NAME="league" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Liga a la que pertenece la actividad."/>
         <FIELD NAME="published" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Indica si se publican las notas de este ejercicio"/>
       </FIELDS>
       <KEYS>
@@ -39,20 +37,18 @@
     <TABLE NAME="league_attempt" COMMENT="Intento de los alumnos">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="exercise" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID del ejercicio al que pertenece"/>
+        <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Usuario que realiza el ejercicio"/>
+        <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID del fichero que se sube"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Nombre del intento"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time attempt was created."/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Tiempo de modificación"/>
-        <FIELD NAME="exercise" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID del ejercicio al que pertenece"/>
-        <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Usuario que realiza el ejercicio"/>
-        <FIELD NAME="mark" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Nota del alumno"/>
+        <FIELD NAME="mark" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="-1" SEQUENCE="false" COMMENT="Nota del alumno"/>
         <FIELD NAME="observations" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Observaciones sobre el trabajo hecho"/>
-        <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID del fichero que se sube"/>
-        <FIELD NAME="league" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID de la liga"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="fk-exercise" TYPE="foreign" FIELDS="exercise" REFTABLE="league_exercise" REFFIELDS="id" COMMENT="FK del exercise"/>
-        <KEY NAME="fk-league" TYPE="foreign" FIELDS="league" REFTABLE="league" REFFIELDS="id" COMMENT="FK de la league"/>
         <KEY NAME="fk-user" TYPE="foreign" FIELDS="user" REFTABLE="user" REFFIELDS="id" COMMENT="User ID FK"/>
         <KEY NAME="fk-itemid" TYPE="foreign" FIELDS="itemid" REFTABLE="files" REFFIELDS="itemid" COMMENT="FK del item id"/>
       </KEYS>

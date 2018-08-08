@@ -192,7 +192,7 @@ function league_exercise_delete_instance($id) {
  * @param int $leagueid League ID.
  * @return int New attempt ID.
  */
-function league_attempt_add_instance($userid, $exerciseid, $itemid, $filename, $leagueid) {
+function league_attempt_add_instance($userid, $exerciseid, $itemid, $filename) {
     global $DB;
     $record = new stdClass();
     $time = time();
@@ -203,7 +203,6 @@ function league_attempt_add_instance($userid, $exerciseid, $itemid, $filename, $
     $record->exercise = $exerciseid;
     $record->mark = -1;
     $record->itemid = $itemid;
-    $record->league = $leagueid;
   
     $id = $DB->insert_record('league_attempt', $record);
    

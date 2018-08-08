@@ -126,7 +126,7 @@ if(\league_model::is_league_exercise($exerciseid, $league->id) and
             // Store the file with the all the necessary data.
             $mform->save_stored_file('userfile', $context->id, $component, $filearea, $itemid);
             // Register the attempt.
-            $success = league_attempt_add_instance($USER->id, $exerciseid, $itemid, $name, $league->id);
+            $success = league_attempt_add_instance($USER->id, $exerciseid, $itemid, $name);
             
             if($success){
                 // Trigger the attempt submitted event.

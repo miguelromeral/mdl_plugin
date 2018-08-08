@@ -579,9 +579,29 @@ class league_model {
     }
 
     /**
-     * Retrieve specific data from an attempt.
+     * Retrieve League ID given an attempt ID.
      * 
      * @global object $DB Moodle database.
+     * @param int $id Attempt ID.
+     */
+    public static function get_league_from_attempt($id){
+        global $DB;
+        $query = "SELECT e.league
+                    FROM {league_exercise} AS e
+              INNER JOIN {league_attempt} AS a
+                      ON e.id = a.exercise
+                   WHERE a.id = :id";
+        
+        $data = $DB->get_records_sql($query, array('id' => $id));
+        foreach ($data as $attempt){
+            return $attempt->league;
+        }
+        return null;
+    }
+    
+    /**
+     * Retrieve specific data from an attempt.
+     * 
      * @param int $id Attempt ID.
      * @param string $field Field to retrieve.
      * @return object
@@ -613,7 +633,7 @@ class league_model {
     public static function get_attempt_data_by_itemid($itemid){
         global $DB;
         $result = new stdClass();
-        $query = "SELECT id, user, league, exercise
+        $query = "SELECT id, user, exercise
                     FROM {league_attempt}
                    WHERE itemid = :id";
         
@@ -623,7 +643,7 @@ class league_model {
             $result->id = $attempt->id;
             $result->user = $attempt->user;
             $result->exercise = $attempt->exercise;
-            $result->league = $attempt->league;
+            $result->league = \league_model::get_league_from_attempt($attempt->id);
             return $result;
         }
         return $result;

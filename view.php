@@ -117,6 +117,13 @@ switch($role){
         //                                                                  //
         //////////////////////////////////////////////////////////////////////
 
+        echo "<br> At 10: ". \league_model::get_league_from_attempt(10) . "<br>";
+        echo "<br> At 20: ". \league_model::get_league_from_attempt(20) . "<br>";
+        echo "<br> At 30: ". \league_model::get_league_from_attempt(30) . "<br>";
+        echo "<br> At 40: ". \league_model::get_league_from_attempt(40) . "<br>";
+        echo "<br> At 50: ". \league_model::get_league_from_attempt(50) . "<br>";
+        
+        
         $panel = new mod_league\output\single_content_view($league->intro, get_string('main_panel_student','league'));
         echo $output->render($panel);
         
