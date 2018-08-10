@@ -58,8 +58,6 @@ function league_supports($feature) {
 function league_add_instance(stdClass $league, mod_league_mod_form $mform = null) {
     global $DB;
     $league->timemodified = time();
-    $league->filearea = 'null';
-    $league->presentation = 'null';
     $league->id = $DB->insert_record('league', $league);
     // Create the Gradebook.
     league_grade_item_update($league);
@@ -120,7 +118,7 @@ function league_delete_instance($id) {
  * @global object $DB Moodle database.
  * @param string $name Exercise name.
  * @param string $statement Exercise statement.
- * @param object $leagueid League ID.
+ * @param int $leagueid League ID.
  * @return int New exercise ID.
  */
 function league_exercise_add_instance($name, $statement, $leagueid) {
@@ -202,6 +200,20 @@ function league_attempt_add_instance($userid, $exerciseid, $itemid, $filename) {
     $record->user = $userid;
     $record->exercise = $exerciseid;
     $record->mark = -1;
+    
+    
+    
+    
+    
+    
+    
+    // A ELIMINAR EN EL FUTURO:
+    $record->league = -1;
+    
+    
+    
+    
+    
     $record->itemid = $itemid;
   
     $id = $DB->insert_record('league_attempt', $record);

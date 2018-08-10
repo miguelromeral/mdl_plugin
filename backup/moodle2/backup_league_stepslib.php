@@ -46,7 +46,7 @@ class backup_league_activity_structure_step extends backup_activity_structure_st
  
         // Define each element separated.
         $league = new backup_nested_element('league', array('id'), array(
-            'name', 'presentation', 'filearea', 'intro', 'timemodified', 'method'));
+            'name', 'intro', 'timemodified', 'method'));
  
         $exercises = new backup_nested_element('exercises');
  
@@ -79,9 +79,10 @@ class backup_league_activity_structure_step extends backup_activity_structure_st
         // All the rest of elements only happen if we are including user info
         if ($userinfo) {
             $attempt->set_source_sql('
-                SELECT *
-                  FROM {league_attempt}
-                 WHERE league = ?',
+                SELECT a.*
+                  FROM {league_attempt} AS a
+            INNER JOIN {league_exercise} AS e 
+                    ON e.league = ?',
                 array(backup::VAR_PARENTID));
         }
         

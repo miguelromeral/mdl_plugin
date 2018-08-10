@@ -102,6 +102,10 @@ class total_attempts_view implements \renderable {
         array_push($align, 'center');
         array_push($headings, get_string('mark', 'league'));
         array_push($align, 'center');
+        array_push($headings, '');
+        array_push($align, 'center');
+        array_push($headings, '');
+        array_push($align, 'center');
         $table->head = $headings;
         $table->align = $align;
 

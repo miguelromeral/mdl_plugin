@@ -78,7 +78,7 @@ foreach($leagues as $league){
     $data[] = '<a href="'.$url.'">'. $league['name'] ."</a>";
                
     // League presentation.
-    $data[] = $league['presentation'];
+    $data[] = $league['intro'];
     
     // Number of exercises.
     $exercises = \league_model::get_exercises_from_id($league['id']);
