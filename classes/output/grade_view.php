@@ -43,19 +43,19 @@ require_once($CFG->libdir . '/tablelib.php');
 class teacher_grade_view implements \renderable {
  
     /** @var object Rows with the user and grades information. */
-    public $rows = null;
+    private $rows = null;
     
     /** @var object Array with the columns names of the table. */
-    public $tablecolumns = null;
+    private $tablecolumns = null;
     
     /** @var object Array with the headers of the table. */
-    public $tableheaders = null;
+    private $tableheaders = null;
     
     /** @var object Array with the name of every exercise. */
-    public $exercisesnames = null;
+    private $exercisesnames = null;
     
     /** @var string URL to redirect when click to sort the table. */
-    public $url = null;
+    private $url = null;
     
     /**
      * Class constructor.
@@ -77,7 +77,7 @@ class teacher_grade_view implements \renderable {
     /**
      * Print directly the table sorted by the user preferences.
      */
-    function print_table_grades(){
+    public function print_table_grades(){
         // Create the flexible table with all appropiate data.
         $table = new \flexible_table('mod-league-grade');
         $table->define_baseurl($this->url);
@@ -112,7 +112,7 @@ class teacher_grade_view implements \renderable {
      * @param string $sortby Criterion to sort (format: "columnname ASC | DESC").
      * @return object rows sorted appropiately.
      */
-    function sort_grade_rows($sortby){
+    private function sort_grade_rows($sortby){
         // Cut the initial string to get only the first one.
         $cut = explode(', ', $sortby);
         $headers = $this->tablecolumns;
@@ -179,7 +179,7 @@ class teacher_grade_view implements \renderable {
      * @param string $order Criterion to sort.
      * @return object Array of arrays sorted.
      */
-    function array_sort($array, $on, $order=SORT_ASC)
+    private function array_sort($array, $on, $order=SORT_ASC)
     {
         $new_array = array();
         $sortable_array = array();

@@ -57,15 +57,15 @@ class league_qualy {
     /**
      * Load the class and generates automatically the qualy.
      * 
-     * @param int $idleague League ID.
-     * @param int $idcurso Course ID.
-     * @param string $rol User role.
+     * @param int $leagueid League ID.
+     * @param int $courseid Course ID.
+     * @param string $role User role.
      * @param int $method Method to sort the qualy.
      */
-    public function __construct($idleague, $idcurso, $rol, $method){
-        $this->leagueid = $idleague;
-        $this->courseid = $idcurso;
-        $this->role = $rol;
+    public function __construct($leagueid, $courseid, $role, $method){
+        $this->leagueid = $leagueid;
+        $this->courseid = $courseid;
+        $this->role = $role;
         $this->method = $method;
         $this->qualy = $this->generate_qualy();
     }
@@ -146,7 +146,7 @@ class league_qualy {
                 $followerbestglobal = $follower['totalmark'] > $leader['totalmark'];
                 $equalglobal = $follower['totalmark'] === $leader['totalmark'];
                 // Check if the follower has best individual marks.
-                $followerbestindividuals = $this->mejoresNotasSegundo($qualy, $leader, $follower);
+                $followerbestindividuals = $this->second_has_best_marks($qualy, $leader, $follower);
                 
                 // If a switch is needed, do it!
                 if($followerbestglobal or
@@ -192,7 +192,7 @@ class league_qualy {
                 // Check if they have the same global mark.
                 $sameglobal= $follower['totalmark'] == $leader['totalmark'];
                 // Check if the follower has best individual marks.
-                $followerbestindividuals = $this->mejoresNotasSegundo($qualy, $leader, $follower);
+                $followerbestindividuals = $this->second_has_best_marks($qualy, $leader, $follower);
                 
                 // If a switch is needed, do it!
                 if($followermoreexercises or 
@@ -388,7 +388,7 @@ class league_qualy {
      * @param object $follower Current follower row.
      * @return boolean
      */
-    private function mejoresNotasSegundo($qualy, $leader, $follower){
+    private function second_has_best_marks($qualy, $leader, $follower){
         $index = 0;
         // Max of uploaded exercises.
         $size = max($leader['exeruplo'], $follower['exeruplo']);

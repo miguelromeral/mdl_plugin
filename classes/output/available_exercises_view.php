@@ -72,7 +72,7 @@ class available_exercises_view implements \renderable {
      * @global object $CFG Global Moodle configuration.
      * @return string HTML table.
      */
-    function print_exercises(){
+    public function print_exercises(){
         global $CFG;
         
         $table = new \html_table();

@@ -45,13 +45,13 @@ class main_teacher_view implements \renderable {
     public $exercises = null;
     
     /** @var int Course Module ID. */
-    public $cmid = 0;
+    private $cmid = 0;
     
     /** @var bool Capability if the user can mark students. */
-    public $canmark = false;
+    private $canmark = false;
     
     /** @var string Alert due to an action of the user. */
-    public $alert = null;
+    private $alert = null;
     
     /**
      * Class constructor.
