@@ -51,21 +51,6 @@ class league_model {
         return $DB->get_record('user', array('id' => $userid));
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * Return the user picture given its ID.
      * 
@@ -143,7 +128,7 @@ class league_model {
                          AS a ON e.id = a.exercise
                    WHERE league = :league
                 ORDER BY id";
-
+        
         return $DB->get_records_sql($query, array('league' => $leagueid, 'user' => $userid));
     }
     

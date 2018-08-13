@@ -33,7 +33,7 @@ class mod_league_events_testcase extends advanced_testcase {
         $this->cm = $DB->get_record('course_modules', array('id' => $this->league->cmid));
         $this->context = context_module::instance($this->league->cmid);
     }
-    /*
+    
     public function test_league_created() {
         // Generate user data.
         $user = $this->getDataGenerator()->create_user();
@@ -183,7 +183,8 @@ class mod_league_events_testcase extends advanced_testcase {
         $this->assertEquals(context_module::instance($this->league->cmid), $events[0]->get_context());
         $this->assertEventContextNotUsed($events[0]);
         $sink->close();
-    }*/
+    }
+    
     public function test_attempt_submitted() {
         // Generate user data.
         $user = $this->getDataGenerator()->create_user();
