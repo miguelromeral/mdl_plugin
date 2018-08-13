@@ -200,20 +200,6 @@ function league_attempt_add_instance($userid, $exerciseid, $itemid, $filename) {
     $record->user = $userid;
     $record->exercise = $exerciseid;
     $record->mark = -1;
-    
-    
-    
-    
-    
-    
-    
-    // A ELIMINAR EN EL FUTURO:
-    $record->league = -1;
-    
-    
-    
-    
-    
     $record->itemid = $itemid;
   
     $id = $DB->insert_record('league_attempt', $record);

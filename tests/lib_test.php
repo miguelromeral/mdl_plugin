@@ -17,4 +17,11 @@ class mod_league_lib_testcase extends externallib_advanced_testcase {
         return $exerciseid;
     }
     
+    public static function create_attempt($userid, $exerciseid){
+        $name = 'attempt_name';
+        $itemid = 123456789123;
+        $attemptid = league_attempt_add_instance($userid, $exerciseid, $itemid, $name);
+        return $attemptid;
+    }
+    
 }

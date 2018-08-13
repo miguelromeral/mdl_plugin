@@ -33,7 +33,7 @@ class mod_league_events_testcase extends advanced_testcase {
         $this->cm = $DB->get_record('course_modules', array('id' => $this->league->cmid));
         $this->context = context_module::instance($this->league->cmid);
     }
-    
+    /*
     public function test_league_created() {
         // Generate user data.
         $user = $this->getDataGenerator()->create_user();
@@ -181,6 +181,105 @@ class mod_league_events_testcase extends advanced_testcase {
         $this->assertEquals($exerciseid, $events[0]->objectid);
         $this->assertEquals($success, true);
         $this->assertEquals(context_module::instance($this->league->cmid), $events[0]->get_context());
+        $this->assertEventContextNotUsed($events[0]);
+        $sink->close();
+    }*/
+    public function test_attempt_submitted() {
+        // Generate user data.
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        // Redirect event.
+        $sink = $this->redirectEvents();
+        
+        // Create an instance of league (to throw the event).
+        $modinfo = get_fast_modinfo($this->course);
+        $cminfo = $modinfo->get_cm($this->cm->id);
+        $mod = new mod_league\league($cminfo, $this->context, $this->league);
+        // Create the exercise and throw the event.
+        $exerciseid = mod_league_lib_testcase::create_exercise($this->league->id);
+        
+        $attemptid = mod_league_lib_testcase::create_attempt($user->id, $exerciseid);
+        $mod->trigger_attempt_submitted_event($exerciseid, $attemptid);
+        
+        // Recover events.
+        $events = $sink->get_events();
+
+        // Data checking.
+        $this->assertCount(1, $events);
+        $this->assertInstanceOf('\mod_league\event\attempt_submitted', $events[0]);
+        $this->assertEquals($user->id, $events[0]->userid);
+        $this->assertEquals($attemptid, $events[0]->objectid);
+        $this->assertEquals(context_module::instance($this->league->cmid), $events[0]->get_context());
+        $this->assertEquals($exerciseid, $events[0]->other['exercise']);
+        $this->assertEventContextNotUsed($events[0]);
+        $sink->close();
+    }
+    
+    public function test_attempt_graded() {
+        // Generate user data.
+        $user = $this->getDataGenerator()->create_user();
+        $userwhosubmit = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        // Redirect event.
+        $sink = $this->redirectEvents();
+        
+        $exerciseid = mod_league_lib_testcase::create_exercise($this->league->id);
+        $attemptid = mod_league_lib_testcase::create_attempt($userwhosubmit->id, $exerciseid);
+        
+        $modinfo = get_fast_modinfo($this->course);
+        $cminfo = $modinfo->get_cm($this->cm->id);
+        $mod = new mod_league\league($cminfo, $this->context, $this->league);
+        
+        $mark = 100;
+        $observations = 'observations';
+        $success = league_attempt_update_instance($this->league->id, $attemptid, $mark, $observations, $exerciseid);
+        
+        $mod->trigger_attempt_graded_event($attemptid, $userwhosubmit->id, $exerciseid, $mark);
+        
+        // Recover events.
+        $events = $sink->get_events();
+
+        // Data checking.
+        $this->assertCount(1, $events);
+        $this->assertInstanceOf('\mod_league\event\attempt_graded', $events[0]);
+        $this->assertEquals($user->id, $events[0]->userid);
+        $this->assertEquals($success, true);
+        $this->assertEquals($attemptid, $events[0]->objectid);
+        $this->assertEquals($userwhosubmit->id, $events[0]->relateduserid);
+        $this->assertEquals(context_module::instance($this->league->cmid), $events[0]->get_context());
+        $this->assertEquals($exerciseid, $events[0]->other['exercise']);
+        $this->assertEquals($mark, $events[0]->other['mark']);
+        $this->assertEventContextNotUsed($events[0]);
+        $sink->close();
+    }
+    
+    public function test_attempt_downloaded() {
+        // Generate user data.
+        $user = $this->getDataGenerator()->create_user();
+        $userwhosubmit = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        // Redirect event.
+        $sink = $this->redirectEvents();
+        
+        $exerciseid = mod_league_lib_testcase::create_exercise($this->league->id);
+        $attemptid = mod_league_lib_testcase::create_attempt($userwhosubmit->id, $exerciseid);
+        \mod_league\league::trigger_attempt_downloaded_event($attemptid, $userwhosubmit->id, $this->league->id, $exerciseid, $this->context);
+        
+        // Recover events.
+        $events = $sink->get_events();
+
+        // Data checking.
+        $this->assertCount(1, $events);
+        $this->assertInstanceOf('\mod_league\event\attempt_downloaded', $events[0]);
+        $this->assertEquals($user->id, $events[0]->userid);
+        $this->assertEquals($attemptid, $events[0]->objectid);
+        $this->assertEquals($userwhosubmit->id, $events[0]->relateduserid);
+        $this->assertEquals(context_module::instance($this->league->cmid), $events[0]->get_context());
+        $this->assertEquals($exerciseid, $events[0]->other['exercise']);
+        $this->assertEquals($this->league->id, $events[0]->other['league']);
         $this->assertEventContextNotUsed($events[0]);
         $sink->close();
     }
