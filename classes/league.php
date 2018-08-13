@@ -134,11 +134,13 @@ class league {
      * 
      * @param object $league League instance.
      */
-    public static function trigger_league_created_event($league) {
+    public static function trigger_league_created_event($league, $context = null) {
 
+        $context = ($context ? $context : \context_module::instance($league->coursemodule));
+        
         $params = array(
             'objectid' => $league->id,
-            'context' => \context_module::instance($league->coursemodule)
+            'context' => $context
         );
 
         $event = \mod_league\event\league_created::create($params);
@@ -151,11 +153,13 @@ class league {
      * 
      * @param object $league League instance.
      */
-    public static function trigger_league_updated_event($league){
+    public static function trigger_league_updated_event($league, $context = null) {
 
+        $context = ($context ? $context : \context_module::instance($league->coursemodule));
+        
         $params = array(
             'objectid' => $league->id,
-            'context' => \context_module::instance($league->coursemodule)
+            'context' => $context
         );
 
         $event = \mod_league\event\league_updated::create($params);
