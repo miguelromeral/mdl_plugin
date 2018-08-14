@@ -25,7 +25,6 @@
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
 
-require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/league/classes/model.php');
 
 /**

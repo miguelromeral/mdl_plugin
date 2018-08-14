@@ -155,34 +155,23 @@ class league_model {
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    /**
+     * Get all students users.
+     * 
+     * @global object $COURSE Course.
+     * @global object $DB Moodle Database.
+     * @return object 
+     */
     public static function get_students(){
         global $COURSE, $DB;
         $cContext = context_course::instance($COURSE->id);
-        $query = 'select u.id as id, firstname, lastname, picture, imagealt, '
-                . 'email, u.* from mdl_role_assignments as a, mdl_user as u where '
-                . 'contextid=' . $cContext->id . ' and roleid=5 and a.userid=u.id '
-                . 'order by firstname desc';
-        $rs = $DB->get_recordset_sql( $query );
-        return $rs;
+        $query = "SELECT u.id AS id, firstname, lastname, picture, imagealt, 
+                         email, u.* 
+                    FROM {role_assignments} AS a, 
+                         {user} AS u 
+                   WHERE contextid = :cid AND roleid = 5 AND a.userid = u.id 
+                ORDER BY firstname DESC";
+        return $DB->get_recordset_sql($query, array('cid' =>$cContext->id ));
     }
     
     /**
@@ -249,7 +238,7 @@ class league_model {
                                    a.timecreated AS tmc,
                                    a.observations, a.name as fname,
                                    a.exercise, b.user, a.mark, a.itemid
-                              FROM mdl_league_attempt AS a
+                              FROM {league_attempt} AS a
                         INNER JOIN (
                                         SELECT MAX(id) AS m, user
                                           FROM {league_attempt}
@@ -567,6 +556,7 @@ class league_model {
      * 
      * @global object $DB Moodle database.
      * @param int $id Attempt ID.
+     * @return int
      */
     public static function get_league_from_attempt($id){
         global $DB;

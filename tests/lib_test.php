@@ -8,6 +8,9 @@ global $CFG;
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 require_once($CFG->dirroot . '/mod/league/lib.php');
 
+/**
+ * @group mod_league_test
+ */
 class mod_league_lib_testcase extends externallib_advanced_testcase {
 
     public static function create_exercise($leagueid){

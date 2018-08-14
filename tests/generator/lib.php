@@ -3,6 +3,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * @group mod_league_test
+ */
 class mod_league_generator extends testing_module_generator {
 
     public function create_instance($record = null, array $options = null) {

@@ -7,6 +7,9 @@ global $CFG;
 require_once($CFG->dirroot . '/mod/league/lib.php');
 require_once($CFG->dirroot . '/mod/league/tests/lib_test.php');
 
+/**
+ * @group mod_league_test
+ */
 class mod_league_events_testcase extends advanced_testcase {
     /** @var league_object */
     protected $league;

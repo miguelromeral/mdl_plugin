@@ -8,7 +8,7 @@ defined('MOODLE_INTERNAL') || die();
  * PHPUnit data generator testcase
  *
  * @package    mod_league
- * @group      mod_league
+ * @group      mod_league_test
  * @category   phpunit
  * @copyright  2018 Miguel Romeral
  */
