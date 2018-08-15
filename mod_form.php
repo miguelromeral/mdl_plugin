@@ -68,12 +68,7 @@ class mod_league_mod_form extends moodleform_mod {
         // Sort description (or presentation) about the league.
         
         $this->standard_intro_elements(get_string('mod_form_presentation', 'league'));
-        
-  /*      $mform->addElement('textarea', 'intro', get_string("mod_form_presentation", "league"), 'wrap="virtual" rows="20" cols="50"');
-        $mform->setType('intro', PARAM_TEXT);
-        $mform->setDefault('intro', '');
-        $mform->addRule('intro', null, 'required', null, 'client');
-    */    
+       
         // Features to the Course Module elements.
         $features = new stdClass();
         $features->groups           = false;
