@@ -25,7 +25,7 @@
 // Prevents direct execution via browser.
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2018081500;
+$plugin->version   = 2018081501;
 $plugin->requires  = 2016051900;
 $plugin->component = 'mod_league';
 $plugin->cron      = 3600;

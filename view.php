@@ -169,7 +169,7 @@ switch($role){
                     $attemptid = false;
                     
                     // If the exercises is enabled, we can't delete it
-                    if ($exerciseenabled == 0){
+                    if ($exerciseenabled == 0 and $exercisepublished == 0){
                         // Delete instance of the exercise given the ID.
                         $attemptid = league_exercise_delete_instance($exerciseid);
                     }
