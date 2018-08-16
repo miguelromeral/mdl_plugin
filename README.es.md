@@ -54,7 +54,7 @@ Este proyecto consiste en el Trabajo ( *ACTUALMENTE EN DESARROLLO* ) de Fin de G
 
 ## Manual de usuario
 
-*Actualmente, el manual de usuario está siendo escrito. Disculpe las molestias.*
+Existe un [manual de usuario en español](manuals/es.pdf) orientado a todos los usuarios de Moodle, tanto alumnos como profesores o administradores del sitio.
 
 ## TODO
 
@@ -72,7 +72,5 @@ LinkedIn: Miguel Romeral (https://www.linkedin.com/in/miguelromeral/)
 Twitter: @MiguelRomeral (https://twitter.com/MiguelRomeral)
 
 ## Licencia
-
-Licencia del plugin: Licencia Pública General GNU 3.0
 
 Licencia de Moodle: Moodle is provided freely as open source software, under the GNU General Public License <https://docs.moodle.org/dev/License>.
