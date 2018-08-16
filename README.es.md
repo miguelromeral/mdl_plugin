@@ -19,7 +19,7 @@ La privacidad en la clasificación consiste en que los profesores tienen acceso 
 
 ## Motivación
 
-Este proyecto consiste en el Trabajo ( *ACTUALMENTE EN DESARROLLO* ) de Fin de Grado de Miguel Ángel García Romeral con la supervisión del [Profesor Antonio García Cabot](https://www.uah.es/es/estudios/profesor/Antonio-Garcia-Cabot/), de la [Universidad de Alcalá](https://www.uah.es) .
+Este proyecto consiste en el Trabajo, *actualmente en desarrollo*, de Fin de Grado de Miguel Ángel García Romeral con la supervisión del [Profesor Antonio García Cabot](https://www.uah.es/es/estudios/profesor/Antonio-Garcia-Cabot/), de la [Universidad de Alcalá](https://www.uah.es) .
 
 ## Requisitos
 
@@ -28,7 +28,7 @@ Este proyecto consiste en el Trabajo ( *ACTUALMENTE EN DESARROLLO* ) de Fin de G
 
 ## Instalación
 
-1. Descargue el repositorio desde el botón *Clone or download* -> *Download ZIP* o clone el proyecto mediante la siguiente orden:
+1. Descargue el repositorio desde el botón *Clone or download* --> *Download ZIP* o clone el proyecto mediante la siguiente orden:
 
     ```
     git clone https://github.com/miguelromeral/moodle-mod_league.git
@@ -44,13 +44,17 @@ Este proyecto consiste en el Trabajo ( *ACTUALMENTE EN DESARROLLO* ) de Fin de G
 
 ## Funcionalidades y capturas
 
-*Actualmente, las funcionalidades y capturas están en desarrollo. Disculpe las molestias.*
+* ### Crear ejercicios que compongan la liga
 
-[//]: # (## Recomendaciones)
+ ![alt]( screenshots/es/panel_control_profesor.png )
 
 ## Pruebas
 
-*Actualmente la aplicación está bajo pruebas.*
+Se han realizado pruebas unitarias mediante PHPUnit de manera satisfactoria.
+
+    ```
+    git clone https://github.com/miguelromeral/moodle-mod_league.git
+    ```
 
 ## Manual de usuario
 
