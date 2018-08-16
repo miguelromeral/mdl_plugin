@@ -129,7 +129,7 @@ class qualy_view implements \renderable {
         // Each row has an user data.
         foreach ($this->qualy as $row){
             $data = array();
-            $data[] = $position;
+            $data[] = '<font size="4"><b><i>'.$position.'</i></b></font>';
 
             // Image and name for teachers.
             // Hashed name for students, but their own user.
@@ -155,7 +155,7 @@ class qualy_view implements \renderable {
             // Total exercises uploaded by the user.
             $data[] = $row['exeruplo'];
             // Total grade of the user in the league.
-            $data[] = $row['totalmark'];
+            $data[] = "<b><i>".$row['totalmark']."</i></b>";
             
             // Prevents a division by zero (put NaN instead).
             if($row['totalexer'] > 0){
