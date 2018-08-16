@@ -19,7 +19,7 @@ La privacidad en la clasificación consiste en que los profesores tienen acceso 
 
 ## Motivación
 
-Este proyecto consiste en el Trabajo, *actualmente en desarrollo*, de Fin de Grado de Miguel Ángel García Romeral con la supervisión del [Profesor Antonio García Cabot](https://www.uah.es/es/estudios/profesor/Antonio-Garcia-Cabot/), de la [Universidad de Alcalá](https://www.uah.es) .
+Este proyecto consiste en el Trabajo, **actualmente en desarrollo**, de Fin de Grado de Miguel Ángel García Romeral con la supervisión del [Profesor Antonio García Cabot](https://www.uah.es/es/estudios/profesor/Antonio-Garcia-Cabot/), de la [Universidad de Alcalá](https://www.uah.es) .
 
 ## Requisitos
 
@@ -46,15 +46,69 @@ Este proyecto consiste en el Trabajo, *actualmente en desarrollo*, de Fin de Gra
 
 * ### Crear ejercicios que compongan la liga
 
- ![alt]( screenshots/es/panel_control_profesor.png )
+![alt](screenshots/es/panel_control_profesor.png)
+
+![alt](screenshots/es/crear_ejercicio.png)
+
+* ### Los estudiantes pueden subir sus intentos para los ejercicios
+
+![alt](screenshots/es/panel_control_alumno.png)
+
+![alt](screenshots/es/subir_ejercicio.png)
+
+* ### Corregir los trabajos (o intentos) de los estudiantes
+
+![alt](screenshots/es/corregir_ejercicio.png)
+
+![alt](screenshots/es/corregir_intento.png)
+
+* ### Visualizar clasificación en tiempo real y como estudiante
+
+    * #### En tiempo real (contando las notas aún sin publicar)
+
+       ![alt](screenshots/es/clasificacion_profesor.png)
+
+    * #### Vista como estudiante (contando únicamente las notas publicadas)
+
+       ![alt](screenshots/es/clasificacion_profesor_estudiante.png)
+
+* ### Los estudiantes pueden ver la clasificación con los nombres ocultos
+
+![alt](screenshots/es/clasificacion_estudiante.png)
+
+* ### Comparación de notas individuales
+
+![alt](screenshots/es/comparacion_notas.png)
+
+* ### Registro de eventos
+
+![alt](screenshots/es/registros.png)
+
+* ### Edición de permisos para diferentes roles
+
+![alt](screenshots/es/capabilities.png)
+
+* ### Soporte para backup y restauración
+
+![alt](screenshots/es/backup.png)
+
+![alt](screenshots/es/restauracion.png)
+
 
 ## Pruebas
 
 Se han realizado pruebas unitarias mediante PHPUnit de manera satisfactoria.
 
-    ```
-    git clone https://github.com/miguelromeral/moodle-mod_league.git
-    ```
+    root@server:/var/www/html/moodle# vendor/bin/phpunit --group mod_league
+    Moodle 3.1.12+ (Build: 20180524)
+    Php: 5.5.9.1.4.25, mysqli: 5.5.60-0ubuntu0.14.04.1, OS: Linux 4.4.0-128-generic i686
+    PHPUnit 4.8.27 by Sebastian Bergmann and contributors.
+
+    .........................
+
+    Time: 5.27 minutes, Memory: 152.75MB
+
+    OK (25 tests, 112 assertions)
 
 ## Manual de usuario
 
