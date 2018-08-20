@@ -64,7 +64,7 @@ class league_model {
         global $COURSE, $DB, $OUTPUT;
         $cContext = context_course::instance($COURSE->id);
         $query = 'select u.id as id, firstname, lastname, picture, imagealt, '
-                . 'email, u.* from mdl_role_assignments as a, mdl_user as u where '
+                . 'email, u.* from {role_assignments} as a, {user} as u where '
                 . 'contextid=' . $cContext->id . ' and roleid=5 and a.userid=u.id';
         $rs = $DB->get_recordset_sql( $query );
         foreach( $rs as $r ) {
@@ -149,7 +149,7 @@ class league_model {
                          ) 
                          AS b ON a.user = b.us
                    WHERE a.exercise = :id
-                ORDER BY a.timemodified DESC";
+                ORDER BY a.timecreated DESC";
         
         return $DB->get_records_sql($query, array('id' => $exerciseid));
     }

@@ -183,8 +183,7 @@ class main_teacher_view implements \renderable {
      */
     public function print_add_exercise_button(){
         $url= new \moodle_url('/mod/league/add_exercise.php', array(
-                'id' => $this->cmid,
-                'exercise' => -1,
+                'id' => $this->cmid
                 ));
 
 

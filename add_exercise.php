@@ -34,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
 
 // Identifies the Course Module ID.
 $cmid = required_param('id', PARAM_INT);
-$exerciseid = required_param('exercise', PARAM_INT);
+$exerciseid = optional_param('exercise', -1, PARAM_INT);
 
 // Check if a course module exists.
 if ($cmid) {
