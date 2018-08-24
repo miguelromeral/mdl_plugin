@@ -83,7 +83,7 @@ This project consists of the Miguel Ángel García Romeral’s Dissertation, **c
 
 * ### Event log
 
-![alt](screenshots/en/logs.png)
+![alt](screenshots/en/event_logs.png)
 
 * ### Edit permissions for different roles
 
