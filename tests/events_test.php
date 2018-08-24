@@ -30,7 +30,7 @@ require_once($CFG->dirroot . '/mod/league/lib.php');
 require_once($CFG->dirroot . '/mod/league/tests/lib_test.php');
 
 /**
- * mod_choice events test.
+ * mod_league events test.
  *
  * @package mod_league
  * @category test

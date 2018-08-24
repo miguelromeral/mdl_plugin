@@ -114,6 +114,12 @@ Se han realizado pruebas unitarias mediante PHPUnit de manera satisfactoria.
 
 Existe un [manual de usuario en español](manuals/es.pdf) orientado a todos los usuarios de Moodle, tanto alumnos como profesores o administradores del sitio.
 
+## Detalles de la versión
+
+### v1.0 (ALPHA)
+
+* Primera versión del plugin, añadidas las funcionalidades básicas.
+
 ## TODO
 
 * Sincronizar ejercicios con Calendar API y poner fecha límite a los mismos (desactivación automática).
