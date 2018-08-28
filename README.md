@@ -113,7 +113,7 @@ Unit tests have been carried out using PHPUnit successfully.
 
 ## User manual
 
-*Currently writting the User manual.*
+There is a [user manual in English](manuals/en.pdf) aimed at all Moodle users, both students and teachers or site administrators.
 
 ## TODO
 
