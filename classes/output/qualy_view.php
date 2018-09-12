@@ -141,7 +141,7 @@ class qualy_view implements \renderable {
                 if($row['uid'] == $this->userid){
                     $data[] = $row['name'];
                 } else {
-                    $data[] = md5($row['name']." - ".$row['uname']);
+                    $data[] = sha1($row['name']." - ".$row['uname']);
                 }
             } 
 
