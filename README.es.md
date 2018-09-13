@@ -42,7 +42,11 @@ Este proyecto consiste en el Trabajo, **actualmente en desarrollo**, de Fin de G
 
 5. Una vez finalizado, puede pulsar en *Continuar* y a partir de entonces puede crear instancias del plugin en cualquier curso (a través de *Activar edición*).
 
-## Funcionalidades y capturas
+## Funcionalidades: vídeo
+
+Puede ver este [vídeo](https://vimeo.com/289471436) en el que se muestran las principales funcionalidades del plugin en español.
+
+## Funcionalidades: capturas
 
 * ### Crear ejercicios que compongan la liga
 

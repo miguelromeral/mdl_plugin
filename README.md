@@ -43,7 +43,11 @@ This project consists of the Miguel Ángel García Romeral’s Dissertation, **c
 
 5. When it had finished, you can click on *Continue* and from then on you can create plugin instances in any course (via *Turn editing on*).
 
-## Features and captures
+## Features: video
+
+You can watch this [video](https://vimeo.com/289471436) in which the main features of the plugin are shown, however, its strings are in spanish.
+
+## Features: screenshots
 
 * ### Create League exercises
 
