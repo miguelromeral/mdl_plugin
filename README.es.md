@@ -1,6 +1,8 @@
 
 # ![alt](pix/mod_league.svg) mod_league
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 Copyright 2018 Miguel Romeral [Universidad de Alcalá](https://www.uah.es)
 
 *También puedes leer esto en otros idiomas: [English](README.md), [Español](README.es.md)*
