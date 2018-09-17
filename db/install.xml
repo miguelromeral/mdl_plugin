@@ -4,53 +4,53 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="league" COMMENT="Tabla principal de la actividad. Contiene el id de la liga y el curso al que pertenece.">
+    <TABLE NAME="league" COMMENT="League Main Table. Has the League's ID and the course belongs to.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del curso"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Nombre instancia"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Tiempo modificación"/>
-        <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Descripción de actividad."/>
-        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false" COMMENT="Formato de intro"/>
-        <FIELD NAME="method" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Metodo de clasificación: 1: por notas, 2: por ejercicios subidos"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course ID"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="League name"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Last time modified"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="League Description"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false" COMMENT="Intro Format"/>
+        <FIELD NAME="method" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Classification method: 1: best marks, 2: more exerises uploaded"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="fk-course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id" COMMENT="FK de curso"/>
+        <KEY NAME="fk-course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id" COMMENT="FK course"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="league_exercise" COMMENT="Tabla que almacena los ejercicios que pertenecen a la liga.">
+    <TABLE NAME="league_exercise" COMMENT="Stores the exercises of the league.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="league" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Liga a la que pertenece la actividad."/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Nombre del ejercicio"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Tiempo de modificación"/>
-        <FIELD NAME="statement" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Enunciado del ejercicio."/>
-        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Indica si los estudiantes pueden realizar esa ejercicio."/>
-        <FIELD NAME="published" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Indica si se publican las notas de este ejercicio"/>
+        <FIELD NAME="league" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Exercise League"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Exercise Name"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Last time modified"/>
+        <FIELD NAME="statement" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Exercises Statement. It also may contain the upload rules."/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Exercise enabled to allow students upload their attempts or not."/>
+        <FIELD NAME="published" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="If is true, students can see their attempt grades belonging to this exercise."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="fk-league" TYPE="foreign" FIELDS="league" REFTABLE="league" REFFIELDS="id" COMMENT="FK de leauge"/>
+        <KEY NAME="fk-league" TYPE="foreign" FIELDS="league" REFTABLE="league" REFFIELDS="id" COMMENT="FK League"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="league_attempt" COMMENT="Intento de los alumnos">
+    <TABLE NAME="league_attempt" COMMENT="Students Attempts">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="exercise" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID del ejercicio al que pertenece"/>
-        <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Usuario que realiza el ejercicio"/>
-        <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID del fichero que se sube"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Nombre del intento"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time attempt was created."/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Tiempo de modificación"/>
-        <FIELD NAME="mark" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="-1" SEQUENCE="false" COMMENT="Nota del alumno"/>
-        <FIELD NAME="observations" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Observaciones sobre el trabajo hecho"/>
+        <FIELD NAME="exercise" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Exercise ID"/>
+        <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="User that uploaded the attempt"/>
+        <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Itemid file with the solution to the exercise."/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Attempt name (usually the file's name)"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time created"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Last time modification"/>
+        <FIELD NAME="mark" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="-1" SEQUENCE="false" COMMENT="Attempt grade"/>
+        <FIELD NAME="observations" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Feedback for the student."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="fk-exercise" TYPE="foreign" FIELDS="exercise" REFTABLE="league_exercise" REFFIELDS="id" COMMENT="FK del exercise"/>
+        <KEY NAME="fk-exercise" TYPE="foreign" FIELDS="exercise" REFTABLE="league_exercise" REFFIELDS="id" COMMENT="FK exercise"/>
         <KEY NAME="fk-user" TYPE="foreign" FIELDS="user" REFTABLE="user" REFFIELDS="id" COMMENT="User ID FK"/>
-        <KEY NAME="fk-itemid" TYPE="foreign" FIELDS="itemid" REFTABLE="files" REFFIELDS="itemid" COMMENT="FK del item id"/>
+        <KEY NAME="fk-itemid" TYPE="foreign" FIELDS="itemid" REFTABLE="files" REFFIELDS="itemid" COMMENT="FK itemid"/>
       </KEYS>
     </TABLE>
   </TABLES>
